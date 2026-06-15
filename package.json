@@ -1,0 +1,16 @@
+{
+  "name": "second-portfolio-root",
+  "version": "1.0.0",
+  "description": "Root project runner for portfolio frontend and backend",
+  "scripts": {
+    "start:frontend": "npm start --prefix frontend",
+    "start:backend": "npm run dev --prefix backend",
+    "install:frontend": "npm install --prefix frontend",
+    "install:backend": "npm install --prefix backend",
+    "install:all": "npm install && npm run install:frontend && npm run install:backend",
+    "dev": "concurrently --kill-others-on-fail \"npm run start:frontend\" \"npm run start:backend\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
