@@ -1,5 +1,6 @@
 .admin-container {
-  padding-top: 100px; /* Account for navbar */
+  padding-top: 100px;
+  /* Account for navbar */
   min-height: 100vh;
   padding-bottom: 50px;
 }
@@ -34,7 +35,9 @@
 
 .admin-items-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: auto;
   gap: 15px;
   margin-bottom: 20px;
 }
@@ -45,25 +48,35 @@
   align-items: center;
   padding: 15px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--admin-bg);
+  border: 1px solid var(--admin-border);
+  flex: 1 1 calc(33.333% - 15px);
+  min-width: 280px;
 }
 
 .admin-item-content {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .admin-item-title {
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--text-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-item-subtitle {
   font-size: 0.9rem;
   color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-item-actions {
@@ -71,7 +84,8 @@
   gap: 10px;
 }
 
-.delete-btn, .edit-btn {
+.delete-btn,
+.edit-btn {
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -102,8 +116,8 @@
 }
 
 .add-container {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--admin-bg);
+  border: 1px solid var(--admin-border);
   padding: 20px;
   border-radius: 12px;
   margin-top: 20px;
@@ -120,7 +134,7 @@
 
 .btn-add {
   background: transparent;
-  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border: 2px dashed var(--admin-border);
   color: var(--text-light);
   padding: 15px;
   width: 100%;
@@ -135,13 +149,13 @@
 }
 
 .btn-add:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: var(--admin-bg);
+  border-color: var(--text-light);
 }
 
 .admin-input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--admin-input-bg);
+  border: 1px solid var(--admin-input-border);
   color: var(--text-light);
   padding: 12px 15px;
   border-radius: 8px;
@@ -152,8 +166,8 @@
 
 .admin-input:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-color);
+  background: var(--admin-input-bg);
 }
 
 .admin-save-btn {
@@ -191,6 +205,26 @@
   gap: 10px;
 }
 
-.form-actions > button {
+.form-actions>button {
   flex: 1;
+}
+
+/* Drag and Drop styling for Admin tech stack list */
+.admin-item.dragging {
+  opacity: 0.4;
+  border: 1px dashed var(--accent-color, #3b82f6);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  user-select: none;
+  font-size: 1.25rem;
+  padding: 0 5px;
+  transition: color 0.2s ease;
+}
+
+.drag-handle:hover {
+  color: var(--text-light);
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Code, Menu, X, Briefcase, Layers, BookOpen, Book, User, Mail } from 'lucide-react';
+import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User, Mail } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -42,11 +42,10 @@ const Navbar = () => {
 
   const navLinks = [
     { path: '/', label: 'Home', icon: <Home size={18} /> },
-    { path: '/#stack', label: 'Stack', icon: <Layers size={18} />, isHash: true },
+    { path: '/#stack', label: 'Stack', icon: <Code size={18} />, isHash: true },
     { path: '/#works', label: 'Works', icon: <Briefcase size={18} />, isHash: true },
     { path: '/#notes', label: 'Notes', icon: <BookOpen size={18} />, isHash: true },
     { path: '/#stories', label: 'Stories', icon: <Book size={18} />, isHash: true },
-    { path: '/#contact', label: 'Contact', icon: <Mail size={18} />, isHash: true },
     { path: '/#social', label: 'Social', icon: <User size={18} />, isHash: true },
     { path: '/github', label: 'GitHub', icon: <Code size={18} /> },
   ];
@@ -84,7 +83,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Navigation Toggle */}
-        <button 
+        <button
           className="mobile-menu-toggle mobile-only"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >

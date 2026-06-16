@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import GithubRepos from './pages/GithubRepos';
@@ -51,18 +51,27 @@ function App() {
     };
   }, []);
 
+function AppContent() {
+  const location = useLocation();
+  const isAdminPath = location.pathname === '/admin@jay';
+
+  return (
+    <div className="app-container">
+      {!isAdminPath && <Navbar />}
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/github" element={<GithubRepos />} />
+          <Route path="/admin@jay" element={<Admin />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
   return (
     <Router>
-      <div className="app-container">
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/github" element={<GithubRepos />} />
-            <Route path="/admin@jay" element={<Admin />} />
-          </Routes>
-        </main>
-      </div>
+      <AppContent />
     </Router>
   );
 }

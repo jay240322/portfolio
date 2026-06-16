@@ -70,10 +70,8 @@ const Admin = () => {
   const defaultConnect = [
     { name: "GitHub", link: "https://github.com/jay240322", icon: "github" },
     { name: "LinkedIn", link: "https://linkedin.com", icon: "linkedin" },
-    { name: "Instagram", link: "https://instagram.com", icon: "instagram" },
     { name: "Hashnode", link: "https://hashnode.com", icon: "globe" },
-    { name: "Twitter", link: "https://twitter.com", icon: "twitter" },
-    { name: "Email", link: "mailto:jay240322@gmail.com", icon: "mail" }
+    { name: "Twitter", link: "https://twitter.com", icon: "twitter" }
   ];
 
   // States
@@ -103,6 +101,7 @@ const Admin = () => {
   const [editingNoteIndex, setEditingNoteIndex] = useState(null);
   const [editingStoryIndex, setEditingStoryIndex] = useState(null);
   const [editingConnectIndex, setEditingConnectIndex] = useState(null);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   useEffect(() => {
     // Load from local storage or use defaults
@@ -117,10 +116,35 @@ const Admin = () => {
     setNotes(storedNotes || defaultNotes);
     setStories(storedStories || defaultStories);
     setConnect(storedConnect || defaultConnect);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Save helpers
   const saveTechStack = (data) => { setTechStack(data); localStorage.setItem('portfolio_techStack', JSON.stringify(data)); };
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.target);
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    const updated = [...techStack];
+    const draggedItem = updated[draggedIndex];
+    updated.splice(draggedIndex, 1);
+    updated.splice(index, 0, draggedItem);
+
+    setDraggedIndex(index);
+    setTechStack(updated);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    localStorage.setItem('portfolio_techStack', JSON.stringify(techStack));
+  };
   const saveWorks = (data) => { setWorks(data); localStorage.setItem('portfolio_works', JSON.stringify(data)); };
   const saveNotes = (data) => { setNotes(data); localStorage.setItem('portfolio_notes', JSON.stringify(data)); };
   const saveStories = (data) => { setStories(data); localStorage.setItem('portfolio_stories', JSON.stringify(data)); };
@@ -235,6 +259,8 @@ const Admin = () => {
     saveStories(updated);
   };
 
+
+
   const handleAddConnect = () => {
     if (newConnect.name && newConnect.link) {
       if (editingConnectIndex !== null) {
@@ -300,7 +326,18 @@ const Admin = () => {
           
           <div className="admin-items-list">
             {techStack.map((tech, i) => (
-              <div key={i} className="admin-item">
+              <div 
+                key={i} 
+                className={`admin-item ${draggedIndex === i ? 'dragging' : ''}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, i)}
+                onDragOver={(e) => handleDragOver(e, i)}
+                onDragEnd={handleDragEnd}
+                style={{ cursor: 'grab' }}
+              >
+                <div className="drag-handle" style={{ cursor: 'grab', marginRight: '1rem', color: 'var(--text-secondary)', userSelect: 'none' }}>
+                  ☰
+                </div>
                 <div className="admin-item-content">
                   <span className="admin-item-title">{tech.name}</span>
                   <span className="admin-item-subtitle">{tech.icon}</span>
@@ -469,6 +506,8 @@ const Admin = () => {
         </div>
       </section>
 
+
+
       {/* Connect Admin */}
       <section className="section-container admin-section">
         <div className="section-box relative-box">
@@ -504,7 +543,7 @@ const Admin = () => {
               <div className="sticker sticker-center-left">🎈</div>
               <input type="text" placeholder="Platform Name (e.g. GitHub)" className="admin-input" value={newConnect.name} onChange={e => setNewConnect({...newConnect, name: e.target.value})} />
               <input type="text" placeholder="Link URL" className="admin-input" value={newConnect.link} onChange={e => setNewConnect({...newConnect, link: e.target.value})} />
-              <input type="text" placeholder="Icon Name (github, linkedin, instagram, twitter, mail, globe, link)" className="admin-input" value={newConnect.icon} onChange={e => setNewConnect({...newConnect, icon: e.target.value})} />
+              <input type="text" placeholder="Icon Name (e.g. github, or FontAwesome React/HTML code like <FontAwesomeIcon icon={faDev} />)" className="admin-input" value={newConnect.icon} onChange={e => setNewConnect({...newConnect, icon: e.target.value})} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddConnect}>{editingConnectIndex !== null ? 'Update Connect Link' : 'Save Connect Link'}</button>
                 <button className="admin-cancel-btn" onClick={() => {setShowConnectForm(false); setEditingConnectIndex(null); setNewConnect({name: '', link: '', icon: 'link'})}}>Cancel</button>

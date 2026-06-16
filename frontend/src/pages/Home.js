@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Download, ChevronRight, Code as GithubIcon, Mail, Briefcase as LinkedinIcon, ExternalLink, Camera as Instagram, MessageCircle as Twitter, Globe, Link as LinkIcon } from 'lucide-react';
+import { ChevronRight, Mail, Code as GithubIcon, Briefcase as LinkedinIcon, ExternalLink, Camera as Instagram, MessageCircle as Twitter, Globe, Link as LinkIcon, ChevronDown, Download } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AOS from 'aos';
 import './Home.css';
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Home = () => {
-  const GITHUB_USERNAME = 'jay240322';
   const container = useRef();
 
   const defaultTechStack = [
@@ -75,10 +77,8 @@ const Home = () => {
   const defaultConnect = [
     { name: "GitHub", link: "https://github.com/jay240322", icon: "github" },
     { name: "LinkedIn", link: "https://linkedin.com", icon: "linkedin" },
-    { name: "Instagram", link: "https://instagram.com", icon: "instagram" },
     { name: "Hashnode", link: "https://hashnode.com", icon: "globe" },
-    { name: "Twitter", link: "https://twitter.com", icon: "twitter" },
-    { name: "Email", link: "mailto:jay240322@gmail.com", icon: "mail" }
+    { name: "Twitter", link: "https://twitter.com", icon: "twitter" }
   ];
 
   const [techStack, setTechStack] = useState(defaultTechStack);
@@ -88,294 +88,410 @@ const Home = () => {
   const [connect, setConnect] = useState(defaultConnect);
 
   useGSAP(() => {
-    // Hero section page load entry animations (no ScrollTrigger)
-    gsap.fromTo('.hero-content',
-      { opacity: 0, x: -50 },
-      { opacity: 1, x: 0, duration: 1.2, ease: 'power3.out' }
+    // Hero section page load entry animations (centered)
+    gsap.fromTo('.hero-content-centered',
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out' }
     );
-    gsap.fromTo('.hero-image-container',
-      { opacity: 0, x: 50 },
-      { opacity: 1, x: 0, duration: 1.2, ease: 'power3.out', delay: 0.2 }
+
+    // Scroll-triggered slide animations for name and subtitle
+    gsap.to('.hero-title-centered', {
+      xPercent: -50,
+      opacity: 0,
+      scrollTrigger: {
+        trigger: '.hero-section-centered',
+        start: 'top top',
+        end: 'bottom 20%',
+        scrub: true,
+      }
+    });
+
+    gsap.to('.hero-subtitle-centered', {
+      xPercent: 50,
+      opacity: 0,
+      scrollTrigger: {
+        trigger: '.hero-section-centered',
+        start: 'top top',
+        end: 'bottom 20%',
+        scrub: true,
+      }
+    });
+
+    // Fade out the download button and scroll indicator as we scroll down
+    gsap.to('.hero-btn-primary', {
+      opacity: 0,
+      y: 30,
+      scrollTrigger: {
+        trigger: '.hero-section-centered',
+        start: 'top top',
+        end: '40% top',
+        scrub: true,
+      }
+    });
+
+    gsap.to('.scroll-indicator', {
+      opacity: 0,
+      scrollTrigger: {
+        trigger: '.hero-section-centered',
+        start: 'top top',
+        end: '20% top',
+        scrub: true,
+      }
+    });
+
+    // Scroll-triggered animations for all sections
+    const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+    sections.forEach((id) => {
+      const isSocial = id === '#social';
+
+      // Title and subtitle slide/fade-in
+      gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          scrollTrigger: {
+            trigger: id,
+            start: isSocial ? 'top 98%' : 'top 95%',
+            end: isSocial ? 'top 92%' : 'top 75%',
+            scrub: true,
+          }
+        }
+      );
+
+      // Grid items slide/fade-in (excluding stack items)
+      if (id !== '#stack') {
+        const itemsClass = id === '#social' ? '.social-item-static' : 
+                           '.work-grid-item';
+
+        gsap.fromTo(`${id} ${itemsClass}`,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: id,
+              start: isSocial ? 'top 95%' : 'top 90%',
+              end: isSocial ? 'top 85%' : 'top 70%',
+              scrub: true,
+            }
+          }
+        );
+      }
+    });
+
+    // Custom animation for Tech Stack (#stack) items:
+    // Arrive from right to left when scrolling down, and go from left to right when scrolling up
+    gsap.fromTo('#stack .tech-item-static',
+      {
+        opacity: 0,
+        x: 180,
+        scale: 0.8,
+        rotation: 8,
+      },
+      {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        rotation: 0,
+        stagger: 0.06,
+        scrollTrigger: {
+          trigger: '#stack',
+          start: 'top 90%',
+          end: 'top 50%',
+          scrub: 1.2, // Smooth scrubbing effect
+        }
+      }
     );
-  }, { scope: container });
+  }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
 
   useEffect(() => {
-    const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
-    const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
-    const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
-    const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
-    const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
+    const loadFromLocalStorage = () => {
+      const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
+      const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
+      const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
+      const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
+      const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
 
-    if (storedTech) setTechStack(storedTech);
-    if (storedWorks) setWorks(storedWorks);
-    if (storedNotes) setBlogs(storedNotes);
-    if (storedStories) setStories(storedStories);
-    if (storedConnect) setConnect(storedConnect);
+      if (storedTech) setTechStack(storedTech);
+      if (storedWorks) setWorks(storedWorks);
+      if (storedNotes) setBlogs(storedNotes);
+      if (storedStories) setStories(storedStories);
+      if (storedConnect) setConnect(storedConnect);
+    };
+
+    loadFromLocalStorage();
+
+    const handleStorageChange = (e) => {
+      if (e.key && e.key.startsWith('portfolio_')) {
+        loadFromLocalStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
-    // Refresh AOS offsets after the DOM adjusts to state loads
+    // Refresh AOS offsets and ScrollTrigger after the DOM adjusts to state loads
     const timer = setTimeout(() => {
       AOS.refresh();
+      ScrollTrigger.refresh();
     }, 150);
     return () => clearTimeout(timer);
   }, [techStack, works, blogs, stories, connect]);
 
-  const getIconForConnect = (iconName) => {
-    switch (iconName?.toLowerCase()) {
+  const getIconForConnect = (iconInput) => {
+    if (!iconInput) return <LinkIcon size={32} />;
+    const input = iconInput.trim();
+
+    // 0. Check if it's a raw SVG string
+    if (input.startsWith('<svg')) {
+      return <span className="social-icon-svg-inline" dangerouslySetInnerHTML={{ __html: input }} />;
+    }
+
+    // 1. Check if it's a FontAwesome React component string
+    if (input.startsWith('<FontAwesomeIcon') || input.includes('icon={fa')) {
+      const iconMatch = input.match(/icon\s*=\s*\{\s*(fa[A-Za-z0-9]+)\s*\}/);
+      if (iconMatch) {
+        const camelName = iconMatch[1];
+        // Convert to kebab-case
+        const name = camelName.replace(/^fa/, '').replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
+        const brands = [
+          'dev', 'github', 'linkedin', 'instagram', 'twitter', 'facebook', 'youtube', 'discord', 'slack',
+          'medium', 'twitch', 'codepen', 'gitlab', 'stack-overflow', 'hashnode', 'threads', 'tiktok',
+          'whatsapp', 'telegram', 'reddit', 'pinterest', 'google', 'apple', 'microsoft', 'aws', 'docker'
+        ];
+        const faClass = brands.includes(name) ? `fa-brands fa-${name}` : `fa-solid fa-${name}`;
+
+        // Parse style if any
+        const styleMatch = input.match(/style\s*=\s*\{\{\s*([^}]+)\s*\}\}/);
+        let styleObj = { fontSize: '24px' };
+        if (styleMatch) {
+          const styleContent = styleMatch[1];
+          styleContent.split(',').forEach(pair => {
+            const parts = pair.split(':');
+            if (parts.length >= 2) {
+              const key = parts[0].trim();
+              const val = parts.slice(1).join(':').trim().replace(/^['"]|['"]$/g, '');
+              styleObj[key] = val;
+            }
+          });
+        }
+        return <i className={faClass} style={styleObj}></i>;
+      }
+    }
+
+    // 2. Check if it's a FontAwesome HTML tag string
+    if (input.startsWith('<i ') && input.endsWith('></i>')) {
+      const classMatch = input.match(/class(?:Name)?\s*=\s*["']([^"']+)["']/);
+      const styleMatch = input.match(/style\s*=\s*\{\{\s*([^}]+)\s*\}\}/) || input.match(/style\s*=\s*["']([^"']+)["']/);
+      let classes = '';
+      if (classMatch) {
+        classes = classMatch[1];
+      }
+      let styleObj = { fontSize: '24px' };
+      if (styleMatch) {
+        const styleContent = styleMatch[1];
+        if (styleContent.includes(':')) {
+          styleContent.split(/[;,]/).forEach(pair => {
+            const parts = pair.split(':');
+            if (parts.length >= 2) {
+              const key = parts[0].trim();
+              const val = parts.slice(1).join(':').trim().replace(/^['"]|['"]$/g, '');
+              styleObj[key] = val;
+            }
+          });
+        }
+      }
+      return <i className={classes} style={styleObj}></i>;
+    }
+
+    // 3. Check if it's a raw class string (e.g. "fa-brands fa-dev")
+    if (input.startsWith('fa-') || input.includes(' fa-')) {
+      return <i className={input} style={{ fontSize: '24px' }}></i>;
+    }
+
+    // 4. Default to standard Lucide icons
+    switch (input.toLowerCase()) {
       case 'github': return <GithubIcon size={24} />;
       case 'linkedin': return <LinkedinIcon size={24} />;
       case 'instagram': return <Instagram size={24} />;
       case 'twitter': return <Twitter size={24} />;
       case 'mail': return <Mail size={24} />;
       case 'globe': return <Globe size={24} />;
+      case 'download': return <Download size={24} />;
+      case 'dev':
+      case 'dev.to':
+      case 'devto':
+        return <i className="fa-brands fa-dev" style={{ fontSize: '24px' }}></i>;
       default: return <LinkIcon size={24} />;
     }
   };
 
+
   return (
     <div className="home-container" ref={container}>
-      {/* Background glowing effects */}
-      <div className="glow-circle top-left"></div>
-      <div className="glow-circle bottom-right"></div>
-      <div className="floating-shape shape-1"></div>
-      <div className="floating-shape shape-2"></div>
-      <div className="floating-shape shape-3"></div>
-      <div className="floating-shape shape-4"></div>
-
-      <div className="hero-section">
-        <div className="hero-content">
-          <div className="badge glass-panel">
-            <span className="live-dot"></span> Available for work
+      <div className="hero-section hero-section-centered">
+        <div className="hero-content-centered">
+          <div className="hero-header-row">
+            <h1 className="hero-title hero-title-centered">
+              JAY
+            </h1>
+            <p className="hero-subtitle-centered">
+              &bull; An Cloud Architect<br /> &bull; Mern Dev <br />&bull; Full Stack Wizard
+            </p>
           </div>
-
-          <h1 className="hero-title" style={{ cursor: 'pointer' }}>
-            Hi, I'm <span className="gradient-text">Jay</span> <br />
-            Full Stack Developer
-          </h1>
-
-          <p className="hero-description" style={{ cursor: 'pointer' }}>
-            I craft responsive websites and dynamic web applications.
-            Passionate about building excellent software that improves the lives of those around me.
-          </p>
-
-          <div className="hero-actions">
-            <a
-              href="/resume.pdf"
-              download="Jay_Resume.pdf"
-              className="btn btn-primary"
-            >
-              <Download size={20} />
-              <span>Download Resume</span>
-            </a>
-
-            <a href="/github" className="btn btn-secondary glass-panel">
-              <span>View My Work</span>
-              <ChevronRight size={20} />
-            </a>
-          </div>
-
-          <div className="social-links">
-            <a href={`https://github.com/${GITHUB_USERNAME}`} target="_blank" rel="noreferrer" className="social-icon">
-              <GithubIcon size={24} />
-            </a>
-            <a href="mailto:contact@example.com" className="social-icon">
-              <Mail size={24} />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-icon">
-              <LinkedinIcon size={24} />
-            </a>
-          </div>
+          <a
+            href="/resume.pdf"
+            download
+            className="hero-btn-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Download size={18} />
+            <span>Download Resume</span>
+          </a>
         </div>
 
-        <div className="hero-image-container">
-          <div className="image-wrapper glass-panel">
-            <img
-              src={`https://github.com/${GITHUB_USERNAME}.png`}
-              alt="Jay"
-              className="profile-image"
-            />
-            <div className="floating-card glass-panel react-card" style={{ cursor: 'pointer' }}>
-              Full Stack Wizard
-            </div>
-            <div className="floating-card glass-panel mern-card" style={{ cursor: 'pointer' }}>
-              MERN Developer
-            </div>
-          </div>
+        {/* Scroll Indicator */}
+        <div className="scroll-indicator" onClick={() => {
+          const target = document.getElementById('stack');
+          if (target) {
+            if (window.lenis) {
+              window.lenis.scrollTo(target, { duration: 1.2 });
+            } else {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        }}>
+          <span>Scroll to explore</span>
+          <ChevronDown className="scroll-arrow" size={20} />
         </div>
       </div>
 
-      {/* Tech Stack Section */}
-      <section id="stack" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-right">💻</div>
-          <div className="sticker sticker-bottom-left">⚙️</div>
-          <div className="sticker sticker-center-left">🚀</div>
-          <div className="sticker sticker-top-center">🧠</div>
-          <h2 className="section-title">Tech <span className="gradient-text">Stack</span></h2>
-          <p className="section-subtitle">Technologies, frameworks, and languages I use to build applications.</p>
+      {/* Tech Stack Marquee Section */}
+      <section id="stack" className="section-container border-t border-foreground/5">
+        <h3 className="section-title text-left">Technical Arsenal</h3>
+        <p className="section-subtitle text-left">Technologies, frameworks, and tools I use to build secure applications.</p>
 
-          <div className="stack-grid">
-            {techStack.map((tech, index) => (
-              <div key={index} className="stack-item glass-panel">
-                <div className="stack-item-content">
-                  <img src={tech.icon} alt={tech.name} className="stack-icon-img" />
-                  <span className="stack-item-name">{tech.name}</span>
-                </div>
-                <div className="stack-item-tooltip">{tech.name}</div>
-              </div>
-            ))}
-          </div>
+        <div className="tech-grid-static">
+          {techStack.map((tech, index) => (
+            <div key={index} className="tech-item-static">
+              {tech.icon && tech.icon.trim().startsWith('<svg') ? (
+                <div className="tech-icon-img-static tech-icon-svg-inline" dangerouslySetInnerHTML={{ __html: tech.icon }} />
+              ) : (
+                <img src={tech.icon} alt={tech.name} className="tech-icon-img-static" />
+              )}
+              <div className="tech-item-tooltip-static">{tech.name}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Works Section */}
-      <section id="works" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-left">🎨</div>
-          <div className="sticker sticker-bottom-right">📱</div>
-          <div className="sticker sticker-center-right">💼</div>
-          <div className="sticker sticker-bottom-left">🌟</div>
-          <h2 className="section-title">Selected <span className="gradient-text">Works</span></h2>
-          <p className="section-subtitle">Projects I worked on. Each tailored to solve specific problems.</p>
+      {/* Selected Works Section */}
+      <section id="works" className="section-container border-t border-foreground/5">
+        <h3 className="section-title text-left">Selected Works</h3>
+        <p className="section-subtitle text-left">Projects I worked on. Each tailored to solve specific business problems.</p>
 
-          <div className="works-list">
-            {works.map((work, index) => (
-              <div key={index} className="work-item glass-panel">
-                <div className="work-content">
-                  <span className="work-category">{work.category}</span>
-                  <h3 className="work-title">{work.title}</h3>
-                  <p className="work-description">{work.description}</p>
-                </div>
-                <a href={work.link} className="work-link">
-                  <span>View Project</span>
+        <div className="works-grid-layout">
+          {works.map((work, index) => (
+            <div key={index} className="work-grid-item">
+              <div className="work-grid-header">
+                <span className="work-grid-category">{work.category}</span>
+                <h4 className="work-grid-title">{work.title}</h4>
+              </div>
+              <p className="work-grid-desc text-secondary">{work.description}</p>
+              <div className="work-grid-footer">
+                <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                  <span>Explore Project</span>
                   <ExternalLink size={16} />
                 </a>
+                <span className="work-grid-year">2025 - 2026</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Engineering Notes / Blogs */}
-      <section id="notes" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-right">📚</div>
-          <div className="sticker sticker-bottom-left">💡</div>
-          <div className="sticker sticker-top-left">📝</div>
-          <div className="sticker sticker-center-right">✍️</div>
-          <h2 className="section-title">Exploit <span className="gradient-text">Notes</span></h2>
-          <p className="section-subtitle">Articles and thoughts on what I've experienced.</p>
+      <section id="notes" className="section-container border-t border-foreground/5">
+        <h3 className="section-title text-left">Exploit Notes</h3>
+        <p className="section-subtitle text-left">Walkthroughs and insights on cloud architectures and application security.</p>
 
-          <div className="works-list">
-            {blogs.map((blog, index) => (
-              <div key={index} className="work-item glass-panel blog-item">
-                <div className="work-content">
-                  <h3 className="work-title">{blog.title}</h3>
-                  <p className="work-description">{blog.description}</p>
-                </div>
-                <a href={blog.link} className="work-link">
-                  <span>Read Article</span>
+        <div className="works-grid-layout">
+          {blogs.map((blog, index) => (
+            <div key={index} className="work-grid-item">
+              <div className="work-grid-header">
+                <span className="work-grid-category">Security Article</span>
+                <h4 className="work-grid-title">{blog.title}</h4>
+              </div>
+              <p className="work-grid-desc text-secondary">{blog.description}</p>
+              <div className="work-grid-footer">
+                <a href={blog.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                  <span>Read Notes</span>
                   <ChevronRight size={16} />
                 </a>
+                <span className="work-grid-year">2026</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Personal Stories */}
-      <section id="stories" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-right">📖</div>
-          <div className="sticker sticker-bottom-left">🚀</div>
-          <div className="sticker sticker-top-left">🎭</div>
-          <div className="sticker sticker-center-right">✨</div>
-          <h2 className="section-title">Personal <span className="gradient-text">Stories</span></h2>
-          <p className="section-subtitle">Stories and achievements from my personal and professional journey.</p>
+      <section id="stories" className="section-container border-t border-foreground/5">
+        <h3 className="section-title text-left">Personal Stories</h3>
+        <p className="section-subtitle text-left">Achievements and professional updates from my journey.</p>
 
-          <div className="works-list">
-            {stories.map((story, index) => (
-              <div key={index} className="work-item glass-panel story-item">
-                <div className="work-content">
-                  <h3 className="work-title">{story.title}</h3>
-                  <p className="work-description">{story.description}</p>
-                </div>
-                <a href={story.link} className="work-link">
+        <div className="works-grid-layout">
+          {stories.map((story, index) => (
+            <div key={index} className="work-grid-item">
+              <div className="work-grid-header">
+                <span className="work-grid-category">Journey Log</span>
+                <h4 className="work-grid-title">{story.title}</h4>
+              </div>
+              <p className="work-grid-desc text-secondary">{story.description}</p>
+              <div className="work-grid-footer">
+                <a href={story.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
                   <span>Read Story</span>
                   <ChevronRight size={16} />
                 </a>
+                <span className="work-grid-year">2025 - 2026</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-right">💌</div>
-          <div className="sticker sticker-bottom-left">📬</div>
-          <div className="sticker sticker-center-right">📞</div>
-          <div className="sticker sticker-top-left">✨</div>
-          <h2 className="section-title">Get In <span className="gradient-text">Touch</span></h2>
-          <p className="section-subtitle">Fill out the form below to send an email directly to my inbox.</p>
 
-          <form className="contact-form" onSubmit={(e) => {
-            e.preventDefault();
-            const name = e.target.name.value;
-            const email = e.target.email.value;
-            const phone = e.target.phone.value;
-            const message = e.target.message.value;
-            window.location.href = `mailto:jay240322@gmail.com?subject=Contact from ${name}&body=Name: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0A%0D%0AMessage:%0D%0A${message}`;
-          }}>
-            <div className="form-group">
-              <input type="text" name="name" placeholder="Your Name" required className="form-input" />
-            </div>
-            <div className="form-group">
-              <input type="email" name="email" placeholder="Your Email" required className="form-input" />
-            </div>
-            <div className="form-group">
-              <input type="tel" name="phone" placeholder="Your Phone Number" className="form-input" />
-            </div>
-            <div className="form-group">
-              <textarea name="message" placeholder="Your Message" required rows="4" className="form-input"></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary submit-btn">
-              <Mail size={20} />
-              <span>Send Message</span>
-            </button>
-          </form>
-        </div>
-      </section>
 
       {/* Social Section */}
-      <section id="social" className="section-container">
-        <div className="section-box relative-box gsap-reveal" data-aos="fade-up">
-          <div className="sticker sticker-top-left">🌐</div>
-          <div className="sticker sticker-bottom-right">💬</div>
-          <div className="sticker sticker-center-left">👋</div>
-          <div className="sticker sticker-top-center">🎈</div>
-          <h2 className="section-title">Let's <span className="gradient-text">Connect</span></h2>
-          <p className="section-subtitle">Find me on these online spaces.</p>
+      <section id="social" className="section-container border-t border-foreground/5">
+        <h3 className="section-title text-center">Got a security challenge or a project in mind? Let’s talk</h3>
+        <p className="section-subtitle text-center">Find me on these online spaces.</p>
 
-          <div className="social-grid">
-            {connect.map((item, index) => (
-              <a key={index} href={item.link} className="social-box glass-panel" target="_blank" rel="noreferrer">
-                {getIconForConnect(item.icon)}
-                <span>{item.name}</span>
-              </a>
-            ))}
-          </div>
+        <div className="social-grid-static">
+          {connect.map((item, index) => (
+            <a key={index} href={item.link} className="social-item-static" target="_blank" rel="noreferrer">
+              <span className="social-icon-wrapper-static">{getIconForConnect(item.icon)}</span>
+              <span className="social-name-static">{item.name}</span>
+            </a>
+          ))}
         </div>
       </section>
 
       {/* Footer */}
       <footer className="footer-container">
         <hr className="footer-line" />
-        <p className="footer-text">2026@jay all right reserved</p>
+        <p className="footer-text">2026 @ JAY. All rights reserved.</p><br />
+        <p className="footer-contact" style={{ marginTop: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
+          &bull; Email: <a href="mailto:pateljay0j@gmail.com" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>pateljay0j@gmail.com</a><br /><br /> &bull; Mo num: <a href="tel:+919104974534" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>+91 9104974534</a>
+        </p>
       </footer>
-    </div>
+    </div >
   );
 };
 

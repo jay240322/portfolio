@@ -21,22 +21,56 @@ html.lenis {
 }
 
 :root {
-  --bg-color: #ffffff;
-  /* Clean white background */
-  --text-primary: #1f1f1f;
-  /* Google standard near-black text */
-  --text-secondary: #5f6368;
-  /* Muted gray for descriptions */
-  --text-light: #1f1f1f;
+  --bg-color: #000000;
+  /* Pure black background */
+  --text-primary: #f3f4f6;
+  /* Off-white text */
+  --text-secondary: #9ca3af;
+  /* Muted slate text for descriptions */
+  --text-light: #e5e7eb;
   /* Support for Admin pages */
-  --text-muted: #5f6368;
+  --text-muted: #9ca3af;
   /* Support for Admin pages */
-  --accent-color: #1a73e8;
-  /* Google/Antigravity Blue */
-  --accent-glow: rgba(26, 115, 232, 0.15);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  /* Premium light glassmorphism */
-  --glass-border: rgba(0, 0, 0, 0.08);
+  --accent-color: #3b82f6;
+  /* Vibrant electric blue */
+  --accent-glow: rgba(59, 130, 246, 0.1);
+  --glass-bg: rgba(15, 15, 15, 0.75);
+  /* Premium dark glassmorphism on black */
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Admin Dashboard theme variables */
+  --admin-bg: rgba(255, 255, 255, 0.05);
+  --admin-border: rgba(255, 255, 255, 0.1);
+  --admin-input-bg: rgba(0, 0, 0, 0.2);
+  --admin-input-border: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #f8fafc;
+    /* Slate 50 background */
+    --text-primary: #0f172a;
+    /* Slate 900 primary text */
+    --text-secondary: #475569;
+    /* Slate 600 secondary text */
+    --text-light: #1e293b;
+    /* Slate 800 light text alternative */
+    --text-muted: #64748b;
+    /* Slate 500 muted text */
+    --accent-color: #2563eb;
+    /* Premium royal blue */
+    --accent-glow: rgba(37, 99, 235, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    /* Clean white glass */
+    --glass-border: rgba(15, 23, 42, 0.08);
+    /* Subtle slate border for light glass */
+
+    /* Admin Dashboard theme variables */
+    --admin-bg: rgba(15, 23, 42, 0.03);
+    --admin-border: rgba(15, 23, 42, 0.08);
+    --admin-input-bg: rgba(255, 255, 255, 0.85);
+    --admin-input-border: rgba(15, 23, 42, 0.12);
+  }
 }
 
 
@@ -121,7 +155,7 @@ body {
 
 /* Custom Scrollbar from nirjar.me */
 html::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
 }
 
 html::-webkit-scrollbar-track {
@@ -129,12 +163,12 @@ html::-webkit-scrollbar-track {
 }
 
 html::-webkit-scrollbar-thumb {
-  background: #8e8e93;
+  background: #3b82f6;
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6e6e73;
+  background: #2563eb;
 }
 
 ::-webkit-scrollbar-button {
@@ -143,5 +177,5 @@ html::-webkit-scrollbar-thumb {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #8e8e93 transparent;
+  scrollbar-color: #3b82f6 transparent;
 }
