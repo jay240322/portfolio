@@ -11,81 +11,11 @@ gsap.registerPlugin(ScrollTrigger);
 const Home = () => {
   const container = useRef();
 
-  const defaultTechStack = [
-    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" },
-    { name: "Express.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" },
-    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
-    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
-    { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" },
-    { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
-    { name: "Django", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" },
-    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
-    { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
-    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" },
-    { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-    { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
-    { name: "Advance SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" }
-  ];
-
-  const defaultWorks = [
-    {
-      title: "E-Commerce Platform",
-      category: "Full Stack Development",
-      description: "A comprehensive e-commerce platform built with the MERN stack featuring user authentication, payment processing, and an admin dashboard for inventory management.",
-      link: "#"
-    },
-    {
-      title: "Real-time Chat Application",
-      category: "Web Application",
-      description: "A real-time messaging application using Socket.io and React. Supports private messaging, group chats, and read receipts with a clean, responsive UI.",
-      link: "#"
-    },
-    {
-      title: "Portfolio Website",
-      category: "Frontend Development",
-      description: "A modern, highly interactive personal portfolio website featuring glassmorphism design, dark mode, and GitHub API integration.",
-      link: "#"
-    }
-  ];
-
-  const defaultBlogs = [
-    {
-      title: "Mastering the MERN Stack in 2026",
-      description: "A deep dive into building scalable web applications using MongoDB, Express, React, and Node.js. What I learned from my recent projects.",
-      link: "#"
-    },
-    {
-      title: "Why PHP Still Matters",
-      description: "Exploring the modern PHP ecosystem and why it remains a robust choice for backend development alongside frameworks like Laravel.",
-      link: "#"
-    }
-  ];
-
-  const defaultStories = [
-    {
-      title: "My First Hackathon Experience",
-      description: "A thrilling 24-hour coding sprint where we built a solution for smart cities and won first prize. The intense challenges and lessons learned.",
-      link: "#"
-    },
-    {
-      title: "Transitioning to Full Stack Development",
-      description: "My personal journey from front-end basics to mastering backend systems, database management, and architecture designs.",
-      link: "#"
-    }
-  ];
-
-  const defaultConnect = [
-    { name: "GitHub", link: "https://github.com/jay240322", icon: "github" },
-    { name: "LinkedIn", link: "https://linkedin.com", icon: "linkedin" },
-    { name: "Hashnode", link: "https://hashnode.com", icon: "globe" },
-    { name: "Twitter", link: "https://twitter.com", icon: "twitter" }
-  ];
-
-  const [techStack, setTechStack] = useState(defaultTechStack);
-  const [works, setWorks] = useState(defaultWorks);
-  const [blogs, setBlogs] = useState(defaultBlogs);
-  const [stories, setStories] = useState(defaultStories);
-  const [connect, setConnect] = useState(defaultConnect);
+  const [techStack, setTechStack] = useState([]);
+  const [works, setWorks] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const [stories, setStories] = useState([]);
+  const [connect, setConnect] = useState([]);
 
   useGSAP(() => {
     // Hero section page load entry animations (centered)
@@ -161,8 +91,8 @@ const Home = () => {
 
       // Grid items slide/fade-in (excluding stack items)
       if (id !== '#stack') {
-        const itemsClass = id === '#social' ? '.social-item-static' : 
-                           '.work-grid-item';
+        const itemsClass = id === '#social' ? '.social-item-static' :
+          '.work-grid-item';
 
         gsap.fromTo(`${id} ${itemsClass}`,
           { opacity: 0, y: 50 },
@@ -341,7 +271,7 @@ const Home = () => {
               JAY
             </h1>
             <p className="hero-subtitle-centered">
-              &bull; An Cloud Architect<br /> &bull; Mern Dev <br />&bull; Full Stack Wizard
+              &bull; An Cloud Architect<br /> &bull; Dev<br />&bull; Operactions
             </p>
           </div>
           <a

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import GithubRepos from './pages/GithubRepos';
 import Admin from './pages/Admin';
+import ClickSpark from './components/ClickSpark';
 import Lenis from '@studio-freight/lenis';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -56,16 +57,18 @@ function AppContent() {
   const isAdminPath = location.pathname === '/admin@jay';
 
   return (
-    <div className="app-container">
-      {!isAdminPath && <Navbar />}
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/github" element={<GithubRepos />} />
-          <Route path="/admin@jay" element={<Admin />} />
-        </Routes>
-      </main>
-    </div>
+    <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
+      <div className="app-container">
+        {!isAdminPath && <Navbar />}
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/github" element={<GithubRepos />} />
+            <Route path="/admin@jay" element={<Admin />} />
+          </Routes>
+        </main>
+      </div>
+    </ClickSpark>
   );
 }
 

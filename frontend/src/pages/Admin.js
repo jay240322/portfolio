@@ -1,79 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, Edit2 } from 'lucide-react';
 import './Admin.css';
 
 const Admin = () => {
-  // Initial data fallback
-  const defaultTechStack = [
-    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" },
-    { name: "Express.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" },
-    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
-    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
-    { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" },
-    { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
-    { name: "Django", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" },
-    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
-    { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
-    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" },
-    { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-    { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
-    { name: "Advance SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" }
-  ];
-
-  const defaultWorks = [
-    {
-      title: "E-Commerce Platform",
-      category: "Full Stack Development",
-      description: "A comprehensive e-commerce platform built with the MERN stack featuring user authentication, payment processing, and an admin dashboard for inventory management.",
-      link: "#"
-    },
-    {
-      title: "Real-time Chat Application",
-      category: "Web Application",
-      description: "A real-time messaging application using Socket.io and React. Supports private messaging, group chats, and read receipts with a clean, responsive UI.",
-      link: "#"
-    },
-    {
-      title: "Portfolio Website",
-      category: "Frontend Development",
-      description: "A modern, highly interactive personal portfolio website featuring glassmorphism design, dark mode, and GitHub API integration.",
-      link: "#"
-    }
-  ];
-
-  const defaultNotes = [
-    {
-      title: "Mastering the MERN Stack in 2026",
-      description: "A deep dive into building scalable web applications using MongoDB, Express, React, and Node.js. What I learned from my recent projects.",
-      link: "#"
-    },
-    {
-      title: "Why PHP Still Matters",
-      description: "Exploring the modern PHP ecosystem and why it remains a robust choice for backend development alongside frameworks like Laravel.",
-      link: "#"
-    }
-  ];
-
-  const defaultStories = [
-    {
-      title: "My First Hackathon Experience",
-      description: "A thrilling 24-hour coding sprint where we built a solution for smart cities and won first prize. The intense challenges and lessons learned.",
-      link: "#"
-    },
-    {
-      title: "Transitioning to Full Stack Development",
-      description: "My personal journey from front-end basics to mastering backend systems, database management, and architecture designs.",
-      link: "#"
-    }
-  ];
-
-  const defaultConnect = [
-    { name: "GitHub", link: "https://github.com/jay240322", icon: "github" },
-    { name: "LinkedIn", link: "https://linkedin.com", icon: "linkedin" },
-    { name: "Hashnode", link: "https://hashnode.com", icon: "globe" },
-    { name: "Twitter", link: "https://twitter.com", icon: "twitter" }
-  ];
-
   // States
   const [techStack, setTechStack] = useState([]);
   const [works, setWorks] = useState([]);
@@ -104,18 +33,18 @@ const Admin = () => {
   const [draggedIndex, setDraggedIndex] = useState(null);
 
   useEffect(() => {
-    // Load from local storage or use defaults
+    // Load from local storage
     const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
     const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
     const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
     const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
     const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
 
-    setTechStack(storedTech || defaultTechStack);
-    setWorks(storedWorks || defaultWorks);
-    setNotes(storedNotes || defaultNotes);
-    setStories(storedStories || defaultStories);
-    setConnect(storedConnect || defaultConnect);
+    setTechStack(storedTech || []);
+    setWorks(storedWorks || []);
+    setNotes(storedNotes || []);
+    setStories(storedStories || []);
+    setConnect(storedConnect || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -288,21 +217,6 @@ const Admin = () => {
     saveConnect(updated);
   };
 
-  const handleResetDefaults = () => {
-    if (window.confirm("Are you sure you want to reset all sections to their default values? This will erase any custom additions you have made.")) {
-      localStorage.removeItem('portfolio_techStack');
-      localStorage.removeItem('portfolio_works');
-      localStorage.removeItem('portfolio_notes');
-      localStorage.removeItem('portfolio_stories');
-      localStorage.removeItem('portfolio_connect');
-      setTechStack(defaultTechStack);
-      setWorks(defaultWorks);
-      setNotes(defaultNotes);
-      setStories(defaultStories);
-      setConnect(defaultConnect);
-    }
-  };
-
   return (
     <div className="admin-container">
       {/* Background glowing effects from Home */}
@@ -312,9 +226,6 @@ const Admin = () => {
       <div className="admin-header">
         <h1 className="hero-title"><span className="gradient-text">Admin</span> Dashboard</h1>
         <p className="hero-description">Manage your portfolio content here.</p>
-        <button className="reset-btn" onClick={handleResetDefaults}>
-          <RefreshCw size={18} /> Reset All to Defaults
-        </button>
       </div>
 
       {/* Tech Stack Admin */}
