@@ -410,7 +410,7 @@ const Home = () => {
               JAY
             </h1>
             <p className="hero-subtitle-centered">
-              &bull; An Cloud Architect<br /> &bull; Security<br />&bull; Automation
+              &bull; An Cloud Architect<br /> &bull; Security<br />&bull; Automation<br />&bull; Dev
             </p>
           </div>
           <a
