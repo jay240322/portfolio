@@ -268,7 +268,7 @@ const Home = () => {
         const res = await fetch(`${API_URL}/api/portfolio-all`);
         if (!res.ok) throw new Error('Failed to fetch from backend');
         const data = await res.json();
-        
+
         if (data && Object.keys(data).length > 0) {
           if (data.techStack) setTechStack(data.techStack);
           if (data.works) setWorks(data.works);
@@ -410,7 +410,7 @@ const Home = () => {
               JAY
             </h1>
             <p className="hero-subtitle-centered">
-              &bull; An Cloud Architect<br /> &bull; Dev<br />&bull; Operactions
+              &bull; An Cloud Architect<br /> &bull; Security<br />&bull; Automation
             </p>
           </div>
           <a

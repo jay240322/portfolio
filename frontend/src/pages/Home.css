@@ -516,7 +516,7 @@
 
   /* Ensure the title does not overflow on very small devices */
   .hero-title-centered {
-    font-size: clamp(3.5rem, 15vw, 6rem);
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
     letter-spacing: 4px;
   }
 
@@ -581,7 +581,7 @@
 
 @media (max-width: 480px) {
   .hero-title-centered {
-    font-size: clamp(3rem, 18vw, 4.5rem);
+    font-size: clamp(2rem, 9vw, 3rem);
     letter-spacing: 2px;
   }
 
