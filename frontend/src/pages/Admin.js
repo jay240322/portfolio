@@ -3,6 +3,8 @@ import { Plus, Trash2, Edit2, FileText, Upload } from 'lucide-react';
 import './Admin.css';
 
 const Admin = () => {
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   // States
   const [techStack, setTechStack] = useState([]);
   const [works, setWorks] = useState([]);
@@ -12,6 +14,11 @@ const Admin = () => {
   const [resume, setResume] = useState(null);
   const [resumeError, setResumeError] = useState('');
   const [resumeSuccess, setResumeSuccess] = useState('');
+
+  // Password & Sync status states
+  const [adminPassword, setAdminPassword] = useState(sessionStorage.getItem('admin_password') || '');
+  const [syncStatus, setSyncStatus] = useState({ type: '', message: '' });
+  const [dbConnected, setDbConnected] = useState(true);
 
   // Form visibility states
   const [showTechForm, setShowTechForm] = useState(false);
@@ -36,25 +43,81 @@ const Admin = () => {
   const [draggedIndex, setDraggedIndex] = useState(null);
 
   useEffect(() => {
-    // Load from local storage
-    const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
-    const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
-    const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
-    const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
-    const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
-    const storedResume = localStorage.getItem('portfolio_resume');
+    const loadData = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/portfolio-all`);
+        if (!res.ok) throw new Error('Failed to fetch from backend');
+        const data = await res.json();
+        
+        if (data && Object.keys(data).length > 0) {
+          if (data.techStack) setTechStack(data.techStack);
+          if (data.works) setWorks(data.works);
+          if (data.notes) setNotes(data.notes);
+          if (data.stories) setStories(data.stories);
+          if (data.connect) setConnect(data.connect);
+          if (data.resume) setResume(data.resume);
+          setDbConnected(true);
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend API unavailable. Falling back to local storage:', err.message);
+        if (err.message.includes('configure MONGO_URI') || err.message.includes('Database is not connected') || err.message.includes('Failed to fetch')) {
+          setDbConnected(false);
+        }
+      }
+      
+      // Fallback to local storage
+      const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
+      const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
+      const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
+      const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
+      const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
+      const storedResume = localStorage.getItem('portfolio_resume');
 
-    setTechStack(storedTech || []);
-    setWorks(storedWorks || []);
-    setNotes(storedNotes || []);
-    setStories(storedStories || []);
-    setConnect(storedConnect || []);
-    setResume(storedResume || null);
+      setTechStack(storedTech || []);
+      setWorks(storedWorks || []);
+      setNotes(storedNotes || []);
+      setStories(storedStories || []);
+      setConnect(storedConnect || []);
+      setResume(storedResume || null);
+    };
+
+    loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Save backend helper
+  const saveToBackend = async (key, value) => {
+    setSyncStatus({ type: '', message: '' });
+    try {
+      const res = await fetch(`${API_URL}/api/portfolio/${key}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminPassword}`
+        },
+        body: JSON.stringify({ value })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to save to database');
+      }
+      setSyncStatus({ type: 'success', message: `${key.replace(/([A-Z])/g, ' $1')} saved to database successfully!` });
+      setTimeout(() => setSyncStatus({ type: '', message: '' }), 4000);
+      return true;
+    } catch (err) {
+      console.error(err);
+      setSyncStatus({ type: 'error', message: err.message || 'Error saving to database' });
+      return false;
+    }
+  };
+
   // Save helpers
-  const saveTechStack = (data) => { setTechStack(data); localStorage.setItem('portfolio_techStack', JSON.stringify(data)); };
+  const saveTechStack = (data) => { 
+    setTechStack(data); 
+    localStorage.setItem('portfolio_techStack', JSON.stringify(data)); 
+    saveToBackend('techStack', data);
+  };
 
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
@@ -78,11 +141,13 @@ const Admin = () => {
   const handleDragEnd = () => {
     setDraggedIndex(null);
     localStorage.setItem('portfolio_techStack', JSON.stringify(techStack));
+    saveToBackend('techStack', techStack);
   };
-  const saveWorks = (data) => { setWorks(data); localStorage.setItem('portfolio_works', JSON.stringify(data)); };
-  const saveNotes = (data) => { setNotes(data); localStorage.setItem('portfolio_notes', JSON.stringify(data)); };
-  const saveStories = (data) => { setStories(data); localStorage.setItem('portfolio_stories', JSON.stringify(data)); };
-  const saveConnect = (data) => { setConnect(data); localStorage.setItem('portfolio_connect', JSON.stringify(data)); };
+
+  const saveWorks = (data) => { setWorks(data); localStorage.setItem('portfolio_works', JSON.stringify(data)); saveToBackend('works', data); };
+  const saveNotes = (data) => { setNotes(data); localStorage.setItem('portfolio_notes', JSON.stringify(data)); saveToBackend('notes', data); };
+  const saveStories = (data) => { setStories(data); localStorage.setItem('portfolio_stories', JSON.stringify(data)); saveToBackend('stories', data); };
+  const saveConnect = (data) => { setConnect(data); localStorage.setItem('portfolio_connect', JSON.stringify(data)); saveToBackend('connect', data); };
 
   // Handlers
   const handleAddTech = () => {
@@ -247,6 +312,7 @@ const Admin = () => {
         setResume(base64String);
         localStorage.setItem('portfolio_resume', base64String);
         setResumeSuccess('Resume updated successfully!');
+        saveToBackend('resume', base64String);
       } catch (err) {
         setResumeError('Failed to read file. Please try again.');
       }
@@ -262,6 +328,7 @@ const Admin = () => {
     localStorage.removeItem('portfolio_resume');
     setResumeSuccess('Custom resume removed. Default resume will be used.');
     setResumeError('');
+    saveToBackend('resume', null);
   };
 
   return (
@@ -273,6 +340,77 @@ const Admin = () => {
       <div className="admin-header">
         <h1 className="hero-title"><span className="gradient-text">Admin</span> Dashboard</h1>
         <p className="hero-description">Manage your portfolio content here.</p>
+      </div>
+
+      {/* DB Connection Warning */}
+      {!dbConnected && (
+        <div className="db-warning-banner" style={{
+          background: 'rgba(239, 68, 68, 0.15)',
+          border: '1px solid #ef4444',
+          color: '#ef4444',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginBottom: '2rem',
+          textAlign: 'center',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <strong>⚠️ Database Disconnected:</strong> Please set the <code>MONGO_URI</code> environment variable on your Vercel/local backend to save your portfolio content permanently.
+        </div>
+      )}
+
+      {/* Sync Status Toast/Notification */}
+      {syncStatus.message && (
+        <div className="sync-status-banner" style={{
+          background: syncStatus.type === 'success' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+          border: syncStatus.type === 'success' ? '1px solid #22c55e' : '1px solid #ef4444',
+          color: syncStatus.type === 'success' ? '#22c55e' : '#ef4444',
+          padding: '1rem',
+          borderRadius: '8px',
+          marginBottom: '2rem',
+          textAlign: 'center',
+          backdropFilter: 'blur(10px)'
+        }}>
+          {syncStatus.message}
+        </div>
+      )}
+
+      {/* Admin Password Input */}
+      <div className="password-section" style={{
+        background: 'rgba(255, 255, 255, 0.03)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        padding: '1.5rem',
+        borderRadius: '12px',
+        marginBottom: '2rem',
+        backdropFilter: 'blur(20px)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.8rem'
+      }}>
+        <label htmlFor="admin-password-input" style={{ fontWeight: 'bold', color: 'white' }}>🔑 Admin Authentication Password</label>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <input
+            id="admin-password-input"
+            type="password"
+            placeholder="Enter Admin Password to save changes..."
+            value={adminPassword}
+            onChange={(e) => {
+              setAdminPassword(e.target.value);
+              sessionStorage.setItem('admin_password', e.target.value);
+            }}
+            style={{
+              flex: 1,
+              padding: '0.8rem 1rem',
+              borderRadius: '8px',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: 'rgba(0, 0, 0, 0.2)',
+              color: 'white',
+              fontSize: '1rem'
+            }}
+          />
+        </div>
+        <p style={{ fontSize: '0.85rem', color: '#8a8a8a', margin: 0 }}>
+          Make sure this password matches the <code>ADMIN_PASSWORD</code> environment variable configured in your backend.
+        </p>
       </div>
 
       {/* Tech Stack Admin */}

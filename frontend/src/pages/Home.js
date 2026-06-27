@@ -137,6 +137,8 @@ const Home = () => {
   }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
 
   useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
     const loadFromLocalStorage = () => {
       const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
       const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
@@ -157,7 +159,33 @@ const Home = () => {
       }
     };
 
-    loadFromLocalStorage();
+    const loadFromBackend = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/portfolio-all`);
+        if (!res.ok) throw new Error('Failed to fetch from backend');
+        const data = await res.json();
+        
+        if (data && Object.keys(data).length > 0) {
+          if (data.techStack) setTechStack(data.techStack);
+          if (data.works) setWorks(data.works);
+          if (data.notes) setBlogs(data.notes);
+          if (data.stories) setStories(data.stories);
+          if (data.connect) setConnect(data.connect);
+          if (data.resume) {
+            setResumeUrl(data.resume);
+          } else {
+            setResumeUrl('/resume.pdf');
+          }
+        } else {
+          loadFromLocalStorage();
+        }
+      } catch (err) {
+        console.warn('Backend API unavailable. Falling back to local storage:', err.message);
+        loadFromLocalStorage();
+      }
+    };
+
+    loadFromBackend();
 
     const handleStorageChange = (e) => {
       if (e.key && e.key.startsWith('portfolio_')) {
