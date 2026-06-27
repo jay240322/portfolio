@@ -17,6 +17,17 @@ const Home = () => {
   const [stories, setStories] = useState([]);
   const [connect, setConnect] = useState([]);
   const [resumeUrl, setResumeUrl] = useState('/resume.pdf');
+  const [activeTechIndex, setActiveTechIndex] = useState(null);
+
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      setActiveTechIndex(null);
+    };
+    document.addEventListener('click', handleDocumentClick);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -448,7 +459,14 @@ const Home = () => {
 
         <div className="tech-grid-static">
           {techStack.map((tech, index) => (
-            <div key={index} className="tech-item-static">
+            <div 
+              key={index} 
+              className={`tech-item-static ${activeTechIndex === index ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveTechIndex(activeTechIndex === index ? null : index);
+              }}
+            >
               {tech.icon && tech.icon.trim().startsWith('<svg') ? (
                 <div className="tech-icon-img-static tech-icon-svg-inline" dangerouslySetInnerHTML={{ __html: tech.icon }} />
               ) : (

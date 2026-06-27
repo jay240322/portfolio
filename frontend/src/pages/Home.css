@@ -560,9 +560,19 @@
     height: 30px;
   }
 
-  /* Hide tooltips on mobile/touch screens to avoid sticky hover states */
+  /* Allow tooltips to show on mobile when tech item is clicked/active */
   .tech-item-tooltip-static {
-    display: none !important;
+    display: block !important;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(8px);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tech-item-static.active .tech-item-tooltip-static {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
   }
 
   /* Make footer elements stack cleanly on mobile */
