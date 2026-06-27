@@ -32,9 +32,12 @@ const PortfolioItemSchema = new mongoose.Schema({
 
 const PortfolioItem = mongoose.model('PortfolioItem', PortfolioItemSchema);
 
-// Middleware
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace('://', '://www.') : null,
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace('://www.', '://') : null,
+  'https://www.jaypatel.online',
+  'https://jaypatel.online',
   'http://localhost:3000'
 ].filter(Boolean);
 
