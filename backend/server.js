@@ -8,18 +8,11 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'change-me';
 
-let dbConnected = false;
-
-// Connect to MongoDB
+// Initial connection attempt (runs when server container spins up)
 if (MONGO_URI) {
   mongoose.connect(MONGO_URI)
-    .then(() => {
-      console.log('Connected to MongoDB');
-      dbConnected = true;
-    })
-    .catch((err) => {
-      console.error('MongoDB connection error:', err);
-    });
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('Initial MongoDB connection error:', err));
 } else {
   console.warn('MONGO_URI is not defined in environment variables. Database features will be disabled.');
 }
@@ -53,12 +46,23 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' })); // support base64 uploads like pdf resumes
 
-// Database Connection check middleware
-const ensureDb = (req, res, next) => {
-  if (!dbConnected && mongoose.connection.readyState !== 1) {
-    return res.status(503).json({ error: 'Database is not connected. Please configure MONGO_URI.' });
+// Database Connection check middleware (ensures connection is ready before processing any DB request)
+const ensureDb = async (req, res, next) => {
+  if (mongoose.connection.readyState === 1) {
+    return next();
   }
-  next();
+  
+  try {
+    if (!MONGO_URI) {
+      return res.status(503).json({ error: 'Database MONGO_URI is not configured.' });
+    }
+    console.log('Connecting to MongoDB asynchronously...');
+    await mongoose.connect(MONGO_URI);
+    next();
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    res.status(503).json({ error: 'Database connection failed: ' + err.message });
+  }
 };
 
 // Routes
@@ -69,7 +73,7 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'UP', 
-    database: dbConnected || mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED',
+    database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED',
     message: 'Backend server is healthy and running' 
   });
 });
