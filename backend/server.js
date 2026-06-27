@@ -50,19 +50,6 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' })); // support base64 uploads like pdf resumes
 
-// Auth Middleware
-const checkAdmin = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Authorization header missing' });
-  }
-  const token = authHeader.split(' ')[1];
-  if (token !== ADMIN_PASSWORD) {
-    return res.status(403).json({ error: 'Invalid admin password' });
-  }
-  next();
-};
-
 // Database Connection check middleware
 const ensureDb = (req, res, next) => {
   if (!dbConnected && mongoose.connection.readyState !== 1) {
@@ -108,8 +95,8 @@ app.get('/api/portfolio/:key', ensureDb, async (req, res) => {
   }
 });
 
-// SAVE a single portfolio key (e.g. techStack) - Admin only
-app.post('/api/portfolio/:key', checkAdmin, ensureDb, async (req, res) => {
+// SAVE a single portfolio key (e.g. techStack)
+app.post('/api/portfolio/:key', ensureDb, async (req, res) => {
   try {
     const { value } = req.body;
     const item = await PortfolioItem.findOneAndUpdate(

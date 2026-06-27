@@ -16,7 +16,6 @@ const Admin = () => {
   const [resumeSuccess, setResumeSuccess] = useState('');
 
   // Password & Sync status states
-  const [adminPassword, setAdminPassword] = useState(sessionStorage.getItem('admin_password') || '');
   const [syncStatus, setSyncStatus] = useState({ type: '', message: '' });
   const [dbConnected, setDbConnected] = useState(true);
 
@@ -93,8 +92,7 @@ const Admin = () => {
       const res = await fetch(`${API_URL}/api/portfolio/${key}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${adminPassword}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ value })
       });
@@ -374,44 +372,6 @@ const Admin = () => {
         </div>
       )}
 
-      {/* Admin Password Input */}
-      <div className="password-section" style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        padding: '1.5rem',
-        borderRadius: '12px',
-        marginBottom: '2rem',
-        backdropFilter: 'blur(20px)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.8rem'
-      }}>
-        <label htmlFor="admin-password-input" style={{ fontWeight: 'bold', color: 'white' }}>🔑 Admin Authentication Password</label>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <input
-            id="admin-password-input"
-            type="password"
-            placeholder="Enter Admin Password to save changes..."
-            value={adminPassword}
-            onChange={(e) => {
-              setAdminPassword(e.target.value);
-              sessionStorage.setItem('admin_password', e.target.value);
-            }}
-            style={{
-              flex: 1,
-              padding: '0.8rem 1rem',
-              borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              background: 'rgba(0, 0, 0, 0.2)',
-              color: 'white',
-              fontSize: '1rem'
-            }}
-          />
-        </div>
-        <p style={{ fontSize: '0.85rem', color: '#8a8a8a', margin: 0 }}>
-          Make sure this password matches the <code>ADMIN_PASSWORD</code> environment variable configured in your backend.
-        </p>
-      </div>
 
       {/* Tech Stack Admin */}
       <section className="section-container admin-section">
