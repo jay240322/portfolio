@@ -95,45 +95,49 @@ const Home = () => {
         const itemsClass = id === '#social' ? '.social-item-static' :
           '.work-grid-item';
 
-        gsap.fromTo(`${id} ${itemsClass}`,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            scrollTrigger: {
-              trigger: id,
-              start: isSocial ? 'top 95%' : 'top 90%',
-              end: isSocial ? 'top 85%' : 'top 70%',
-              scrub: true,
+        if (document.querySelectorAll(`${id} ${itemsClass}`).length > 0) {
+          gsap.fromTo(`${id} ${itemsClass}`,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              scrollTrigger: {
+                trigger: id,
+                start: isSocial ? 'top 95%' : 'top 90%',
+                end: isSocial ? 'top 85%' : 'top 70%',
+                scrub: true,
+              }
             }
-          }
-        );
+          );
+        }
       }
     });
 
     // Custom animation for Tech Stack (#stack) items:
     // Arrive from right to left when scrolling down, and go from left to right when scrolling up
-    gsap.fromTo('#stack .tech-item-static',
-      {
-        opacity: 0,
-        x: 180,
-        scale: 0.8,
-        rotation: 8,
-      },
-      {
-        opacity: 1,
-        x: 0,
-        scale: 1,
-        rotation: 0,
-        stagger: 0.06,
-        scrollTrigger: {
-          trigger: '#stack',
-          start: 'top 90%',
-          end: 'top 50%',
-          scrub: 1.2, // Smooth scrubbing effect
+    if (document.querySelectorAll('#stack .tech-item-static').length > 0) {
+      gsap.fromTo('#stack .tech-item-static',
+        {
+          opacity: 0,
+          x: 180,
+          scale: 0.8,
+          rotation: 8,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          rotation: 0,
+          stagger: 0.06,
+          scrollTrigger: {
+            trigger: '#stack',
+            start: 'top 90%',
+            end: 'top 50%',
+            scrub: 1.2, // Smooth scrubbing effect
+          }
         }
-      }
-    );
+      );
+    }
   }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
 
   useEffect(() => {
