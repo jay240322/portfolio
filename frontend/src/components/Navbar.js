@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User, Mail } from 'lucide-react';
+import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
