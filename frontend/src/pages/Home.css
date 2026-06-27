@@ -496,6 +496,105 @@
   }
 }
 
+@media (max-width: 768px) {
+  .home-container {
+    padding-top: 80px;
+  }
+
+  /* Reduce huge section padding from 6rem on desktop to 3.5rem on mobile */
+  .section-container {
+    padding: 3.5rem 1.25rem !important;
+  }
+
+  /* Centered subtitle styling with layout-safe lists on mobile */
+  .hero-subtitle-centered {
+    font-size: 1.1rem;
+    padding: 0 0.5rem;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  /* Ensure the title does not overflow on very small devices */
+  .hero-title-centered {
+    font-size: clamp(3.5rem, 15vw, 6rem);
+    letter-spacing: 4px;
+  }
+
+  .hero-header-row {
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .scroll-indicator {
+    bottom: 1.5rem;
+  }
+
+  /* Reduce massive card padding (3rem) to optimize space */
+  .work-grid-item {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .work-grid-title {
+    font-size: 1.4rem;
+  }
+
+  .work-grid-desc {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Center the static tech grids & social icons for symmetry on mobile */
+  .tech-grid-static, .social-grid-static {
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .tech-item-static, .social-item-static {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+  }
+
+  .tech-icon-img-static, .tech-icon-svg-inline svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Hide tooltips on mobile/touch screens to avoid sticky hover states */
+  .tech-item-tooltip-static {
+    display: none !important;
+  }
+
+  /* Make footer elements stack cleanly on mobile */
+  .footer-container {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  .footer-text {
+    font-size: 1rem;
+  }
+
+  .footer-contact {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title-centered {
+    font-size: clamp(3rem, 18vw, 4.5rem);
+    letter-spacing: 2px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+}
+
 /* Custom inline SVG styles for Admin panel additions */
 .tech-icon-svg-inline svg {
   width: 36px;

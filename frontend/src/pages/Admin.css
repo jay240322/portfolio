@@ -377,3 +377,47 @@
   border: 1px solid rgba(34, 197, 94, 0.2);
   color: #22c55e;
 }
+
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 90px 1.25rem 30px;
+  }
+  
+  .admin-header h1 {
+    font-size: 2rem;
+  }
+  
+  .admin-items-list {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .admin-item {
+    flex: 1 1 100%;
+    min-width: 0;
+    padding: 12px;
+  }
+  
+  .add-container {
+    padding: 15px;
+  }
+  
+  .resume-actions-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn-preview, .btn-remove-resume {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .resume-upload-label {
+    padding: 20px 15px;
+  }
+  
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+}

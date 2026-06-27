@@ -174,10 +174,37 @@
 }
 
 @media (max-width: 768px) {
-  .repos-title {
-    font-size: 2.5rem;
+  .repos-container {
+    padding: 100px 1.25rem 3rem;
   }
+  
+  .repos-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .repos-title {
+    font-size: 2.25rem;
+  }
+  
+  .repos-subtitle {
+    font-size: 1rem;
+    padding: 0 0.5rem;
+  }
+  
   .repos-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .repo-card {
+    padding: 1.25rem;
+  }
+  
+  .repo-name {
+    font-size: 1.15rem;
+  }
+  
+  .no-repos {
+    padding: 2.5rem 1.25rem;
   }
 }

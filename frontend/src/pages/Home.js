@@ -19,125 +19,225 @@ const Home = () => {
   const [resumeUrl, setResumeUrl] = useState('/resume.pdf');
 
   useGSAP(() => {
-    // Hero section page load entry animations (centered)
-    gsap.fromTo('.hero-content-centered',
-      { opacity: 0, y: 50 },
-      { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out' }
-    );
+    const mm = gsap.matchMedia();
 
-    // Scroll-triggered slide animations for name and subtitle
-    gsap.to('.hero-title-centered', {
-      xPercent: -50,
-      opacity: 0,
-      scrollTrigger: {
-        trigger: '.hero-section-centered',
-        start: 'top top',
-        end: 'bottom 20%',
-        scrub: true,
-      }
-    });
-
-    gsap.to('.hero-subtitle-centered', {
-      xPercent: 50,
-      opacity: 0,
-      scrollTrigger: {
-        trigger: '.hero-section-centered',
-        start: 'top top',
-        end: 'bottom 20%',
-        scrub: true,
-      }
-    });
-
-    // Fade out the download button and scroll indicator as we scroll down
-    gsap.to('.hero-btn-primary', {
-      opacity: 0,
-      y: 30,
-      scrollTrigger: {
-        trigger: '.hero-section-centered',
-        start: 'top top',
-        end: '40% top',
-        scrub: true,
-      }
-    });
-
-    gsap.to('.scroll-indicator', {
-      opacity: 0,
-      scrollTrigger: {
-        trigger: '.hero-section-centered',
-        start: 'top top',
-        end: '20% top',
-        scrub: true,
-      }
-    });
-
-    // Scroll-triggered animations for all sections
-    const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
-    sections.forEach((id) => {
-      const isSocial = id === '#social';
-
-      // Title and subtitle slide/fade-in
-      gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          scrollTrigger: {
-            trigger: id,
-            start: isSocial ? 'top 98%' : 'top 95%',
-            end: isSocial ? 'top 92%' : 'top 75%',
-            scrub: true,
-          }
-        }
+    // Desktop/Tablet animations
+    mm.add("(min-width: 769px)", () => {
+      // Hero section page load entry animations (centered)
+      gsap.fromTo('.hero-content-centered',
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out' }
       );
 
-      // Grid items slide/fade-in (excluding stack items)
-      if (id !== '#stack') {
-        const itemsClass = id === '#social' ? '.social-item-static' :
-          '.work-grid-item';
+      // Scroll-triggered slide animations for name and subtitle
+      gsap.to('.hero-title-centered', {
+        xPercent: -50,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: 'bottom 20%',
+          scrub: true,
+        }
+      });
 
-        if (document.querySelectorAll(`${id} ${itemsClass}`).length > 0) {
-          gsap.fromTo(`${id} ${itemsClass}`,
-            { opacity: 0, y: 50 },
-            {
-              opacity: 1,
-              y: 0,
-              scrollTrigger: {
-                trigger: id,
-                start: isSocial ? 'top 95%' : 'top 90%',
-                end: isSocial ? 'top 85%' : 'top 70%',
-                scrub: true,
-              }
+      gsap.to('.hero-subtitle-centered', {
+        xPercent: 50,
+        opacity: 0,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: 'bottom 20%',
+          scrub: true,
+        }
+      });
+
+      // Fade out the download button and scroll indicator as we scroll down
+      gsap.to('.hero-btn-primary', {
+        opacity: 0,
+        y: 30,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: '40% top',
+          scrub: true,
+        }
+      });
+
+      gsap.to('.scroll-indicator', {
+        opacity: 0,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: '20% top',
+          scrub: true,
+        }
+      });
+
+      // Scroll-triggered animations for all sections
+      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      sections.forEach((id) => {
+        const isSocial = id === '#social';
+
+        // Title and subtitle slide/fade-in
+        gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: id,
+              start: isSocial ? 'top 98%' : 'top 95%',
+              end: isSocial ? 'top 92%' : 'top 75%',
+              scrub: true,
             }
-          );
+          }
+        );
+
+        // Grid items slide/fade-in (excluding stack items)
+        if (id !== '#stack') {
+          const itemsClass = id === '#social' ? '.social-item-static' :
+            '.work-grid-item';
+
+          if (document.querySelectorAll(`${id} ${itemsClass}`).length > 0) {
+            gsap.fromTo(`${id} ${itemsClass}`,
+              { opacity: 0, y: 50 },
+              {
+                opacity: 1,
+                y: 0,
+                scrollTrigger: {
+                  trigger: id,
+                  start: isSocial ? 'top 95%' : 'top 90%',
+                  end: isSocial ? 'top 85%' : 'top 70%',
+                  scrub: true,
+                }
+              }
+            );
+          }
         }
+      });
+
+      // Custom animation for Tech Stack (#stack) items:
+      // Arrive from right to left when scrolling down, and go from left to right when scrolling up
+      if (document.querySelectorAll('#stack .tech-item-static').length > 0) {
+        gsap.fromTo('#stack .tech-item-static',
+          {
+            opacity: 0,
+            x: 180,
+            scale: 0.8,
+            rotation: 8,
+          },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            rotation: 0,
+            stagger: 0.06,
+            scrollTrigger: {
+              trigger: '#stack',
+              start: 'top 90%',
+              end: 'top 50%',
+              scrub: 1.2, // Smooth scrubbing effect
+            }
+          }
+        );
       }
     });
 
-    // Custom animation for Tech Stack (#stack) items:
-    // Arrive from right to left when scrolling down, and go from left to right when scrolling up
-    if (document.querySelectorAll('#stack .tech-item-static').length > 0) {
-      gsap.fromTo('#stack .tech-item-static',
-        {
-          opacity: 0,
-          x: 180,
-          scale: 0.8,
-          rotation: 8,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          rotation: 0,
-          stagger: 0.06,
-          scrollTrigger: {
-            trigger: '#stack',
-            start: 'top 90%',
-            end: 'top 50%',
-            scrub: 1.2, // Smooth scrubbing effect
+    // Mobile specific animations (avoiding horizontal transformations to prevent overflow)
+    mm.add("(max-width: 768px)", () => {
+      // Hero section page load entry animations (gentler fade on mobile)
+      gsap.fromTo('.hero-content-centered',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' }
+      );
+
+      // Scroll-triggered simple fade animations (no layout-breaking horizontal movements)
+      gsap.to('.hero-title-centered, .hero-subtitle-centered', {
+        opacity: 0,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: 'bottom 40%',
+          scrub: true,
+        }
+      });
+
+      // Fade out the download button and scroll indicator as we scroll down
+      gsap.to('.hero-btn-primary, .scroll-indicator', {
+        opacity: 0,
+        scrollTrigger: {
+          trigger: '.hero-section-centered',
+          start: 'top top',
+          end: '30% top',
+          scrub: true,
+        }
+      });
+
+      // Scroll-triggered fade-in animations for all sections
+      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      sections.forEach((id) => {
+        // Gentle vertical fade-in on mobile
+        gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: id,
+              start: 'top 95%',
+              end: 'top 80%',
+              scrub: true,
+            }
+          }
+        );
+
+        if (id !== '#stack') {
+          const itemsClass = id === '#social' ? '.social-item-static' : '.work-grid-item';
+
+          if (document.querySelectorAll(`${id} ${itemsClass}`).length > 0) {
+            gsap.fromTo(`${id} ${itemsClass}`,
+              { opacity: 0, y: 35 },
+              {
+                opacity: 1,
+                y: 0,
+                scrollTrigger: {
+                  trigger: id,
+                  start: 'top 95%',
+                  end: 'top 75%',
+                  scrub: true,
+                }
+              }
+            );
           }
         }
-      );
-    }
+      });
+
+      // Custom animation for Tech Stack (#stack) items (vertical fade-in only)
+      if (document.querySelectorAll('#stack .tech-item-static').length > 0) {
+        gsap.fromTo('#stack .tech-item-static',
+          {
+            opacity: 0,
+            y: 20,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.04,
+            scrollTrigger: {
+              trigger: '#stack',
+              start: 'top 95%',
+              end: 'top 65%',
+              scrub: true,
+            }
+          }
+        );
+      }
+    });
+
+    return () => mm.revert();
   }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
 
   useEffect(() => {
