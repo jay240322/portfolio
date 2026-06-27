@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
+import { Plus, Trash2, Edit2, FileText, Upload } from 'lucide-react';
 import './Admin.css';
 
 const Admin = () => {
@@ -9,6 +9,9 @@ const Admin = () => {
   const [notes, setNotes] = useState([]);
   const [stories, setStories] = useState([]);
   const [connect, setConnect] = useState([]);
+  const [resume, setResume] = useState(null);
+  const [resumeError, setResumeError] = useState('');
+  const [resumeSuccess, setResumeSuccess] = useState('');
 
   // Form visibility states
   const [showTechForm, setShowTechForm] = useState(false);
@@ -39,12 +42,14 @@ const Admin = () => {
     const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
     const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
     const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
+    const storedResume = localStorage.getItem('portfolio_resume');
 
     setTechStack(storedTech || []);
     setWorks(storedWorks || []);
     setNotes(storedNotes || []);
     setStories(storedStories || []);
     setConnect(storedConnect || []);
+    setResume(storedResume || null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -215,6 +220,48 @@ const Admin = () => {
     const updated = [...connect];
     updated.splice(index, 1);
     saveConnect(updated);
+  };
+
+  const handleResumeUpload = (e) => {
+    setResumeError('');
+    setResumeSuccess('');
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type is PDF
+    if (file.type !== 'application/pdf') {
+      setResumeError('Please select a valid PDF file.');
+      return;
+    }
+
+    // Validate size (limit to 4.5MB to fit in 5MB localStorage)
+    if (file.size > 4.5 * 1024 * 1024) {
+      setResumeError('File is too large. Please select a PDF file smaller than 4.5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const base64String = event.target.result;
+        setResume(base64String);
+        localStorage.setItem('portfolio_resume', base64String);
+        setResumeSuccess('Resume updated successfully!');
+      } catch (err) {
+        setResumeError('Failed to read file. Please try again.');
+      }
+    };
+    reader.onerror = () => {
+      setResumeError('An error occurred while reading the file.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveResume = () => {
+    setResume(null);
+    localStorage.removeItem('portfolio_resume');
+    setResumeSuccess('Custom resume removed. Default resume will be used.');
+    setResumeError('');
   };
 
   return (
@@ -461,6 +508,55 @@ const Admin = () => {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Resume Admin Section */}
+      <section className="section-container admin-section">
+        <div className="section-box relative-box">
+          <div className="sticker sticker-top-right">📄</div>
+          <div className="sticker sticker-bottom-left">📎</div>
+          <h2 className="section-title">Manage <span className="gradient-text">Resume</span></h2>
+          
+          <div className="resume-manage-box">
+            <div className="resume-status">
+              <span className="status-label">Current Resume: </span>
+              {resume ? (
+                <span className="status-value custom-uploaded">Custom PDF Uploaded</span>
+              ) : (
+                <span className="status-value default-used">Default (/resume.pdf)</span>
+              )}
+            </div>
+
+            {resume && (
+              <div className="resume-actions-row">
+                <a href={resume} download="resume.pdf" className="btn-preview">
+                  <FileText size={16} /> Preview Current Resume
+                </a>
+                <button className="btn-remove-resume" onClick={handleRemoveResume}>
+                  <Trash2 size={16} /> Remove Custom Resume
+                </button>
+              </div>
+            )}
+
+            <div className="resume-upload-zone">
+              <label htmlFor="resume-file-input" className="resume-upload-label">
+                <Upload size={24} />
+                <span>Choose a PDF file to update resume</span>
+                <span className="file-limit">Max size 4.5MB</span>
+              </label>
+              <input 
+                id="resume-file-input" 
+                type="file" 
+                accept=".pdf" 
+                onChange={handleResumeUpload} 
+                className="resume-file-input-hidden" 
+              />
+            </div>
+
+            {resumeError && <div className="resume-message error">{resumeError}</div>}
+            {resumeSuccess && <div className="resume-message success">{resumeSuccess}</div>}
+          </div>
         </div>
       </section>
     </div>

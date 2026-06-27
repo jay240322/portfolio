@@ -54,7 +54,8 @@ function App() {
 
 function AppContent() {
   const location = useLocation();
-  const isAdminPath = location.pathname === '/admin@jay';
+  const adminRoute = process.env.REACT_APP_ADMIN_ROUTE || '/admin@jay';
+  const isAdminPath = location.pathname === adminRoute;
 
   return (
     <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
@@ -64,7 +65,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/github" element={<GithubRepos />} />
-            <Route path="/admin@jay" element={<Admin />} />
+            <Route path={adminRoute} element={<Admin />} />
           </Routes>
         </main>
       </div>

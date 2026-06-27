@@ -16,6 +16,7 @@ const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [stories, setStories] = useState([]);
   const [connect, setConnect] = useState([]);
+  const [resumeUrl, setResumeUrl] = useState('/resume.pdf');
 
   useGSAP(() => {
     // Hero section page load entry animations (centered)
@@ -142,12 +143,18 @@ const Home = () => {
       const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
       const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
       const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
+      const storedResume = localStorage.getItem('portfolio_resume');
 
       if (storedTech) setTechStack(storedTech);
       if (storedWorks) setWorks(storedWorks);
       if (storedNotes) setBlogs(storedNotes);
       if (storedStories) setStories(storedStories);
       if (storedConnect) setConnect(storedConnect);
+      if (storedResume) {
+        setResumeUrl(storedResume);
+      } else {
+        setResumeUrl('/resume.pdf');
+      }
     };
 
     loadFromLocalStorage();
@@ -275,8 +282,8 @@ const Home = () => {
             </p>
           </div>
           <a
-            href="/resume.pdf"
-            download
+            href={resumeUrl}
+            download="resume.pdf"
             className="hero-btn-primary"
             target="_blank"
             rel="noopener noreferrer"
