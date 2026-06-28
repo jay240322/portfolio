@@ -421,12 +421,12 @@ const Home = () => {
               JAY
             </h1>
             <p className="hero-subtitle-centered">
-              &bull; An Cloud Architect<br /> &bull; Security<br />&bull; Automation<br />&bull; Dev
+              &bull; A Cloud Architect<br /> &bull; Security<br />&bull; Automation<br />&bull; Dev
             </p>
           </div>
           <a
             href={resumeUrl}
-            download="resume.pdf"
+            download="Jay_resume.pdf"
             className="hero-btn-primary"
             target="_blank"
             rel="noopener noreferrer"
