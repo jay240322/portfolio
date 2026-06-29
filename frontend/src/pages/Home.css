@@ -87,6 +87,12 @@
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
   cursor: pointer;
   z-index: 20;
+
+  &:hover {
+    background-color: black;
+    border: white;
+    color: white;
+  }
 }
 
 /* Scroll indicator styling */
