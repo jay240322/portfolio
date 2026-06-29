@@ -64,7 +64,7 @@ const Home = () => {
       });
 
       // Fade out the download button and scroll indicator as we scroll down
-      gsap.to('.button', {
+      gsap.to('.hero-btn-primary', {
         opacity: 0,
         y: 30,
         scrollTrigger: {
@@ -175,7 +175,7 @@ const Home = () => {
       });
 
       // Fade out the download button and scroll indicator as we scroll down
-      gsap.to('.button, .scroll-indicator', {
+      gsap.to('.hero-btn-primary, .scroll-indicator', {
         opacity: 0,
         scrollTrigger: {
           trigger: '.hero-section-centered',
@@ -424,24 +424,16 @@ const Home = () => {
               &bull; A Cloud Architect<br /> &bull; Security<br />&bull; Automation<br />&bull; Dev
             </p>
           </div>
-          <button
-            className="button"
-            onClick={() => {
-              const link = document.createElement('a');
-              link.href = resumeUrl;
-              link.download = "Jay_resume.pdf";
-              link.target = "_blank";
-              link.rel = "noopener noreferrer";
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }}
+          <a
+            href={resumeUrl}
+            download="Jay_resume.pdf"
+            className="hero-btn-primary"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <span className="button_lg">
-              <span className="button_sl"></span>
-              <span className="button_text">Download Now</span>
-            </span>
-          </button>
+            <Download size={18} />
+            <span>Download Resume</span>
+          </a>
         </div>
 
         {/* Scroll Indicator */}
