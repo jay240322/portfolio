@@ -16,7 +16,7 @@ const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [stories, setStories] = useState([]);
   const [connect, setConnect] = useState([]);
-  const [resumeUrl, setResumeUrl] = useState('/resume.pdf');
+  const [resumeUrl, setResumeUrl] = useState('/Jay_resume.pdf');
   const [activeTechIndex, setActiveTechIndex] = useState(null);
 
   useEffect(() => {
