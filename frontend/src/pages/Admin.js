@@ -54,7 +54,12 @@ const Admin = () => {
           if (data.notes) setNotes(data.notes);
           if (data.stories) setStories(data.stories);
           if (data.connect) setConnect(data.connect);
-          if (data.resume) setResume(data.resume);
+          if (data.resume) {
+            setResume(data.resume);
+          } else {
+            const storedResume = localStorage.getItem('portfolio_resume');
+            setResume(storedResume || null);
+          }
           setDbConnected(true);
           return;
         }

@@ -289,7 +289,12 @@ const Home = () => {
           if (data.resume) {
             setResumeUrl(data.resume);
           } else {
-            setResumeUrl('/resume.pdf');
+            const storedResume = localStorage.getItem('portfolio_resume');
+            if (storedResume) {
+              setResumeUrl(storedResume);
+            } else {
+              setResumeUrl('/resume.pdf');
+            }
           }
         } else {
           loadFromLocalStorage();
