@@ -10,13 +10,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   const container = useRef();
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const [techStack, setTechStack] = useState([]);
   const [works, setWorks] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [stories, setStories] = useState([]);
   const [connect, setConnect] = useState([]);
-  const [resumeUrl, setResumeUrl] = useState('/Jay_resume.pdf');
   const [activeTechIndex, setActiveTechIndex] = useState(null);
 
   useEffect(() => {
@@ -252,26 +252,18 @@ const Home = () => {
   }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
 
   useEffect(() => {
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
     const loadFromLocalStorage = () => {
       const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
       const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
       const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
       const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
       const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
-      const storedResume = localStorage.getItem('portfolio_resume');
 
       if (storedTech) setTechStack(storedTech);
       if (storedWorks) setWorks(storedWorks);
       if (storedNotes) setBlogs(storedNotes);
       if (storedStories) setStories(storedStories);
       if (storedConnect) setConnect(storedConnect);
-      if (storedResume) {
-        setResumeUrl(storedResume);
-      } else {
-        setResumeUrl('/resume.pdf');
-      }
     };
 
     const loadFromBackend = async () => {
@@ -286,16 +278,6 @@ const Home = () => {
           if (data.notes) setBlogs(data.notes);
           if (data.stories) setStories(data.stories);
           if (data.connect) setConnect(data.connect);
-          if (data.resume) {
-            setResumeUrl(data.resume);
-          } else {
-            const storedResume = localStorage.getItem('portfolio_resume');
-            if (storedResume) {
-              setResumeUrl(storedResume);
-            } else {
-              setResumeUrl('/resume.pdf');
-            }
-          }
         } else {
           loadFromLocalStorage();
         }
@@ -317,6 +299,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -430,8 +413,7 @@ const Home = () => {
             </p>
           </div>
           <a
-            href={resumeUrl}
-            download="Jay_resume.pdf"
+            href={`${API_URL}/api/resume/download`}
             className="hero-btn-primary"
             target="_blank"
             rel="noopener noreferrer"

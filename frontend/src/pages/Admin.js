@@ -633,7 +633,7 @@ const Admin = () => {
 
             {resume && (
               <div className="resume-actions-row">
-                <a href={resume} download="resume.pdf" className="btn-preview">
+                <a href={`${API_URL}/api/resume/download`} download="resume.pdf" className="btn-preview" target="_blank" rel="noopener noreferrer">
                   <FileText size={16} /> Preview Current Resume
                 </a>
                 <button className="btn-remove-resume" onClick={handleRemoveResume}>
