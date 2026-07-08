@@ -99,10 +99,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-color);
 }
 
 @keyframes fadeIn {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User } from 'lucide-react';
 import './Navbar.css';
 
@@ -7,6 +7,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,36 +18,42 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (location.hash) {
-      const targetId = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
-      const element = document.getElementById(targetId);
-      if (element) {
+    if (location.pathname === '/') {
+      const sectionId = location.state?.scrollToSection;
+      const alreadyScrolled = location.state?.scrolled;
+
+      if (sectionId && !alreadyScrolled) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          setTimeout(() => {
+            if (window.lenis) {
+              window.lenis.scrollTo(element, { duration: 1.2 });
+            } else {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+            // Mark as scrolled in the history state to prevent scrolling back on navigation POP or refresh
+            navigate('/', { replace: true, state: { scrollToSection: sectionId, scrolled: true } });
+          }, 150);
+        }
+      } else if (!sectionId) {
         setTimeout(() => {
           if (window.lenis) {
-            window.lenis.scrollTo(element, { duration: 1.2 });
+            window.lenis.scrollTo(0, { duration: 1.2 });
           } else {
-            element.scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }, 150);
       }
-    } else {
-      setTimeout(() => {
-        if (window.lenis) {
-          window.lenis.scrollTo(0, { duration: 1.2 });
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 150);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const navLinks = [
     { path: '/', label: 'Home', icon: <Home size={18} /> },
-    { path: '/#stack', label: 'Stack', icon: <Code size={18} />, isHash: true },
-    { path: '/#works', label: 'Works', icon: <Briefcase size={18} />, isHash: true },
-    { path: '/#notes', label: 'Notes', icon: <BookOpen size={18} />, isHash: true },
-    { path: '/#stories', label: 'Stories', icon: <Book size={18} />, isHash: true },
-    { path: '/#social', label: 'Social', icon: <User size={18} />, isHash: true },
+    { path: '/', label: 'Stack', icon: <Code size={18} />, state: { scrollToSection: 'stack' } },
+    { path: '/', label: 'Works', icon: <Briefcase size={18} />, state: { scrollToSection: 'works' } },
+    { path: '/', label: 'Notes', icon: <BookOpen size={18} />, state: { scrollToSection: 'notes' } },
+    { path: '/', label: 'Stories', icon: <Book size={18} />, state: { scrollToSection: 'stories' } },
+    { path: '/', label: 'Social', icon: <User size={18} />, state: { scrollToSection: 'social' } },
     { path: '/github', label: 'GitHub', icon: <Code size={18} /> },
   ];
 
@@ -59,27 +66,20 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="nav-links desktop-only">
-          {navLinks.map((link) => (
-            link.isHash ? (
-              <a
-                key={link.path}
-                href={link.path}
-                className="nav-link"
-              >
-                {link.icon}
-                <span>{link.label}</span>
-              </a>
-            ) : (
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path && !link.state;
+            return (
               <Link
-                key={link.path}
+                key={link.label}
                 to={link.path}
-                className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+                state={link.state}
+                className={`nav-link ${isActive ? 'active' : ''}`}
               >
                 {link.icon}
                 <span>{link.label}</span>
               </Link>
-            )
-          ))}
+            );
+          })}
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -94,29 +94,21 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="mobile-menu glass-panel mobile-only animate-fade-in">
-          {navLinks.map((link) => (
-            link.isHash ? (
-              <a
-                key={link.path}
-                href={link.path}
-                className="mobile-link"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.icon}
-                <span>{link.label}</span>
-              </a>
-            ) : (
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path && !link.state;
+            return (
               <Link
-                key={link.path}
+                key={link.label}
                 to={link.path}
-                className={`mobile-link ${location.pathname === link.path ? 'active' : ''}`}
+                state={link.state}
+                className={`mobile-link ${isActive ? 'active' : ''}`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.icon}
                 <span>{link.label}</span>
               </Link>
-            )
-          ))}
+            );
+          })}
         </div>
       )}
     </nav>
