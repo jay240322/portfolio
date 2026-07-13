@@ -21,7 +21,7 @@ html.lenis {
 }
 
 :root {
-  --bg-color: #000000;
+  --bg-color: #1B1C1E;
   /* Pure black background */
   --text-primary: #f3f4f6;
   /* Off-white text */
@@ -86,6 +86,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--bg-color);
 }
 
 
