@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Cpu, HardDrive, ShieldCheck, ChevronRight, Activity } from 'lucide-react';
+import { Terminal, ChevronRight, Activity } from 'lucide-react';
 import './Devspace.css';
 
 const Devspace = () => {
@@ -13,12 +13,6 @@ const Devspace = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const systemStats = [
-    { label: 'CPU Load', value: '12.4%', icon: <Cpu size={18} />, color: '#10b981' },
-    { label: 'Memory Usage', value: '4.8 GB / 16 GB', icon: <HardDrive size={18} />, color: '#3b82f6' },
-    { label: 'Sec Audits', value: 'Passed', icon: <ShieldCheck size={18} />, color: '#8b5cf6' }
-  ];
 
   return (
     <div className="devspace-container">
