@@ -422,7 +422,34 @@
   }
 }
 
+/* Custom styling to decrease the size of selected works and notes grid items */
+#works .work-grid-item,
+#notes .work-grid-item {
+  padding: 1.5rem;
+  min-height: 100px;
+}
 
+#works .work-grid-title,
+#notes .work-grid-title {
+  font-size: 1.2rem;
+}
+
+#works .work-grid-header,
+#notes .work-grid-header {
+  margin-bottom: 1rem;
+}
+
+#works .work-grid-desc,
+#notes .work-grid-desc {
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.work-grid-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 
 /* 6. Static Social Connect Grid (matching Tech Arsenal layout) */
 .social-grid-static {

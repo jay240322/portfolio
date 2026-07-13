@@ -446,8 +446,8 @@ const Home = () => {
 
         <div className="tech-grid-static">
           {techStack.map((tech, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`tech-item-static ${activeTechIndex === index ? 'active' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -479,10 +479,18 @@ const Home = () => {
               </div>
               <p className="work-grid-desc text-secondary">{work.description}</p>
               <div className="work-grid-footer">
-                <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                  <span>Explore Project</span>
-                  <ExternalLink size={16} />
-                </a>
+                <div className="work-grid-actions">
+                  <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                    <span>Explore Project</span>
+                    <ExternalLink size={16} />
+                  </a>
+                  {work.enableDownload && work.downloadUrl && (
+                    <a href={work.downloadUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer" download>
+                      <span>Download</span>
+                      <Download size={16} />
+                    </a>
+                  )}
+                </div>
                 <span className="work-grid-year">2025 - 2026</span>
               </div>
             </div>
@@ -562,7 +570,7 @@ const Home = () => {
         <hr className="footer-line" />
         <p className="footer-text">2026 @ JAY. All rights reserved.</p><br />
         <p className="footer-contact" style={{ marginTop: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-          &bull; Email: <a href="mailto:pateljay0j@gmail.com" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>pateljay0j@gmail.com</a><br /><br /> &bull; Mo num: <a href="tel:+919104974534" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>+91 9104974534</a>
+          &bull; Email: <a href="mailto:pateljay0j@gmail.com" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>pateljay0j@gmail.com</a><br /><br /> &bull;  num: <a href="tel:+919104974534" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>+91 9104974534</a>
         </p>
       </footer>
     </div >
