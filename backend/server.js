@@ -44,7 +44,7 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(express.json({ limit: '10mb' })); // support base64 uploads like pdf resumes
+app.use(express.json({ limit: '50mb' })); // support base64 uploads like pdf resumes & binaries
 
 // Database Connection check middleware (ensures connection is ready before processing any DB request)
 const ensureDb = async (req, res, next) => {
@@ -78,15 +78,50 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// GET all portfolio data in a single response
+// GET all portfolio data in a single response (excluding heavy binary files)
 app.get('/api/portfolio-all', ensureDb, async (req, res) => {
   try {
-    const items = await PortfolioItem.find({});
+    const items = await PortfolioItem.find({ key: { $ne: 'devspace_exe' } });
     const data = {};
     items.forEach(item => {
       data[item.key] = item.value;
     });
     res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET devspace status (whether the executable exists in MongoDB)
+app.get('/api/devspace/status', ensureDb, async (req, res) => {
+  try {
+    const item = await PortfolioItem.findOne({ key: 'devspace_exe' }, { key: 1 });
+    res.json({ exists: !!item });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET devspace executable download
+app.get('/api/devspace/download', ensureDb, async (req, res) => {
+  try {
+    const item = await PortfolioItem.findOne({ key: 'devspace_exe' });
+    if (!item || !item.value) {
+      return res.status(404).json({ error: 'Executable not found' });
+    }
+
+    const base64Data = item.value;
+    const match = base64Data.match(/^data:([^;]+);base64,(.+)$/);
+    let buffer;
+    if (match) {
+      buffer = Buffer.from(match[2], 'base64');
+    } else {
+      buffer = Buffer.from(base64Data, 'base64');
+    }
+
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', 'attachment; filename="devspace.exe"');
+    return res.send(buffer);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

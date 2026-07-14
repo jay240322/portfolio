@@ -15,6 +15,11 @@ const Admin = () => {
   const [resumeError, setResumeError] = useState('');
   const [resumeSuccess, setResumeSuccess] = useState('');
 
+  // Devspace Executable states
+  const [devspaceExists, setDevspaceExists] = useState(false);
+  const [devspaceError, setDevspaceError] = useState('');
+  const [devspaceSuccess, setDevspaceSuccess] = useState('');
+
   // Password & Sync status states
   const [syncStatus, setSyncStatus] = useState({ type: '', message: '' });
   const [dbConnected, setDbConnected] = useState(true);
@@ -84,6 +89,17 @@ const Admin = () => {
       setStories(storedStories || []);
       setConnect(storedConnect || []);
       setResume(storedResume || null);
+
+      // Check Devspace status
+      try {
+        const devspaceRes = await fetch(`${API_URL}/api/devspace/status`);
+        if (devspaceRes.ok) {
+          const devspaceData = await devspaceRes.json();
+          setDevspaceExists(devspaceData.exists);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch devspace status:', err);
+      }
     };
 
     loadData();
@@ -340,6 +356,62 @@ const Admin = () => {
     setResumeSuccess('Custom resume removed. Default resume will be used.');
     setResumeError('');
     saveToBackend('resume', null);
+  };
+
+  const handleDevspaceUpload = (e) => {
+    setDevspaceError('');
+    setDevspaceSuccess('');
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileName = file.name.toLowerCase();
+    if (!fileName.endsWith('.exe')) {
+      setDevspaceError('Please select a valid standalone executable (.exe) file.');
+      return;
+    }
+
+    if (file.size > 15 * 1024 * 1024) {
+      setDevspaceError('File is too large. Please select a file smaller than 15MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const base64String = event.target.result;
+        setDevspaceSuccess('Uploading executable to database...');
+        const success = await saveToBackend('devspace_exe', base64String);
+        if (success) {
+          setDevspaceSuccess('Devspace executable updated successfully!');
+          setDevspaceExists(true);
+        } else {
+          setDevspaceError('Failed to upload. See sync status.');
+          setDevspaceSuccess('');
+        }
+      } catch (err) {
+        setDevspaceError('Failed to read file. Please try again.');
+        setDevspaceSuccess('');
+      }
+    };
+    reader.onerror = () => {
+      setDevspaceError('An error occurred while reading the file.');
+      setDevspaceSuccess('');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveDevspace = async () => {
+    setDevspaceError('');
+    setDevspaceSuccess('');
+    setDevspaceSuccess('Removing executable...');
+    const success = await saveToBackend('devspace_exe', null);
+    if (success) {
+      setDevspaceSuccess('Devspace executable removed successfully!');
+      setDevspaceExists(false);
+    } else {
+      setDevspaceError('Failed to remove executable.');
+      setDevspaceSuccess('');
+    }
   };
 
   return (
@@ -672,6 +744,54 @@ const Admin = () => {
 
             {resumeError && <div className="resume-message error">{resumeError}</div>}
             {resumeSuccess && <div className="resume-message success">{resumeSuccess}</div>}
+          </div>
+        </div>
+      </section>
+
+      {/* Devspace Executable Admin Section */}
+      <section className="admin-section">
+        <div className="admin-card glass-panel">
+          <div className="card-header">
+            <h2 className="section-title">Manage <span className="gradient-text">Devspace Executable</span></h2>
+          </div>
+          <div className="resume-manage-box">
+            <div className="resume-status">
+              <span className="status-label">Current Standalone Executable: </span>
+              {devspaceExists ? (
+                <span className="status-value custom-uploaded">Uploaded (Stored in MongoDB)</span>
+              ) : (
+                <span className="status-value default-used">None (GitHub Releases fallback will be used)</span>
+              )}
+            </div>
+
+            {devspaceExists && (
+              <div className="resume-actions-row">
+                <a href={`${API_URL}/api/devspace/download`} download="devspace.exe" className="btn-preview">
+                  <FileText size={16} /> Download Executable
+                </a>
+                <button className="btn-remove-resume" onClick={handleRemoveDevspace}>
+                  <Trash2 size={16} /> Remove Executable
+                </button>
+              </div>
+            )}
+
+            <div className="resume-upload-zone">
+              <label htmlFor="devspace-file-input" className="resume-upload-label">
+                <Upload size={24} />
+                <span>Choose a standalone devspace.exe to update</span>
+                <span className="file-limit">Max size 15MB</span>
+              </label>
+              <input 
+                id="devspace-file-input" 
+                type="file" 
+                accept=".exe" 
+                onChange={handleDevspaceUpload} 
+                className="resume-file-input-hidden" 
+              />
+            </div>
+
+            {devspaceError && <div className="resume-message error">{devspaceError}</div>}
+            {devspaceSuccess && <div className="resume-message success">{devspaceSuccess}</div>}
           </div>
         </div>
       </section>

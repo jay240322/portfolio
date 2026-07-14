@@ -1,7 +1,7 @@
 .devspace-container {
   min-height: 100vh;
   padding: 130px 2rem 4rem;
-  max-width: 1100px;
+  max-width: 100%;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -11,37 +11,95 @@
   /* Soften borders inside the Devspace page */
 }
 
-/* Background glow elements */
-.glow-circle {
-  position: absolute;
+/* Floating Navigation Sidebar */
+.devspace-sidebar-nav {
+  position: fixed;
+  right: calc(50vw - 750px);
+  left: auto;
+  top: 180px;
+  width: 135px;
+  /* Decreased width of the overview section */
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(15, 15, 15, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+
+.sidebar-nav-title {
+  font-size: 0.75rem;
+  /* Slightly smaller text for compact fit */
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.25rem;
+  padding-left: 0.25rem;
+}
+
+.sidebar-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sidebar-nav-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Smaller gap */
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  /* Slightly smaller font to fit within 135px */
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.35rem 0.4rem;
+  border-radius: 6px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-nav-btn .dot-indicator {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  filter: blur(120px);
-  z-index: 0;
-  opacity: 0.15;
-  pointer-events: none;
+  background: transparent;
+  border: 1px solid var(--text-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.glow-circle.top-left {
-  top: -150px;
-  left: -150px;
-  background: var(--accent-glow);
-  width: 600px;
-  height: 600px;
+.sidebar-nav-btn:hover .dot-indicator {
+  border-color: var(--text-primary);
 }
 
-.glow-circle.bottom-right {
-  bottom: -150px;
-  right: -150px;
-  background: #8b5cf6;
-  width: 500px;
-  height: 500px;
+.sidebar-nav-btn.active {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.sidebar-nav-btn.active .dot-indicator {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
 }
 
 /* Custom Navbar / Breadcrumbs (home > devspace) */
 .devspace-navbar {
   position: fixed;
   top: 0;
-  left: -250px;
+  left: 0;
   right: 0;
   z-index: 1000;
   padding: 1.5rem 2rem;
@@ -102,8 +160,8 @@
 .devspace-header {
   position: relative;
   z-index: 2;
-  margin-bottom: 3rem;
-  text-align: left;
+  margin-bottom: 3.5rem;
+  text-align: center;
 }
 
 .devspace-title {
@@ -116,8 +174,10 @@
 .devspace-subtitle {
   color: var(--text-secondary);
   font-size: 1.15rem;
-  max-width: 700px;
+  max-width: 100%;
+  width: 100%;
   line-height: 1.6;
+  margin: 0 auto;
 }
 
 /* Live Stats Grid */
@@ -355,9 +415,643 @@
   }
 }
 
+/* Open headings styling */
+.section-title-open {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 4.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.section-lead-text {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  width: 80%;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+/* Why Choose Devspace Grid & Wrapper */
+.why-choose-wrapper {
+  max-width: 80%;
+  margin: 0 auto 4rem;
+  padding: 2.25rem 2.5rem;
+  border-radius: 16px;
+}
+
+.why-choose-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 2.5rem;
+}
+
+.why-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.why-icon-box {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  color: var(--accent-color);
+  padding: 0.75rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-item h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.why-item p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Fast Installation Open Section */
+.install-desc-open {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.download-cta-open {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin: 0 auto 2rem;
+  max-width: 850px;
+  transition: all 0.3s ease;
+}
+
+.download-cta-open:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 10px 40px rgba(59, 130, 246, 0.04);
+}
+
+.download-cta-left h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.download-cta-left p.platform-tag {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.btn-download-open {
+  background: #ffffff;
+  /* Light background color */
+  color: #0f172a;
+  /* Dark text */
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.btn-download-open:hover {
+  background: #f1f5f9;
+  /* Soft hover grey */
+  color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+}
+
+.install-steps-list-open {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0 auto 2rem;
+  max-width: 850px;
+}
+
+.install-step-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.install-step-item .step-badge {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--accent-color);
+  font-weight: 800;
+  border: 1px solid var(--glass-border);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.install-step-item p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.install-step-item code {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.15rem 0.4rem;
+  border-radius: 6px;
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.releases-link-muted {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 1.5rem auto 0;
+  max-width: 850px;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.releases-link-muted a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.releases-link-muted a:hover {
+  text-decoration: underline;
+}
+
+/* Timeline Layout for Steps */
+.timeline-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.section-title-guide {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.section-subtitle-open {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin: 0 auto 3rem;
+  max-width: 850px;
+  text-align: center;
+}
+
+.timeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.timeline-step-block {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1.5rem;
+}
+
+.step-meta-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+  flex-shrink: 0;
+}
+
+.timeline-line {
+  width: 2px;
+  flex-grow: 1;
+  background: linear-gradient(to bottom, rgba(59, 130, 246, 0.3), rgba(255, 255, 255, 0.01));
+  margin-top: 0.5rem;
+}
+
+.step-content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+}
+
+.step-header-info h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.step-header-info p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 850px;
+}
+
+.step-config-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  max-width: 850px;
+}
+
+.step-config-item {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid var(--glass-border);
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-config-item strong {
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.step-config-item p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.step-config-item pre {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--glass-border);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.step-config-item code {
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}
+
+.step-terminal-box {
+  width: 100%;
+}
+
+.mini-terminal {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.mini-terminal .terminal-body {
+  min-height: 200px !important;
+  background: #090a0c;
+}
+
+/* Terminal line tags custom colors */
+.term-line.info {
+  color: #60a5fa;
+}
+
+.term-line.error {
+  color: #f87171;
+}
+
+.term-line.yellow {
+  color: #fbbf24;
+}
+
+.live-monitors-section {
+  margin-top: 2rem;
+}
+
+/* Detailed Configuration Options */
+.config-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.config-reference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  max-width: 850px;
+  margin: 0 auto 2.5rem;
+}
+
+.config-ref-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.config-ref-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+
+.config-ref-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.config-ref-card pre {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.config-ref-card code {
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.config-conclusion {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* Generated Project Structure Section */
+.structure-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.structure-box {
+  max-width: 850px;
+  margin: 0 auto 1.5rem;
+  padding: 2rem;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.structure-box pre {
+  margin: 0;
+  background: transparent;
+  border: none;
+}
+
+.structure-box code {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.note-box {
+  background: rgba(255, 255, 255, 0.01);
+  border-left: 3px solid var(--text-secondary);
+  padding: 1rem 1.5rem;
+  max-width: 850px;
+  margin: 0 auto;
+  border-radius: 0 8px 8px 0;
+}
+
+.note-box p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Develop Your Application Section */
+.develop-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.develop-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.develop-checklist-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.checklist-item .bullet-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
+  flex-shrink: 0;
+}
+
+/* Build Docker Images Section */
+.docker-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.docker-commands-box {
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cmd-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cmd-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cmd-group pre {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.cmd-group code {
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+/* Deploy to Kubernetes Section */
+.deploy-section {
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.deploy-commands-box {
+  max-width: 850px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.kubectl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.kubectl-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kubectl-col span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.kubectl-col pre {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.kubectl-col code {
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.success-note {
+  border-left-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.01);
+}
+
 /* Responsive Rules */
+@media (max-width: 1350px) {
+  .devspace-sidebar-nav {
+    display: none !important;
+  }
+}
+
 @media (max-width: 900px) {
   .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .why-choose-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .download-cta-open {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .btn-download-open {
+    justify-content: center;
+  }
+
+  .timeline-step-block {
+    grid-template-columns: 44px 1fr;
+    gap: 1rem;
+  }
+
+  .step-config-options {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .kubectl-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -382,6 +1076,69 @@
 
   .devspace-title {
     font-size: 2.2rem;
+  }
+
+  .section-title-open,
+  .section-title-guide {
+    font-size: 1.75rem;
+  }
+
+  .section-lead-text,
+  .install-desc-open,
+  .section-subtitle-open {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .why-choose-wrapper {
+    max-width: 100% !important;
+    padding: 1.5rem 1rem !important;
+  }
+
+  .why-item h3 {
+    font-size: 1.15rem;
+  }
+
+  .why-item p {
+    font-size: 0.85rem;
+  }
+
+  .step-header-info h3 {
+    font-size: 1.2rem;
+  }
+
+  .step-header-info p {
+    font-size: 0.85rem;
+  }
+
+  .download-cta-open {
+    padding: 1.25rem 1rem;
+  }
+
+  .download-cta-left h3 {
+    font-size: 1.1rem;
+  }
+
+  .download-cta-left p.platform-tag {
+    font-size: 0.75rem;
+  }
+
+  .btn-download-open {
+    font-size: 0.85rem;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .timeline-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+
+  .timeline-step-block {
+    grid-template-columns: 32px 1fr;
+    gap: 0.75rem;
   }
 
   .dashboard-header {
