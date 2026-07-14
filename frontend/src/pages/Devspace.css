@@ -41,7 +41,7 @@
 .devspace-navbar {
   position: fixed;
   top: 0;
-  left: 0;
+  left: -250px;
   right: 0;
   z-index: 1000;
   padding: 1.5rem 2rem;
@@ -51,7 +51,7 @@
 }
 
 .devspace-navbar.scrolled {
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

@@ -1,10 +1,71 @@
 .repos-container {
   min-height: 100vh;
   padding: 120px 2rem 4rem;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
+}
+
+/* Custom Navbar / Breadcrumbs (home > github) */
+.github-navbar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  right: 0;
+  z-index: 1000;
+  padding: 1.5rem 2rem;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+
+.github-navbar.scrolled {
+  padding: 1.5rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.github-nav-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+}
+
+.breadcrumb-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.breadcrumb-icon {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.breadcrumb-current {
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .glow-circle.top-right {
@@ -53,12 +114,14 @@
 }
 
 @keyframes spin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .repos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
@@ -71,6 +134,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  background-color: #251a2745;
 }
 
 .repo-card::before {
@@ -174,11 +238,25 @@
   border: 1px dashed var(--glass-border);
 }
 
+@media (max-width: 1024px) {
+  .repos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .repos-container {
     padding: 100px 1.25rem 3rem;
   }
-  
+
+  .github-navbar {
+    padding: 1rem 1.25rem;
+  }
+
+  .github-navbar.scrolled {
+    padding: 0.75rem 1.25rem;
+  }
+
   .repos-header {
     margin-bottom: 2.5rem;
   }
@@ -186,12 +264,12 @@
   .repos-title {
     font-size: 2.25rem;
   }
-  
+
   .repos-subtitle {
     font-size: 1rem;
     padding: 0 0.5rem;
   }
-  
+
   .repos-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
@@ -200,11 +278,11 @@
   .repo-card {
     padding: 1.25rem;
   }
-  
+
   .repo-name {
     font-size: 1.15rem;
   }
-  
+
   .no-repos {
     padding: 2.5rem 1.25rem;
   }

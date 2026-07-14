@@ -21,9 +21,9 @@ html.lenis {
 }
 
 :root {
-  --bg-color: #1B1C1E;
+  --bg-color: #130D14;
   /* Pure black background */
-  --text-primary: #f3f4f6;
+  --text-primary: #f2f3f4d9;
   /* Off-white text */
   --text-secondary: #9ca3af;
   /* Muted slate text for descriptions */
@@ -37,6 +37,7 @@ html.lenis {
   --glass-bg: rgba(15, 15, 15, 0.75);
   /* Premium dark glassmorphism on black */
   --glass-border: rgba(255, 255, 255, 0.08);
+  --font-family-title: system-ui;
 
   /* Admin Dashboard theme variables */
   --admin-bg: rgba(255, 255, 255, 0.05);

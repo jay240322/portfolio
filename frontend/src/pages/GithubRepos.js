@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Star, GitFork, BookOpen, ExternalLink, Activity } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Star, GitFork, BookOpen, ExternalLink, Activity, ChevronRight } from 'lucide-react';
 import './GithubRepos.css';
 
 const GithubRepos = () => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const GITHUB_USERNAME = 'jay240322';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const fetchRepos = async () => {
@@ -25,6 +35,17 @@ const GithubRepos = () => {
 
   return (
     <div className="repos-container">
+      {/* Custom Navbar (Breadcrumbs only: home > github) */}
+      <nav className={`github-navbar ${isScrolled ? 'scrolled' : ''} animate-fade-in`}>
+        <div className="github-nav-container">
+          <div className="breadcrumb">
+            <Link to="/" className="breadcrumb-link">home</Link>
+            <ChevronRight size={14} className="breadcrumb-icon" />
+            <span className="breadcrumb-current">github</span>
+          </div>
+        </div>
+      </nav>
+
       <div className="glow-circle top-right"></div>
       
       <div className="repos-header animate-fade-in">

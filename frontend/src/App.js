@@ -58,11 +58,12 @@ function AppContent() {
   const adminRoute = process.env.REACT_APP_ADMIN_ROUTE || '/admin@jay';
   const isAdminPath = location.pathname === adminRoute;
   const isDevspacePath = location.pathname === '/devspace';
+  const isGithubPath = location.pathname === '/github';
 
   return (
     <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
       <div className="app-container">
-        {!isAdminPath && !isDevspacePath && <Navbar />}
+        {!isAdminPath && !isDevspacePath && !isGithubPath && <Navbar />}
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />

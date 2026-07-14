@@ -552,7 +552,7 @@ const Home = () => {
 
       {/* Social Section */}
       <section id="social" className="section-container border-t border-foreground/5">
-        <h3 className="section-title text-center">Got a security challenge or a project in mind? Let’s talk</h3>
+        <h3 className="section-title text-center">Got a security challenge or a project in mind?<br />Let’s talk</h3>
         <p className="section-subtitle text-center">Find me on these online spaces.</p>
 
         <div className="social-grid-static">
