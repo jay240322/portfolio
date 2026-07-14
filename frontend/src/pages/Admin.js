@@ -33,7 +33,7 @@ const Admin = () => {
 
   // Form states
   const [newTech, setNewTech] = useState({ name: '', icon: '' });
-  const [newWork, setNewWork] = useState({ title: '', category: '', description: '', link: '', downloadUrl: '', enableDownload: false });
+  const [newWork, setNewWork] = useState({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false });
   const [newNote, setNewNote] = useState({ title: '', description: '', link: '' });
   const [newStory, setNewStory] = useState({ title: '', description: '', link: '' });
   const [newConnect, setNewConnect] = useState({ name: '', link: '', icon: 'link' });
@@ -206,7 +206,7 @@ const Admin = () => {
       } else {
         saveWorks([...works, newWork]);
       }
-      setNewWork({ title: '', category: '', description: '', link: '', downloadUrl: '', enableDownload: false });
+      setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false });
       setShowWorkForm(false);
     }
   };
@@ -218,6 +218,8 @@ const Admin = () => {
       category: item.category || '',
       description: item.description || '',
       link: item.link || '',
+      liveUrl: item.liveUrl || '',
+      enableLiveUrl: !!item.enableLiveUrl,
       downloadUrl: item.downloadUrl || '',
       enableDownload: !!item.enableDownload
     });
@@ -549,15 +551,15 @@ const Admin = () => {
               <input type="text" placeholder="Project Title" className="admin-input" value={newWork.title} onChange={e => setNewWork({...newWork, title: e.target.value})} />
               <input type="text" placeholder="Sub Heading / Category" className="admin-input" value={newWork.category} onChange={e => setNewWork({...newWork, category: e.target.value})} />
               <textarea placeholder="Project Description" className="admin-input" rows="3" value={newWork.description} onChange={e => setNewWork({...newWork, description: e.target.value})}></textarea>
-              <input type="text" placeholder="Project Link" className="admin-input" value={newWork.link} onChange={e => setNewWork({...newWork, link: e.target.value})} />
-              <input type="text" placeholder="Download Link (Optional)" className="admin-input" value={newWork.downloadUrl || ''} onChange={e => setNewWork({...newWork, downloadUrl: e.target.value})} />
+              <input type="text" placeholder="Project Link (GitHub URL)" className="admin-input" value={newWork.link} onChange={e => setNewWork({...newWork, link: e.target.value})} />
+              <input type="text" placeholder="Live Website URL (Optional)" className="admin-input" value={newWork.liveUrl || ''} onChange={e => setNewWork({...newWork, liveUrl: e.target.value})} />
               <div className="admin-checkbox-container" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 0' }}>
-                <input type="checkbox" id="enableDownload" checked={!!newWork.enableDownload} onChange={e => setNewWork({...newWork, enableDownload: e.target.checked})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-                <label htmlFor="enableDownload" style={{ color: 'var(--text-light)', cursor: 'pointer', fontSize: '0.95rem', userSelect: 'none' }}>Enable Download Button</label>
+                <input type="checkbox" id="enableLiveUrl" checked={!!newWork.enableLiveUrl} onChange={e => setNewWork({...newWork, enableLiveUrl: e.target.checked})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                <label htmlFor="enableLiveUrl" style={{ color: 'var(--text-light)', cursor: 'pointer', fontSize: '0.95rem', userSelect: 'none' }}>Enable See on Web Button</label>
               </div>
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddWork}>{editingWorkIndex !== null ? 'Update Project' : 'Save Project'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({title: '', category: '', description: '', link: '', downloadUrl: '', enableDownload: false})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => {setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false})}}>Cancel</button>
               </div>
             </div>
           )}
