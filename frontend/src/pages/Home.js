@@ -480,14 +480,19 @@ const Home = () => {
               <p className="work-grid-desc text-secondary">{work.description}</p>
               <div className="work-grid-footer">
                 <div className="work-grid-actions">
-                  <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                    <span>Explore Project</span>
-                    <ExternalLink size={16} />
-                  </a>
-                  {work.enableDownload && work.downloadUrl && (
-                    <a href={work.downloadUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer" download>
-                      <span>Download</span>
-                      <Download size={16} />
+                  {/* Explore Project (GitHub Link) */}
+                  {work.link && (
+                    <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                      <span>Explore Project</span>
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
+                  
+                  {/* See on Web (Live Website Link) */}
+                  {work.enableLiveUrl && work.liveUrl && (
+                    <a href={work.liveUrl} className="work-grid-link">
+                      <span>See on Web</span>
+                      <Globe size={16} />
                     </a>
                   )}
                 </div>
