@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import GithubRepos from './pages/GithubRepos';
 import Admin from './pages/Admin';
 import Devspace from './pages/Devspace';
+import Kubesense from './pages/Kubesense';
 import ClickSpark from './components/ClickSpark';
 import Lenis from '@studio-freight/lenis';
 import AOS from 'aos';
@@ -59,17 +60,19 @@ function AppContent() {
   const isAdminPath = location.pathname === adminRoute;
   const isDevspacePath = location.pathname === '/devspace';
   const isGithubPath = location.pathname === '/github';
+  const isKubesensePath = location.pathname === '/kubesense';
 
   return (
     <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
       <div className="app-container">
-        {!isAdminPath && !isDevspacePath && !isGithubPath && <Navbar />}
+        {!isAdminPath && !isDevspacePath && !isGithubPath && !isKubesensePath && <Navbar />}
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/github" element={<GithubRepos />} />
             <Route path={adminRoute} element={<Admin />} />
             <Route path="/devspace" element={<Devspace />} />
+            <Route path="/kubesense" element={<Kubesense />} />
           </Routes>
         </main>
       </div>

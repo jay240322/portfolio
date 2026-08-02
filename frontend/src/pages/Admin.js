@@ -52,7 +52,7 @@ const Admin = () => {
         const res = await fetch(`${API_URL}/api/portfolio-all`);
         if (!res.ok) throw new Error('Failed to fetch from backend');
         const data = await res.json();
-        
+
         if (data && Object.keys(data).length > 0) {
           if (data.techStack) setTechStack(data.techStack);
           if (data.works) setWorks(data.works);
@@ -74,7 +74,7 @@ const Admin = () => {
           setDbConnected(false);
         }
       }
-      
+
       // Fallback to local storage
       const storedTech = JSON.parse(localStorage.getItem('portfolio_techStack'));
       const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
@@ -132,9 +132,9 @@ const Admin = () => {
   };
 
   // Save helpers
-  const saveTechStack = (data) => { 
-    setTechStack(data); 
-    localStorage.setItem('portfolio_techStack', JSON.stringify(data)); 
+  const saveTechStack = (data) => {
+    setTechStack(data);
+    localStorage.setItem('portfolio_techStack', JSON.stringify(data));
     saveToBackend('techStack', data);
   };
 
@@ -421,7 +421,7 @@ const Admin = () => {
       {/* Background glowing effects from Home */}
       <div className="glow-circle top-left"></div>
       <div className="glow-circle bottom-right"></div>
-      
+
       <div className="admin-header">
         <h1 className="hero-title"><span className="gradient-text">Admin</span> Dashboard</h1>
         <p className="hero-description">Manage your portfolio content here.</p>
@@ -466,11 +466,11 @@ const Admin = () => {
           <div className="sticker sticker-top-right">💻</div>
           <div className="sticker sticker-bottom-left">⚙️</div>
           <h2 className="section-title">Manage <span className="gradient-text">Tech Stack</span></h2>
-          
+
           <div className="admin-items-list">
             {techStack.map((tech, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className={`admin-item ${draggedIndex === i ? 'dragging' : ''}`}
                 draggable
                 onDragStart={(e) => handleDragStart(e, i)}
@@ -504,11 +504,11 @@ const Admin = () => {
           ) : (
             <div className="add-container relative-box">
               <div className="sticker sticker-top-left">✨</div>
-              <input type="text" placeholder="Technology Name" className="admin-input" value={newTech.name} onChange={e => setNewTech({...newTech, name: e.target.value})} />
-              <input type="text" placeholder="Icon URL (e.g. from devicons)" className="admin-input" value={newTech.icon} onChange={e => setNewTech({...newTech, icon: e.target.value})} />
+              <input type="text" placeholder="Technology Name" className="admin-input" value={newTech.name} onChange={e => setNewTech({ ...newTech, name: e.target.value })} />
+              <input type="text" placeholder="Icon URL (e.g. from devicons)" className="admin-input" value={newTech.icon} onChange={e => setNewTech({ ...newTech, icon: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddTech}>{editingTechIndex !== null ? 'Update Technology' : 'Save Technology'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowTechForm(false); setEditingTechIndex(null); setNewTech({name: '', icon: ''})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowTechForm(false); setEditingTechIndex(null); setNewTech({ name: '', icon: '' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -521,7 +521,7 @@ const Admin = () => {
           <div className="sticker sticker-top-left">🎨</div>
           <div className="sticker sticker-bottom-right">📱</div>
           <h2 className="section-title">Manage <span className="gradient-text">Works</span></h2>
-          
+
           <div className="admin-items-list">
             {works.map((work, i) => (
               <div key={i} className="admin-item">
@@ -548,18 +548,18 @@ const Admin = () => {
           ) : (
             <div className="add-container relative-box">
               <div className="sticker sticker-top-right">🚀</div>
-              <input type="text" placeholder="Project Title" className="admin-input" value={newWork.title} onChange={e => setNewWork({...newWork, title: e.target.value})} />
-              <input type="text" placeholder="Sub Heading / Category" className="admin-input" value={newWork.category} onChange={e => setNewWork({...newWork, category: e.target.value})} />
-              <textarea placeholder="Project Description" className="admin-input" rows="3" value={newWork.description} onChange={e => setNewWork({...newWork, description: e.target.value})}></textarea>
-              <input type="text" placeholder="Project Link (GitHub URL)" className="admin-input" value={newWork.link} onChange={e => setNewWork({...newWork, link: e.target.value})} />
-              <input type="text" placeholder="Live Website URL (Optional)" className="admin-input" value={newWork.liveUrl || ''} onChange={e => setNewWork({...newWork, liveUrl: e.target.value})} />
+              <input type="text" placeholder="Project Title" className="admin-input" value={newWork.title} onChange={e => setNewWork({ ...newWork, title: e.target.value })} />
+              <input type="text" placeholder="Sub Heading / Category" className="admin-input" value={newWork.category} onChange={e => setNewWork({ ...newWork, category: e.target.value })} />
+              <textarea placeholder="Project Description" className="admin-input" rows="3" value={newWork.description} onChange={e => setNewWork({ ...newWork, description: e.target.value })}></textarea>
+              <input type="text" placeholder="Project Link (GitHub URL)" className="admin-input" value={newWork.link} onChange={e => setNewWork({ ...newWork, link: e.target.value })} />
+              <input type="text" placeholder="Live Website URL (Optional)" className="admin-input" value={newWork.liveUrl || ''} onChange={e => setNewWork({ ...newWork, liveUrl: e.target.value })} />
               <div className="admin-checkbox-container" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '5px 0' }}>
-                <input type="checkbox" id="enableLiveUrl" checked={!!newWork.enableLiveUrl} onChange={e => setNewWork({...newWork, enableLiveUrl: e.target.checked})} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                <input type="checkbox" id="enableLiveUrl" checked={!!newWork.enableLiveUrl} onChange={e => setNewWork({ ...newWork, enableLiveUrl: e.target.checked })} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
                 <label htmlFor="enableLiveUrl" style={{ color: 'var(--text-light)', cursor: 'pointer', fontSize: '0.95rem', userSelect: 'none' }}>Enable See on Web Button</label>
               </div>
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddWork}>{editingWorkIndex !== null ? 'Update Project' : 'Save Project'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -572,7 +572,7 @@ const Admin = () => {
           <div className="sticker sticker-top-right">📚</div>
           <div className="sticker sticker-bottom-left">💡</div>
           <h2 className="section-title">Manage <span className="gradient-text">Notes</span></h2>
-          
+
           <div className="admin-items-list">
             {notes.map((note, i) => (
               <div key={i} className="admin-item">
@@ -598,12 +598,12 @@ const Admin = () => {
           ) : (
             <div className="add-container relative-box">
               <div className="sticker sticker-bottom-right">✍️</div>
-              <input type="text" placeholder="Note Title" className="admin-input" value={newNote.title} onChange={e => setNewNote({...newNote, title: e.target.value})} />
-              <textarea placeholder="Note Description" className="admin-input" rows="3" value={newNote.description} onChange={e => setNewNote({...newNote, description: e.target.value})}></textarea>
-              <input type="text" placeholder="Note Link" className="admin-input" value={newNote.link} onChange={e => setNewNote({...newNote, link: e.target.value})} />
+              <input type="text" placeholder="Note Title" className="admin-input" value={newNote.title} onChange={e => setNewNote({ ...newNote, title: e.target.value })} />
+              <textarea placeholder="Note Description" className="admin-input" rows="3" value={newNote.description} onChange={e => setNewNote({ ...newNote, description: e.target.value })}></textarea>
+              <input type="text" placeholder="Note Link" className="admin-input" value={newNote.link} onChange={e => setNewNote({ ...newNote, link: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddNote}>{editingNoteIndex !== null ? 'Update Note' : 'Save Note'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowNoteForm(false); setEditingNoteIndex(null); setNewNote({title: '', description: '', link: ''})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowNoteForm(false); setEditingNoteIndex(null); setNewNote({ title: '', description: '', link: '' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -616,7 +616,7 @@ const Admin = () => {
           <div className="sticker sticker-top-right">📖</div>
           <div className="sticker sticker-bottom-left">🚀</div>
           <h2 className="section-title">Manage <span className="gradient-text">Stories</span></h2>
-          
+
           <div className="admin-items-list">
             {stories.map((story, i) => (
               <div key={i} className="admin-item">
@@ -642,12 +642,12 @@ const Admin = () => {
           ) : (
             <div className="add-container relative-box">
               <div className="sticker sticker-bottom-right">✍️</div>
-              <input type="text" placeholder="Story Title" className="admin-input" value={newStory.title} onChange={e => setNewStory({...newStory, title: e.target.value})} />
-              <textarea placeholder="Story Description" className="admin-input" rows="3" value={newStory.description} onChange={e => setNewStory({...newStory, description: e.target.value})}></textarea>
-              <input type="text" placeholder="Story Link" className="admin-input" value={newStory.link} onChange={e => setNewStory({...newStory, link: e.target.value})} />
+              <input type="text" placeholder="Story Title" className="admin-input" value={newStory.title} onChange={e => setNewStory({ ...newStory, title: e.target.value })} />
+              <textarea placeholder="Story Description" className="admin-input" rows="3" value={newStory.description} onChange={e => setNewStory({ ...newStory, description: e.target.value })}></textarea>
+              <input type="text" placeholder="Story Link" className="admin-input" value={newStory.link} onChange={e => setNewStory({ ...newStory, link: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddStory}>{editingStoryIndex !== null ? 'Update Story' : 'Save Story'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowStoryForm(false); setEditingStoryIndex(null); setNewStory({title: '', description: '', link: ''})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowStoryForm(false); setEditingStoryIndex(null); setNewStory({ title: '', description: '', link: '' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -662,7 +662,7 @@ const Admin = () => {
           <div className="sticker sticker-top-left">🌐</div>
           <div className="sticker sticker-bottom-right">💬</div>
           <h2 className="section-title">Manage <span className="gradient-text">Connect</span></h2>
-          
+
           <div className="admin-items-list">
             {connect.map((item, i) => (
               <div key={i} className="admin-item">
@@ -689,12 +689,12 @@ const Admin = () => {
           ) : (
             <div className="add-container relative-box">
               <div className="sticker sticker-center-left">🎈</div>
-              <input type="text" placeholder="Platform Name (e.g. GitHub)" className="admin-input" value={newConnect.name} onChange={e => setNewConnect({...newConnect, name: e.target.value})} />
-              <input type="text" placeholder="Link URL" className="admin-input" value={newConnect.link} onChange={e => setNewConnect({...newConnect, link: e.target.value})} />
-              <input type="text" placeholder="Icon Name (e.g. github, or FontAwesome React/HTML code like <FontAwesomeIcon icon={faDev} />)" className="admin-input" value={newConnect.icon} onChange={e => setNewConnect({...newConnect, icon: e.target.value})} />
+              <input type="text" placeholder="Platform Name (e.g. GitHub)" className="admin-input" value={newConnect.name} onChange={e => setNewConnect({ ...newConnect, name: e.target.value })} />
+              <input type="text" placeholder="Link URL" className="admin-input" value={newConnect.link} onChange={e => setNewConnect({ ...newConnect, link: e.target.value })} />
+              <input type="text" placeholder="Icon Name (e.g. github, or FontAwesome React/HTML code like <FontAwesomeIcon icon={faDev} />)" className="admin-input" value={newConnect.icon} onChange={e => setNewConnect({ ...newConnect, icon: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddConnect}>{editingConnectIndex !== null ? 'Update Connect Link' : 'Save Connect Link'}</button>
-                <button className="admin-cancel-btn" onClick={() => {setShowConnectForm(false); setEditingConnectIndex(null); setNewConnect({name: '', link: '', icon: 'link'})}}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowConnectForm(false); setEditingConnectIndex(null); setNewConnect({ name: '', link: '', icon: 'link' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -707,7 +707,7 @@ const Admin = () => {
           <div className="sticker sticker-top-right">📄</div>
           <div className="sticker sticker-bottom-left">📎</div>
           <h2 className="section-title">Manage <span className="gradient-text">Resume</span></h2>
-          
+
           <div className="resume-manage-box">
             <div className="resume-status">
               <span className="status-label">Current Resume: </span>
@@ -735,12 +735,12 @@ const Admin = () => {
                 <span>Choose a PDF file to update resume</span>
                 <span className="file-limit">Max size 4.5MB</span>
               </label>
-              <input 
-                id="resume-file-input" 
-                type="file" 
-                accept=".pdf" 
-                onChange={handleResumeUpload} 
-                className="resume-file-input-hidden" 
+              <input
+                id="resume-file-input"
+                type="file"
+                accept=".pdf"
+                onChange={handleResumeUpload}
+                className="resume-file-input-hidden"
               />
             </div>
 
@@ -783,12 +783,12 @@ const Admin = () => {
                 <span>Choose a standalone devspace.exe to update</span>
                 <span className="file-limit">Max size 15MB</span>
               </label>
-              <input 
-                id="devspace-file-input" 
-                type="file" 
-                accept=".exe" 
-                onChange={handleDevspaceUpload} 
-                className="resume-file-input-hidden" 
+              <input
+                id="devspace-file-input"
+                type="file"
+                accept=".exe"
+                onChange={handleDevspaceUpload}
+                className="resume-file-input-hidden"
               />
             </div>
 
