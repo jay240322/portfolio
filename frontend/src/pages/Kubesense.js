@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { 
   ChevronRight, 
   Cpu, 
-  Box, 
   Layers, 
   ExternalLink, 
   Terminal, 
@@ -11,11 +10,7 @@ import {
   Sparkles, 
   Lock, 
   Database, 
-  GitBranch, 
-  CheckCircle2, 
-  ArrowRight,
   Server,
-  RefreshCw,
   Key
 } from 'lucide-react';
 import './Kubesense.css';
@@ -24,11 +19,10 @@ const overviewLinks = [
   { id: 'overview', label: 'Overview' },
   { id: 'features', label: 'Features' },
   { id: 'architecture', label: 'Architecture' },
+  { id: 'screenshots', label: 'Dashboard UI' },
   { id: 'install', label: 'Installation' },
   { id: 'access', label: 'Access & Auth' },
-  { id: 'api', label: 'API Endpoints' },
-  { id: 'cicd', label: 'CI/CD Pipeline' },
-  { id: 'develop', label: 'Development' }
+  { id: 'api', label: 'API Endpoints' }
 ];
 
 const Kubesense = () => {
@@ -173,18 +167,6 @@ const Kubesense = () => {
           AI-Powered Kubernetes Troubleshooting Assistant — Diagnose, analyze, and resolve Kubernetes issues in seconds using Google Gemini LLM.
         </p>
 
-        {/* Tech Stack Badges */}
-        <div className="tech-badges-wrapper">
-          <img src="https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white" alt="Next.js" />
-          <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
-          <img src="https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white" alt="Kubernetes" />
-          <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker" />
-          <img src="https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white" alt="PostgreSQL" />
-          <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white" alt="GitHub Actions" />
-          <img src="https://img.shields.io/badge/ArgoCD-EF7B4D?logo=argo&logoColor=white" alt="ArgoCD" />
-          <img src="https://img.shields.io/badge/Google_Gemini-4285F4?logo=google&logoColor=white" alt="Google Gemini" />
-          <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
-        </div>
       </header>
 
       {/* 1. Overview Section */}
@@ -300,6 +282,86 @@ const Kubesense = () => {
           </div>
           <div className="diagram-caption">
             <span>Figure 1: KubeSense Microservices and AI Diagnosis Pipeline Flow</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard UI Screenshots Section */}
+      <section id="screenshots" className="kubesense-section screenshots-section animate-fade-in" style={{ animationDelay: '0.22s' }}>
+        <h2 className="section-title-open">Dashboard UI</h2>
+        <p className="section-subtitle-open">
+          Explore the visual interface of KubeSense, featuring interactive troubleshooting explorers and Gemini AI workflows.
+        </p>
+
+        <div className="screenshots-grid">
+          <div className="screenshot-card glass-panel">
+            <div className="screenshot-frame">
+              <img 
+                src="/images/kubesense/login.png" 
+                alt="KubeSense Login Portal" 
+                className="screenshot-img"
+              />
+            </div>
+            <div className="screenshot-info">
+              <h4>Login Portal</h4>
+              <p>Secure JWT-based user authentication entry gate to access the KubeSense cluster operations dashboard.</p>
+            </div>
+          </div>
+
+          <div className="screenshot-card glass-panel">
+            <div className="screenshot-frame">
+              <img 
+                src="/images/kubesense/gemini_setup.png" 
+                alt="Google Gemini API Connection Setup" 
+                className="screenshot-img"
+              />
+            </div>
+            <div className="screenshot-info">
+              <h4>Gemini API Key Configuration</h4>
+              <p>Setup panel allowing admins to securely submit Google Gemini LLM API keys for cluster analysis.</p>
+            </div>
+          </div>
+
+          <div className="screenshot-card glass-panel">
+            <div className="screenshot-frame">
+              <img 
+                src="/images/kubesense/pod_list.png" 
+                alt="Interactive Kubernetes Pod Explorer" 
+                className="screenshot-img"
+              />
+            </div>
+            <div className="screenshot-info">
+              <h4>Pod List Explorer</h4>
+              <p>Sleek tabular list tracking names, namespaces, nodes, statuses, and restart counts of active pods.</p>
+            </div>
+          </div>
+
+          <div className="screenshot-card glass-panel">
+            <div className="screenshot-frame">
+              <img 
+                src="/images/kubesense/pod_details.png" 
+                alt="Pod Metadata and Specifications Panel" 
+                className="screenshot-img"
+              />
+            </div>
+            <div className="screenshot-info">
+              <h4>Pod Details Panel</h4>
+              <p>Deep-dive inspector displaying pod metadata, age, node profiles, and matching container image details.</p>
+            </div>
+          </div>
+
+          <div className="screenshot-card glass-panel">
+            <div className="screenshot-frame">
+              <img 
+                src="/images/kubesense/pod_events.png" 
+                alt="Pod Events Timeline & Diagnostic Warnings" 
+                className="screenshot-img"
+              />
+            </div>
+            <div className="screenshot-info">
+              <h4>Pod Events & AI Diagnosis</h4>
+              <p>Timeline monitor compiling pod events, unhealthy probe logs, and triggering Gemini AI diagnostics recommendations.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -477,178 +539,16 @@ $ kubectl get nodes`}</code></pre>
         </div>
       </section>
 
-      {/* 7. CI/CD Pipeline Section */}
-      <section id="cicd" className="kubesense-section cicd-section animate-fade-in" style={{ animationDelay: '0.4s' }}>
-        <h2 className="section-title-open">🚀 CI/CD Pipeline & Deployment</h2>
-        <p className="section-subtitle-open">
-          Automated deployment and packaging pipelines ensure that updates are delivered reliably to Kubernetes using GitOps.
-        </p>
-
-        {/* Visual Pipeline Flowchart */}
-        <div className="pipeline-flow-wrapper glass-panel">
-          <h3 className="flow-title">GitOps Delivery Pipeline</h3>
-          <div className="pipeline-flow">
-            <div className="flow-node">
-              <div className="node-icon"><Cpu size={20} /></div>
-              <span>Developer</span>
-            </div>
-            <div className="flow-arrow"><ArrowRight size={18} /></div>
-
-            <div className="flow-node">
-              <div className="node-icon"><GitBranch size={20} /></div>
-              <span>GitHub Repo</span>
-            </div>
-            <div className="flow-arrow"><ArrowRight size={18} /></div>
-
-            <div className="flow-node">
-              <div className="node-icon"><Activity size={20} /></div>
-              <span>GitHub Actions</span>
-            </div>
-            <div className="flow-arrow"><ArrowRight size={18} /></div>
-
-            <div className="flow-node">
-              <div className="node-icon"><Box size={20} /></div>
-              <span>Docker Hub</span>
-            </div>
-            <div className="flow-arrow"><ArrowRight size={18} /></div>
-
-            <div className="flow-node">
-              <div className="node-icon"><RefreshCw size={20} /></div>
-              <span>ArgoCD</span>
-            </div>
-            <div className="flow-arrow"><ArrowRight size={18} /></div>
-
-            <div className="flow-node highlight">
-              <div className="node-icon"><Layers size={20} /></div>
-              <span>K8s Cluster</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Deployment Stack Icons */}
-        <div className="deployment-tech-wrapper glass-panel">
-          <h3>Deployment Components</h3>
-          <div className="deployment-tech-grid">
-            <div className="tech-item">
-              <img src="https://skillicons.dev/icons?i=docker" alt="Docker Logo" />
-              <span>Docker Containers</span>
-            </div>
-            <div className="tech-item">
-              <img src="https://skillicons.dev/icons?i=kubernetes" alt="Kubernetes Logo" />
-              <span>Kubernetes Orchestration</span>
-            </div>
-            <div className="tech-item">
-              <img src="https://skillicons.dev/icons?i=githubactions" alt="GitHub Actions Logo" />
-              <span>GitHub Actions CI</span>
-            </div>
-            <div className="tech-item">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/argocd/argocd-original.svg" alt="ArgoCD Logo" />
-              <span>ArgoCD GitOps Sync</span>
-            </div>
-            <div className="tech-item">
-              <div className="ingress-icon-fallback">🌐</div>
-              <span>Ingress Controller</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Roadmap Sub-section */}
-        <div className="roadmap-box glass-panel">
-          <h3>🛣️ Roadmap & Milestones</h3>
-          <div className="roadmap-list">
-            <div className="roadmap-item completed">
-              <CheckCircle2 size={18} className="roadmap-icon" />
-              <span>AI-powered Kubernetes Troubleshooting</span>
-            </div>
-            <div className="roadmap-item completed">
-              <CheckCircle2 size={18} className="roadmap-icon" />
-              <span>Google Gemini LLM Integration</span>
-            </div>
-            <div className="roadmap-item completed">
-              <CheckCircle2 size={18} className="roadmap-icon" />
-              <span>Cluster-wide Analysis Dashboard</span>
-            </div>
-            <div className="roadmap-item pending">
-              <span className="roadmap-dot-pending"></span>
-              <span>Multi-Cluster Management Support</span>
-            </div>
-            <div className="roadmap-item pending">
-              <span className="roadmap-dot-pending"></span>
-              <span>Official Helm Scaffolding Chart</span>
-            </div>
-            <div className="roadmap-item pending">
-              <span className="roadmap-dot-pending"></span>
-              <span>Native Prometheus & Grafana Metric Integrations</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Development & Contributing Section */}
-      <section id="develop" className="kubesense-section develop-section animate-fade-in" style={{ animationDelay: '0.45s' }}>
-        <h2 className="section-title-open">👨‍💻 Development & Contributing</h2>
-        <p className="section-subtitle-open">
-          KubeSense is open-source. Follow these steps to clone, customize, compile, and contribute back to the project.
-        </p>
-
-        <div className="development-steps-box glass-panel">
-          <div className="dev-step">
-            <h4>1. Clone the Codebase</h4>
-            <pre className="font-mono"><code>{`git clone https://github.com/jay240322/KubeSense.git
-cd KubeSense`}</code></pre>
-          </div>
-
-          <div className="dev-step">
-            <h4>2. Spin Up Feature Branches</h4>
-            <pre className="font-mono"><code>{`git checkout -b feature/your-feature-name`}</code></pre>
-          </div>
-
-          <div className="dev-step">
-            <h4>3. Local Manifest & Kustomize Deployments</h4>
-            <p>Deploy overlay changes locally via Kubernetes manifests or Kustomize overrides:</p>
-            <pre className="font-mono"><code>{`# Normal Manifest
-kubectl apply -f k8s/install.yaml
-
-# Kustomize Overlay
-kubectl apply -k k8s/overlays/dev`}</code></pre>
-          </div>
-
-          <div className="dev-step">
-            <h4>4. Commit & Trigger Automated Workflows</h4>
-            <p>Commit your updates and push the branch. GitHub Actions will automate Docker image compilation and trigger registries updates:</p>
-            <pre className="font-mono"><code>{`git add .
-git commit -m "feat: describe your change"
-git push origin feature/your-feature-name`}</code></pre>
-            <p className="pr-note">Open a Pull Request pointing to the <code>develop</code> branch to propose updates.</p>
-          </div>
-        </div>
-
-        {/* Contributing Summary Info */}
-        <div className="contribute-info-box glass-panel">
-          <h3>🤝 How to Contribute</h3>
-          <ul>
-            <li>Fork the repo and make commits clean and granular.</li>
-            <li>Write meaningful commit messages following conventional guidelines.</li>
-            <li>Maintain code styles and verify changes locally using port forwarding checks.</li>
-          </ul>
-        </div>
-
-        {/* License Footer */}
-        <div className="license-box glass-panel">
-          <p>This project is licensed under the <strong>Apache License 2.0</strong>.</p>
-        </div>
-
-        {/* Closing Star Banner */}
-        <div className="star-banner glass-panel">
-          <h3>⭐ Support KubeSense</h3>
-          <p>If you find KubeSense useful, consider giving the repository a star on GitHub!</p>
-          <a href="https://github.com/jay240322/KubeSense" target="_blank" rel="noopener noreferrer" className="btn-star-repo">
-            <ExternalLink size={16} />
-            <span>Star jay240322/KubeSense</span>
-          </a>
-          <p className="built-by-tag">Built with 👓 by Jay Patel</p>
-        </div>
-      </section>
+      {/* Closing Star Banner */}
+      <footer className="star-banner glass-panel animate-fade-in" style={{ marginTop: '4rem', animationDelay: '0.4s' }}>
+        <h3>⭐ Support KubeSense</h3>
+        <p>If you find KubeSense useful, consider giving the repository a star on GitHub!</p>
+        <a href="https://github.com/jay240322/KubeSense" target="_blank" rel="noopener noreferrer" className="btn-star-repo">
+          <ExternalLink size={16} />
+          <span>Star jay240322/KubeSense</span>
+        </a>
+        <p className="built-by-tag">Built with 👓 by Jay Patel</p>
+      </footer>
     </div>
   );
 };
