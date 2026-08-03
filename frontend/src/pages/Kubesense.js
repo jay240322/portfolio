@@ -547,7 +547,6 @@ $ kubectl get nodes`}</code></pre>
           <ExternalLink size={16} />
           <span>Star jay240322/KubeSense</span>
         </a>
-        <p className="built-by-tag">Built with 👓 by Jay Patel</p>
       </footer>
     </div>
   );
