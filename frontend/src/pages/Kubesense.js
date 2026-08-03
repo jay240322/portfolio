@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ChevronRight, 
-  Cpu, 
-  Layers, 
-  ExternalLink, 
-  Terminal, 
-  Activity, 
-  Sparkles, 
-  Lock, 
-  Database, 
+import {
+  ChevronRight,
+  Cpu,
+  Layers,
+  ExternalLink,
+  Terminal,
+  Activity,
+  Sparkles,
+  Lock,
+  Database,
   Server,
   Key
 } from 'lucide-react';
@@ -274,9 +274,9 @@ const Kubesense = () => {
 
         <div className="architecture-diagram-wrapper glass-panel">
           <div className="diagram-frame">
-            <img 
-              src="https://github.com/user-attachments/assets/0a20bccf-5b60-4e36-afc5-4140c7db5b0b" 
-              alt="KubeSense System Diagram" 
+            <img
+              src="https://github.com/user-attachments/assets/d23d18c2-d5fa-433d-b690-2b30fa5bab78"
+              alt="KubeSense System Diagram"
               className="architecture-image"
             />
           </div>
@@ -296,9 +296,9 @@ const Kubesense = () => {
         <div className="screenshots-grid">
           <div className="screenshot-card glass-panel">
             <div className="screenshot-frame">
-              <img 
-                src="/images/kubesense/login.png" 
-                alt="KubeSense Login Portal" 
+              <img
+                src="/images/kubesense/login.png"
+                alt="KubeSense Login Portal"
                 className="screenshot-img"
               />
             </div>
@@ -310,9 +310,9 @@ const Kubesense = () => {
 
           <div className="screenshot-card glass-panel">
             <div className="screenshot-frame">
-              <img 
-                src="/images/kubesense/gemini_setup.png" 
-                alt="Google Gemini API Connection Setup" 
+              <img
+                src="/images/kubesense/gemini_setup.png"
+                alt="Google Gemini API Connection Setup"
                 className="screenshot-img"
               />
             </div>
@@ -324,9 +324,9 @@ const Kubesense = () => {
 
           <div className="screenshot-card glass-panel">
             <div className="screenshot-frame">
-              <img 
-                src="/images/kubesense/pod_list.png" 
-                alt="Interactive Kubernetes Pod Explorer" 
+              <img
+                src="/images/kubesense/pod_list.png"
+                alt="Interactive Kubernetes Pod Explorer"
                 className="screenshot-img"
               />
             </div>
@@ -338,9 +338,9 @@ const Kubesense = () => {
 
           <div className="screenshot-card glass-panel">
             <div className="screenshot-frame">
-              <img 
-                src="/images/kubesense/pod_details.png" 
-                alt="Pod Metadata and Specifications Panel" 
+              <img
+                src="/images/kubesense/pod_details.png"
+                alt="Pod Metadata and Specifications Panel"
                 className="screenshot-img"
               />
             </div>
@@ -352,9 +352,9 @@ const Kubesense = () => {
 
           <div className="screenshot-card glass-panel">
             <div className="screenshot-frame">
-              <img 
-                src="/images/kubesense/pod_events.png" 
-                alt="Pod Events Timeline & Diagnostic Warnings" 
+              <img
+                src="/images/kubesense/pod_events.png"
+                alt="Pod Events Timeline & Diagnostic Warnings"
                 className="screenshot-img"
               />
             </div>
@@ -466,7 +466,7 @@ $ kubectl get nodes`}</code></pre>
           <div className="access-card glass-panel">
             <h3>Default System Credentials</h3>
             <p>Access the dashboard administrative view using these credentials:</p>
-            
+
             <table className="credentials-table">
               <thead>
                 <tr>
