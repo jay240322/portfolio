@@ -275,7 +275,7 @@ const Kubesense = () => {
         <div className="architecture-diagram-wrapper glass-panel">
           <div className="diagram-frame">
             <img
-              src="https://github.com/user-attachments/assets/0a20bccf-5b60-4e36-afc5-4140c7db5b0b"
+              src="https://github.com/user-attachments/assets/d23d18c2-d5fa-433d-b690-2b30fa5bab78"
               alt="KubeSense System Diagram"
               className="architecture-image"
             />
