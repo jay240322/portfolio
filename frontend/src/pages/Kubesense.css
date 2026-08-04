@@ -556,10 +556,12 @@
   background: #090a0c;
   font-size: 0.9rem;
   line-height: 1.6;
+  overflow-x: auto;
 }
 
 .term-line {
   margin-bottom: 0.5rem;
+  white-space: nowrap;
 }
 
 .term-line.prompt {
@@ -630,6 +632,7 @@
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
+  white-space: nowrap;
 }
 
 .access-card code {
@@ -654,10 +657,16 @@
 }
 
 /* Credentials Table */
+.credentials-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 0.5rem;
+}
+
 .credentials-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 0.5rem;
 }
 
 .credentials-table th, 

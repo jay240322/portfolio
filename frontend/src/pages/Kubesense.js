@@ -275,7 +275,7 @@ const Kubesense = () => {
         <div className="architecture-diagram-wrapper glass-panel">
           <div className="diagram-frame">
             <img
-              src="https://github.com/user-attachments/assets/d23d18c2-d5fa-433d-b690-2b30fa5bab78"
+              src="https://github.com/user-attachments/assets/3b3e8367-b4e2-4169-884a-f8b11c8ea0bc"
               alt="KubeSense System Diagram"
               className="architecture-image"
             />
@@ -467,20 +467,22 @@ $ kubectl get nodes`}</code></pre>
             <h3>Default System Credentials</h3>
             <p>Access the dashboard administrative view using these credentials:</p>
 
-            <table className="credentials-table">
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Password</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>admin</code></td>
-                  <td><code>KubeSense@123</code></td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="credentials-table-wrapper">
+              <table className="credentials-table">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>admin</code></td>
+                    <td><code>KubeSense@123</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

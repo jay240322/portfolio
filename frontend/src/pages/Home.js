@@ -12,11 +12,46 @@ const Home = () => {
   const container = useRef();
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  const [techStack, setTechStack] = useState([]);
-  const [works, setWorks] = useState([]);
-  const [blogs, setBlogs] = useState([]);
-  const [stories, setStories] = useState([]);
-  const [connect, setConnect] = useState([]);
+  const [techStack, setTechStack] = useState(() => {
+    try {
+      const stored = localStorage.getItem('portfolio_techStack');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [works, setWorks] = useState(() => {
+    try {
+      const stored = localStorage.getItem('portfolio_works');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [blogs, setBlogs] = useState(() => {
+    try {
+      const stored = localStorage.getItem('portfolio_notes');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [stories, setStories] = useState(() => {
+    try {
+      const stored = localStorage.getItem('portfolio_stories');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [connect, setConnect] = useState(() => {
+    try {
+      const stored = localStorage.getItem('portfolio_connect');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [activeTechIndex, setActiveTechIndex] = useState(null);
 
   useEffect(() => {
@@ -273,11 +308,26 @@ const Home = () => {
         const data = await res.json();
 
         if (data && Object.keys(data).length > 0) {
-          if (data.techStack) setTechStack(data.techStack);
-          if (data.works) setWorks(data.works);
-          if (data.notes) setBlogs(data.notes);
-          if (data.stories) setStories(data.stories);
-          if (data.connect) setConnect(data.connect);
+          if (data.techStack) {
+            setTechStack(data.techStack);
+            localStorage.setItem('portfolio_techStack', JSON.stringify(data.techStack));
+          }
+          if (data.works) {
+            setWorks(data.works);
+            localStorage.setItem('portfolio_works', JSON.stringify(data.works));
+          }
+          if (data.notes) {
+            setBlogs(data.notes);
+            localStorage.setItem('portfolio_notes', JSON.stringify(data.notes));
+          }
+          if (data.stories) {
+            setStories(data.stories);
+            localStorage.setItem('portfolio_stories', JSON.stringify(data.stories));
+          }
+          if (data.connect) {
+            setConnect(data.connect);
+            localStorage.setItem('portfolio_connect', JSON.stringify(data.connect));
+          }
         } else {
           loadFromLocalStorage();
         }
@@ -287,6 +337,9 @@ const Home = () => {
       }
     };
 
+    // Load cached version instantly on mount
+    loadFromLocalStorage();
+    // Fetch latest in the background
     loadFromBackend();
 
     const handleStorageChange = (e) => {
