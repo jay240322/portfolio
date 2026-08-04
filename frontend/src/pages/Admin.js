@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, FileText, Upload } from 'lucide-react';
 import './Admin.css';
 
+const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+const years = Array.from({ length: 11 }, (_, i) => (2020 + i).toString());
+
 const Admin = () => {
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -33,9 +39,9 @@ const Admin = () => {
 
   // Form states
   const [newTech, setNewTech] = useState({ name: '', icon: '' });
-  const [newWork, setNewWork] = useState({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false });
-  const [newNote, setNewNote] = useState({ title: '', description: '', link: '' });
-  const [newStory, setNewStory] = useState({ title: '', description: '', link: '' });
+  const [newWork, setNewWork] = useState({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false, month: '', year: '' });
+  const [newNote, setNewNote] = useState({ title: '', description: '', link: '', month: '', year: '' });
+  const [newStory, setNewStory] = useState({ title: '', description: '', link: '', month: '', year: '' });
   const [newConnect, setNewConnect] = useState({ name: '', link: '', icon: 'link' });
 
   // Edit states
@@ -206,7 +212,7 @@ const Admin = () => {
       } else {
         saveWorks([...works, newWork]);
       }
-      setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false });
+      setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false, month: '', year: '' });
       setShowWorkForm(false);
     }
   };
@@ -221,7 +227,9 @@ const Admin = () => {
       liveUrl: item.liveUrl || '',
       enableLiveUrl: !!item.enableLiveUrl,
       downloadUrl: item.downloadUrl || '',
-      enableDownload: !!item.enableDownload
+      enableDownload: !!item.enableDownload,
+      month: item.month || '',
+      year: item.year || ''
     });
     setEditingWorkIndex(index);
     setShowWorkForm(true);
@@ -243,13 +251,20 @@ const Admin = () => {
       } else {
         saveNotes([...notes, newNote]);
       }
-      setNewNote({ title: '', description: '', link: '' });
+      setNewNote({ title: '', description: '', link: '', month: '', year: '' });
       setShowNoteForm(false);
     }
   };
 
   const handleEditNote = (index) => {
-    setNewNote(notes[index]);
+    const item = notes[index];
+    setNewNote({
+      title: item.title || '',
+      description: item.description || '',
+      link: item.link || '',
+      month: item.month || '',
+      year: item.year || ''
+    });
     setEditingNoteIndex(index);
     setShowNoteForm(true);
   };
@@ -270,13 +285,20 @@ const Admin = () => {
       } else {
         saveStories([...stories, newStory]);
       }
-      setNewStory({ title: '', description: '', link: '' });
+      setNewStory({ title: '', description: '', link: '', month: '', year: '' });
       setShowStoryForm(false);
     }
   };
 
   const handleEditStory = (index) => {
-    setNewStory(stories[index]);
+    const item = stories[index];
+    setNewStory({
+      title: item.title || '',
+      description: item.description || '',
+      link: item.link || '',
+      month: item.month || '',
+      year: item.year || ''
+    });
     setEditingStoryIndex(index);
     setShowStoryForm(true);
   };
@@ -527,7 +549,9 @@ const Admin = () => {
               <div key={i} className="admin-item">
                 <div className="admin-item-content">
                   <span className="admin-item-title">{work.title}</span>
-                  <span className="admin-item-subtitle">{work.category}</span>
+                  <span className="admin-item-subtitle">
+                    {work.category} {work.month && work.year ? `(${work.month} ${work.year})` : (work.year ? `(${work.year})` : '')}
+                  </span>
                 </div>
                 <div className="admin-item-actions">
                   <button className="edit-btn" onClick={() => handleEditWork(i)}>
@@ -550,6 +574,16 @@ const Admin = () => {
               <div className="sticker sticker-top-right">🚀</div>
               <input type="text" placeholder="Project Title" className="admin-input" value={newWork.title} onChange={e => setNewWork({ ...newWork, title: e.target.value })} />
               <input type="text" placeholder="Sub Heading / Category" className="admin-input" value={newWork.category} onChange={e => setNewWork({ ...newWork, category: e.target.value })} />
+              <div className="admin-input-group" style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <select className="admin-input" value={newWork.month || ''} onChange={e => setNewWork({ ...newWork, month: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Month</option>
+                  {months.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <select className="admin-input" value={newWork.year || ''} onChange={e => setNewWork({ ...newWork, year: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Year</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <textarea placeholder="Project Description" className="admin-input" rows="3" value={newWork.description} onChange={e => setNewWork({ ...newWork, description: e.target.value })}></textarea>
               <input type="text" placeholder="Project Link (GitHub URL)" className="admin-input" value={newWork.link} onChange={e => setNewWork({ ...newWork, link: e.target.value })} />
               <input type="text" placeholder="Live Website URL (Optional)" className="admin-input" value={newWork.liveUrl || ''} onChange={e => setNewWork({ ...newWork, liveUrl: e.target.value })} />
@@ -559,7 +593,7 @@ const Admin = () => {
               </div>
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddWork}>{editingWorkIndex !== null ? 'Update Project' : 'Save Project'}</button>
-                <button className="admin-cancel-btn" onClick={() => { setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false }) }}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowWorkForm(false); setEditingWorkIndex(null); setNewWork({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false, month: '', year: '' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -578,6 +612,9 @@ const Admin = () => {
               <div key={i} className="admin-item">
                 <div className="admin-item-content">
                   <span className="admin-item-title">{note.title}</span>
+                  <span className="admin-item-subtitle">
+                    {note.month && note.year ? `${note.month} ${note.year}` : (note.year || '')}
+                  </span>
                 </div>
                 <div className="admin-item-actions">
                   <button className="edit-btn" onClick={() => handleEditNote(i)}>
@@ -599,11 +636,21 @@ const Admin = () => {
             <div className="add-container relative-box">
               <div className="sticker sticker-bottom-right">✍️</div>
               <input type="text" placeholder="Note Title" className="admin-input" value={newNote.title} onChange={e => setNewNote({ ...newNote, title: e.target.value })} />
+              <div className="admin-input-group" style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <select className="admin-input" value={newNote.month || ''} onChange={e => setNewNote({ ...newNote, month: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Month</option>
+                  {months.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <select className="admin-input" value={newNote.year || ''} onChange={e => setNewNote({ ...newNote, year: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Year</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <textarea placeholder="Note Description" className="admin-input" rows="3" value={newNote.description} onChange={e => setNewNote({ ...newNote, description: e.target.value })}></textarea>
               <input type="text" placeholder="Note Link" className="admin-input" value={newNote.link} onChange={e => setNewNote({ ...newNote, link: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddNote}>{editingNoteIndex !== null ? 'Update Note' : 'Save Note'}</button>
-                <button className="admin-cancel-btn" onClick={() => { setShowNoteForm(false); setEditingNoteIndex(null); setNewNote({ title: '', description: '', link: '' }) }}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowNoteForm(false); setEditingNoteIndex(null); setNewNote({ title: '', description: '', link: '', month: '', year: '' }) }}>Cancel</button>
               </div>
             </div>
           )}
@@ -622,6 +669,9 @@ const Admin = () => {
               <div key={i} className="admin-item">
                 <div className="admin-item-content">
                   <span className="admin-item-title">{story.title}</span>
+                  <span className="admin-item-subtitle">
+                    {story.month && story.year ? `${story.month} ${story.year}` : (story.year || '')}
+                  </span>
                 </div>
                 <div className="admin-item-actions">
                   <button className="edit-btn" onClick={() => handleEditStory(i)}>
@@ -643,11 +693,21 @@ const Admin = () => {
             <div className="add-container relative-box">
               <div className="sticker sticker-bottom-right">✍️</div>
               <input type="text" placeholder="Story Title" className="admin-input" value={newStory.title} onChange={e => setNewStory({ ...newStory, title: e.target.value })} />
+              <div className="admin-input-group" style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                <select className="admin-input" value={newStory.month || ''} onChange={e => setNewStory({ ...newStory, month: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Month</option>
+                  {months.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <select className="admin-input" value={newStory.year || ''} onChange={e => setNewStory({ ...newStory, year: e.target.value })} style={{ flex: 1 }}>
+                  <option value="">Select Year</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
               <textarea placeholder="Story Description" className="admin-input" rows="3" value={newStory.description} onChange={e => setNewStory({ ...newStory, description: e.target.value })}></textarea>
               <input type="text" placeholder="Story Link" className="admin-input" value={newStory.link} onChange={e => setNewStory({ ...newStory, link: e.target.value })} />
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddStory}>{editingStoryIndex !== null ? 'Update Story' : 'Save Story'}</button>
-                <button className="admin-cancel-btn" onClick={() => { setShowStoryForm(false); setEditingStoryIndex(null); setNewStory({ title: '', description: '', link: '' }) }}>Cancel</button>
+                <button className="admin-cancel-btn" onClick={() => { setShowStoryForm(false); setEditingStoryIndex(null); setNewStory({ title: '', description: '', link: '', month: '', year: '' }) }}>Cancel</button>
               </div>
             </div>
           )}

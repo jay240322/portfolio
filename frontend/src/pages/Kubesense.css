@@ -453,7 +453,7 @@
 
 .timeline-step-block {
   display: grid;
-  grid-template-columns: 60px 1fr;
+  grid-template-columns: 60px minmax(0, 1fr);
   gap: 1.5rem;
 }
 
@@ -491,6 +491,7 @@
   flex-direction: column;
   gap: 1.25rem;
   padding-bottom: 1.5rem;
+  min-width: 0;
 }
 
 .step-header-info h3 {
@@ -597,7 +598,7 @@
 /* Access Section */
 .access-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
   max-width: 900px;
   margin: 0 auto 2.5rem;
@@ -1258,20 +1259,20 @@
   }
 
   .features-list-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .prereq-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .timeline-step-block {
-    grid-template-columns: 44px 1fr;
+    grid-template-columns: 44px minmax(0, 1fr);
     gap: 1rem;
   }
 
   .access-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
   }
 
@@ -1325,11 +1326,11 @@
   }
 
   .features-list-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .prereq-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .why-item h3 {
@@ -1355,7 +1356,7 @@
   }
 
   .timeline-step-block {
-    grid-template-columns: 32px 1fr;
+    grid-template-columns: 32px minmax(0, 1fr);
     gap: 0.75rem;
   }
 
