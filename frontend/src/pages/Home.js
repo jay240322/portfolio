@@ -549,7 +549,9 @@ const Home = () => {
                     </a>
                   )}
                 </div>
-                <span className="work-grid-year">2025 - 2026</span>
+                <span className="work-grid-year">
+                  {work.month && work.year ? `${work.month} ${work.year}` : (work.year || "2025 - 2026")}
+                </span>
               </div>
             </div>
           ))}
@@ -574,7 +576,9 @@ const Home = () => {
                   <span>Read Notes</span>
                   <ChevronRight size={16} />
                 </a>
-                <span className="work-grid-year">2026</span>
+                <span className="work-grid-year">
+                  {blog.month && blog.year ? `${blog.month} ${blog.year}` : (blog.year || "2026")}
+                </span>
               </div>
             </div>
           ))}
@@ -599,7 +603,9 @@ const Home = () => {
                   <span>Read Story</span>
                   <ChevronRight size={16} />
                 </a>
-                <span className="work-grid-year">2025 - 2026</span>
+                <span className="work-grid-year">
+                  {story.month && story.year ? `${story.month} ${story.year}` : (story.year || "2025 - 2026")}
+                </span>
               </div>
             </div>
           ))}

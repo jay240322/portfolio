@@ -80,7 +80,7 @@ const Kubesense = () => {
         { type: "success", text: "deployment.apps/kubesense-postgres created" },
         { type: "success", text: "service/kubesense-postgres-service created" },
         { type: "success", text: "deployment.apps/kubesense-backend created" },
-        { type: "service/kubesense-backend-service created" },
+        { type: "success", text: "service/kubesense-backend-service created" },
         { type: "success", text: "deployment.apps/kubesense-frontend created" },
         { type: "success", text: "service/kubesense-frontend-service created" }
       ]
