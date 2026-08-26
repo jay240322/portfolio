@@ -540,7 +540,7 @@ const Home = () => {
                       <ExternalLink size={16} />
                     </a>
                   )}
-                  
+
                   {/* See on Web (Live Website Link) */}
                   {work.enableLiveUrl && work.liveUrl && (
                     <a href={work.liveUrl} className="work-grid-link">
@@ -564,7 +564,7 @@ const Home = () => {
         <p className="section-subtitle text-left">Walkthroughs and insights on cloud architectures and application security.</p>
 
         <div className="works-grid-layout">
-          {blogs.map((blog, index) => (
+          {blogs.slice(0, 2).map((blog, index) => (
             <div key={index} className="work-grid-item">
               <div className="work-grid-header">
                 <span className="work-grid-category">Security Article</span>
@@ -583,6 +583,14 @@ const Home = () => {
             </div>
           ))}
         </div>
+
+        {/* View More Notes */}
+        <div className="view-more-container">
+          <a href="https://jaypatel2403.hashnode.dev/" className="view-more-btn" target="_blank" rel="noopener noreferrer">
+            <span>More Notes</span>
+            <ExternalLink size={16} />
+          </a>
+        </div>
       </section>
 
       {/* Personal Stories */}
@@ -591,7 +599,7 @@ const Home = () => {
         <p className="section-subtitle text-left">Achievements and professional updates from my journey.</p>
 
         <div className="works-grid-layout">
-          {stories.map((story, index) => (
+          {stories.slice(0, 2).map((story, index) => (
             <div key={index} className="work-grid-item">
               <div className="work-grid-header">
                 <span className="work-grid-category">Journey Log</span>
@@ -609,6 +617,14 @@ const Home = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* View More Stories */}
+        <div className="view-more-container">
+          <a href="https://medium.com/@JayPatel_1" className="view-more-btn" target="_blank" rel="noopener noreferrer">
+            <span>More Stories</span>
+            <ExternalLink size={16} />
+          </a>
         </div>
       </section>
 
