@@ -98,8 +98,8 @@ const Home = () => {
         }
       });
 
-      // Fade out the download button and scroll indicator as we scroll down
-      gsap.to('.hero-btn-primary', {
+      // Fade out scroll indicator as we scroll down
+      gsap.to('.scroll-indicator', {
         opacity: 0,
         y: 30,
         scrollTrigger: {
@@ -209,8 +209,8 @@ const Home = () => {
         }
       });
 
-      // Fade out the download button and scroll indicator as we scroll down
-      gsap.to('.hero-btn-primary, .scroll-indicator', {
+      // Fade out scroll indicator as we scroll down
+      gsap.to('.scroll-indicator', {
         opacity: 0,
         scrollTrigger: {
           trigger: '.hero-section-centered',
@@ -465,15 +465,6 @@ const Home = () => {
               &bull; A Cloud Architect<br /> &bull; Security<br />&bull; Automation<br />&bull; Dev
             </p>
           </div>
-          <a
-            href={`${API_URL}/api/resume/download`}
-            className="hero-btn-primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Download size={18} />
-            <span>Download Resume</span>
-          </a>
         </div>
 
         {/* Scroll Indicator */}

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User } from 'lucide-react';
+import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User, FileText } from 'lucide-react';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const location = useLocation();
   const navigate = useNavigate();
+
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,63 +20,185 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Update active section when route changes
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (location.pathname === '/github') {
+      setActiveSection('github');
+    } else if (location.pathname === '/') {
       const sectionId = location.state?.scrollToSection;
-      const alreadyScrolled = location.state?.scrolled;
-
-      if (sectionId && !alreadyScrolled) {
+      if (sectionId) {
+        setActiveSection(sectionId);
         const element = document.getElementById(sectionId);
         if (element) {
           setTimeout(() => {
             if (window.lenis) {
-              window.lenis.scrollTo(element, { duration: 1.2 });
+              window.lenis.scrollTo(element, { duration: 1.2, offset: -40 });
             } else {
-              element.scrollIntoView({ behavior: 'smooth' });
+              const top = element.getBoundingClientRect().top + window.scrollY - 70;
+              window.scrollTo({ top, behavior: 'smooth' });
             }
-            // Mark as scrolled in the history state to prevent scrolling back on navigation POP or refresh
-            navigate('/', { replace: true, state: { scrollToSection: sectionId, scrolled: true } });
+            navigate('/', { replace: true, state: {} });
           }, 150);
         }
-      } else if (!sectionId) {
-        setTimeout(() => {
-          if (window.lenis) {
-            window.lenis.scrollTo(0, { duration: 1.2 });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }, 150);
       }
     }
-  }, [location, navigate]);
+  }, [location.pathname, location.state, navigate]);
+
+  // Scrollspy: update active section as user scrolls through the page
+  const handleScrollSpy = useCallback(() => {
+    if (location.pathname !== '/') return;
+
+    const scrollY = window.scrollY;
+
+    // If near the very top, activate Home
+    if (scrollY < 180) {
+      setActiveSection('home');
+      return;
+    }
+
+    // If near the bottom of the page, activate Social
+    if (window.innerHeight + scrollY >= document.documentElement.scrollHeight - 70) {
+      setActiveSection('social');
+      return;
+    }
+
+    const sections = ['stack', 'works', 'notes', 'stories', 'social'];
+    let current = 'home';
+    for (const sectionId of sections) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        // Section is in view when its top has reached the upper third of screen
+        if (rect.top <= 260) {
+          current = sectionId;
+        }
+      }
+    }
+    setActiveSection(current);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScrollSpy);
+    };
+  }, [location.pathname, handleScrollSpy]);
+
+  const scrollToContainer = (sectionId) => {
+    setActiveSection(sectionId);
+    if (sectionId === 'home') {
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { duration: 1.2, offset: -40 });
+      } else {
+        const top = element.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handleNavClick = (link, e) => {
+    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+
+    if (link.isResume) {
+      // Resume click handling - open in new tab
+      try {
+        const localResume = localStorage.getItem('portfolio_resume');
+        if (localResume && localResume.startsWith('data:application/pdf')) {
+          e.preventDefault();
+          const base64Data = localResume.split(',')[1];
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'application/pdf' });
+          const fileURL = URL.createObjectURL(blob);
+          window.open(fileURL, '_blank');
+          return;
+        }
+      } catch (err) {
+        console.error('Error opening local resume:', err);
+      }
+      return;
+    }
+
+    if (link.sectionId) {
+      if (location.pathname === '/') {
+        e.preventDefault();
+        scrollToContainer(link.sectionId);
+      } else {
+        navigate('/', { state: { scrollToSection: link.sectionId } });
+      }
+    }
+  };
+
+  const handleLogoClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      scrollToContainer('home');
+    }
+  };
 
   const navLinks = [
-    { path: '/', label: 'Home', icon: <Home size={18} /> },
-    { path: '/', label: 'Stack', icon: <Code size={18} />, state: { scrollToSection: 'stack' } },
-    { path: '/', label: 'Works', icon: <Briefcase size={18} />, state: { scrollToSection: 'works' } },
-    { path: '/', label: 'Notes', icon: <BookOpen size={18} />, state: { scrollToSection: 'notes' } },
-    { path: '/', label: 'Stories', icon: <Book size={18} />, state: { scrollToSection: 'stories' } },
-    { path: '/', label: 'Social', icon: <User size={18} />, state: { scrollToSection: 'social' } },
-    { path: '/github', label: 'GitHub', icon: <Code size={18} /> },
+    { id: 'home', path: '/', label: 'Home', sectionId: 'home', icon: <Home size={14} /> },
+    { id: 'stack', path: '/', label: 'Stack', sectionId: 'stack', icon: <Code size={14} /> },
+    { id: 'works', path: '/', label: 'Works', sectionId: 'works', icon: <Briefcase size={14} /> },
+    { id: 'notes', path: '/', label: 'Notes', sectionId: 'notes', icon: <BookOpen size={14} /> },
+    { id: 'stories', path: '/', label: 'Stories', sectionId: 'stories', icon: <Book size={14} /> },
+    { id: 'social', path: '/', label: 'Social', sectionId: 'social', icon: <User size={14} /> },
+    { id: 'resume', path: `${API_URL}/api/resume/view`, label: 'Resume', isResume: true, icon: <FileText size={14} /> },
+    { id: 'github', path: '/github', label: 'GitHub', icon: <Code size={14} /> },
   ];
 
   return (
-    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${location.pathname !== '/' ? 'subpage' : ''}`}>
       <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          <span className="gradient-text">Jay</span>
+        <Link to="/" className="nav-logo" onClick={handleLogoClick}>
+          <span className="nav-logo-text">Jay</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="nav-links desktop-only">
           {navLinks.map((link) => {
-            const isActive = location.pathname === link.path && !link.state;
+            const isActive = location.pathname === '/github'
+              ? link.id === 'github'
+              : location.pathname === '/' && activeSection === link.id;
+
+            if (link.isResume) {
+              return (
+                <a
+                  key={link.id}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-link"
+                  onClick={(e) => handleNavClick(link, e)}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </a>
+              );
+            }
+
             return (
               <Link
-                key={link.label}
+                key={link.id}
                 to={link.path}
-                state={link.state}
                 className={`nav-link ${isActive ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(link, e)}
               >
                 {link.icon}
                 <span>{link.label}</span>
@@ -86,8 +211,9 @@ const Navbar = () => {
         <button
           className="mobile-menu-toggle mobile-only"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Menu"
         >
-          {isMobileMenuOpen ? <X /> : <Menu />}
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
@@ -95,14 +221,32 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="mobile-menu glass-panel mobile-only animate-fade-in">
           {navLinks.map((link) => {
-            const isActive = location.pathname === link.path && !link.state;
+            const isActive = location.pathname === '/github'
+              ? link.id === 'github'
+              : location.pathname === '/' && activeSection === link.id;
+
+            if (link.isResume) {
+              return (
+                <a
+                  key={link.id}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-link"
+                  onClick={(e) => handleNavClick(link, e)}
+                >
+                  {link.icon}
+                  <span>{link.label}</span>
+                </a>
+              );
+            }
+
             return (
               <Link
-                key={link.label}
+                key={link.id}
                 to={link.path}
-                state={link.state}
                 className={`mobile-link ${isActive ? 'active' : ''}`}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => handleNavClick(link, e)}
               >
                 {link.icon}
                 <span>{link.label}</span>
