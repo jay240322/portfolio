@@ -1,6 +1,6 @@
 .repos-container {
   min-height: 100vh;
-  padding: 120px 2rem 4rem;
+  padding: 85px 2rem 4rem;
   max-width: 100%;
   margin: 0 auto;
   position: relative;
@@ -14,14 +14,14 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.5rem 2rem;
+  padding: 0.75rem 2rem;
   transition: all 0.3s ease;
   background: transparent;
   border-bottom: 1px solid transparent;
 }
 
 .github-navbar.scrolled {
-  padding: 1.5rem 2rem;
+  padding: 0.6rem 2rem;
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -246,15 +246,15 @@
 
 @media (max-width: 768px) {
   .repos-container {
-    padding: 100px 1.25rem 3rem;
+    padding: 75px 1.25rem 3rem;
   }
 
   .github-navbar {
-    padding: 1rem 1.25rem;
+    padding: 0.65rem 1.25rem;
   }
 
   .github-navbar.scrolled {
-    padding: 0.75rem 1.25rem;
+    padding: 0.55rem 1.25rem;
   }
 
   .repos-header {

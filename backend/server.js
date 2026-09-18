@@ -158,6 +158,37 @@ app.get('/api/resume/download', ensureDb, async (req, res) => {
   }
 });
 
+// GET resume file directly to view inline in browser tab
+app.get('/api/resume/view', ensureDb, async (req, res) => {
+  try {
+    const item = await PortfolioItem.findOne({ key: 'resume' });
+    if (!item || !item.value) {
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+      return res.redirect(`${frontendUrl}/Jay_resume.pdf`);
+    }
+
+    const base64Data = item.value;
+    const match = base64Data.match(/^data:([^;]+);base64,(.+)$/);
+    
+    if (match) {
+      const contentType = match[1];
+      const base64Content = match[2];
+      const buffer = Buffer.from(base64Content, 'base64');
+      
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', 'inline; filename="Jay_resume.pdf"');
+      return res.send(buffer);
+    } else {
+      const buffer = Buffer.from(base64Data, 'base64');
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'inline; filename="Jay_resume.pdf"');
+      return res.send(buffer);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET a single portfolio key (e.g. techStack)
 app.get('/api/portfolio/:key', ensureDb, async (req, res) => {
   try {
