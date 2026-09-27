@@ -108,9 +108,9 @@ const Home = () => {
       });
 
       // Scroll-triggered animations for all sections
-      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      const sections = ['#about', '#stack', '#works', '#notes', '#stories', '#social'];
       sections.forEach((id) => {
-        const isSocial = id === '#social';
+        const isSocial = id === '#social' || id === '#about';
 
         // Title and subtitle slide/fade-in
         gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
@@ -202,7 +202,7 @@ const Home = () => {
       });
 
       // Scroll-triggered fade-in animations for all sections
-      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      const sections = ['#about', '#stack', '#works', '#notes', '#stories', '#social'];
       sections.forEach((id) => {
         // Gentle vertical fade-in on mobile
         gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
@@ -339,6 +339,54 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, [techStack, works, blogs, stories]);
 
+  // Drag-to-scroll support for selected works slider on desktop
+  useEffect(() => {
+    const slider = worksSliderRef.current;
+    if (!slider) return;
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    const handleMouseDown = (e) => {
+      if (e.target.closest('a, button')) return;
+      isDown = true;
+      slider.classList.add('active-drag');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    };
+
+    const handleMouseLeave = () => {
+      isDown = false;
+      slider.classList.remove('active-drag');
+    };
+
+    const handleMouseUp = () => {
+      isDown = false;
+      slider.classList.remove('active-drag');
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      slider.scrollLeft = scrollLeft - walk;
+    };
+
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [works]);
+
   const handleResumeClick = (e) => {
     try {
       const localResume = localStorage.getItem('portfolio_resume');
@@ -377,12 +425,14 @@ const Home = () => {
 
         {/* Scroll Indicator */}
         <div className="scroll-indicator" onClick={() => {
-          const target = document.getElementById('stack');
+          const target = document.getElementById('about');
           if (target) {
+            const offset = -Math.max(0, (window.innerHeight - target.offsetHeight) / 2);
             if (window.lenis) {
-              window.lenis.scrollTo(target, { duration: 1.2 });
+              window.lenis.scrollTo(target, { duration: 1.2, offset });
             } else {
-              target.scrollIntoView({ behavior: 'smooth' });
+              const top = target.getBoundingClientRect().top + window.scrollY - Math.max(0, (window.innerHeight - target.offsetHeight) / 2);
+              window.scrollTo({ top, behavior: 'smooth' });
             }
           }
         }}>
@@ -390,6 +440,14 @@ const Home = () => {
           <ChevronDown className="scroll-arrow" size={20} />
         </div>
       </div>
+
+      {/* What I Bring Section */}
+      <section id="about" className="section-container border-t border-foreground/5 what-i-bring-section">
+        <h3 className="section-title text-left">What I Bring</h3>
+        <p className="what-i-bring-desc text-left">
+          I specialize in architecting secure, scalable cloud ecosystems and resilient infrastructure from the ground up. With deep expertise across systems security, threat modeling, vulnerability remediation, automated DevSecOps pipelines, and container orchestration with Kubernetes, I help organizations harden their attack surface, eliminate vulnerabilities, and implement multi-layered defense-in-depth frameworks without sacrificing engineering velocity.
+        </p>
+      </section>
 
       {/* Tech Stack Marquee Section */}
       <section id="stack" className="section-container border-t border-foreground/5">
@@ -422,7 +480,7 @@ const Home = () => {
         <h3 className="section-title text-left">Selected Works</h3>
         <p className="section-subtitle text-left">Projects I worked on. Each tailored to solve specific business problems.</p>
 
-        <div className="works-slider-container" ref={worksSliderRef} data-lenis-prevent>
+        <div className="works-slider-container" ref={worksSliderRef}>
           {works.map((work, index) => (
             <div key={index} className="work-slider-card">
               <div className="work-grid-header">
@@ -527,13 +585,11 @@ const Home = () => {
         </div>
       </section>
 
-
-
-      {/* What I Bring Section */}
+      {/* Have a Security Challenge / Let's Talk Section */}
       <section id="social" className="section-container border-t border-foreground/5 let-talk-section">
-        <h3 className="section-title text-center">What I Bring</h3>
+        <h3 className="section-title text-center">Have a Security Challenge?</h3>
         <p className="let-talk-desc">
-          I specialize in cloud and systems security, threat modeling, vulnerability remediation, and building defense-in-depth architectures. I help teams eliminate vulnerabilities, harden their attack surface, and build resilient, secure infrastructure from the ground up.
+          Whether you're looking to audit your cloud infrastructure, harden application security, automate DevSecOps pipelines, or discuss an exciting project, let's talk.
         </p>
         <p className="let-talk-cta">
           Reach out via email or connect with me through my links below.

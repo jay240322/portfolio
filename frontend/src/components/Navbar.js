@@ -32,10 +32,17 @@ const Navbar = () => {
         const element = document.getElementById(sectionId);
         if (element) {
           setTimeout(() => {
+            const isAbout = sectionId === 'about';
+            const offset = isAbout
+              ? -Math.max(0, (window.innerHeight - element.offsetHeight) / 2)
+              : -40;
+
             if (window.lenis) {
-              window.lenis.scrollTo(element, { duration: 1.2, offset: -40 });
+              window.lenis.scrollTo(element, { duration: 1.2, offset });
             } else {
-              const top = element.getBoundingClientRect().top + window.scrollY - 70;
+              const top = isAbout
+                ? element.getBoundingClientRect().top + window.scrollY - Math.max(0, (window.innerHeight - element.offsetHeight) / 2)
+                : element.getBoundingClientRect().top + window.scrollY - 70;
               window.scrollTo({ top, behavior: 'smooth' });
             }
             navigate('/', { replace: true, state: {} });
@@ -63,7 +70,7 @@ const Navbar = () => {
       return;
     }
 
-    const sections = ['stack', 'works', 'notes', 'stories', 'social'];
+    const sections = ['about', 'stack', 'works', 'notes', 'stories', 'social'];
     let current = 'home';
     for (const sectionId of sections) {
       const el = document.getElementById(sectionId);
@@ -100,10 +107,17 @@ const Navbar = () => {
 
     const element = document.getElementById(sectionId);
     if (element) {
+      const isAbout = sectionId === 'about';
+      const offset = isAbout
+        ? -Math.max(0, (window.innerHeight - element.offsetHeight) / 2)
+        : -40;
+
       if (window.lenis) {
-        window.lenis.scrollTo(element, { duration: 1.2, offset: -40 });
+        window.lenis.scrollTo(element, { duration: 1.2, offset });
       } else {
-        const top = element.getBoundingClientRect().top + window.scrollY - 70;
+        const top = isAbout
+          ? element.getBoundingClientRect().top + window.scrollY - Math.max(0, (window.innerHeight - element.offsetHeight) / 2)
+          : element.getBoundingClientRect().top + window.scrollY - 70;
         window.scrollTo({ top, behavior: 'smooth' });
       }
     }
@@ -155,11 +169,12 @@ const Navbar = () => {
 
   const navLinks = [
     { id: 'home', path: '/', label: 'Home', sectionId: 'home', icon: <Home size={14} /> },
+    { id: 'about', path: '/', label: 'About', sectionId: 'about', icon: <User size={14} /> },
     { id: 'stack', path: '/', label: 'Stack', sectionId: 'stack', icon: <Code size={14} /> },
     { id: 'works', path: '/', label: 'Works', sectionId: 'works', icon: <Briefcase size={14} /> },
     { id: 'notes', path: '/', label: 'Notes', sectionId: 'notes', icon: <BookOpen size={14} /> },
     { id: 'stories', path: '/', label: 'Stories', sectionId: 'stories', icon: <Book size={14} /> },
-    { id: 'social', path: '/', label: 'Social', sectionId: 'social', icon: <User size={14} /> },
+    { id: 'social', path: '/', label: 'Contact', sectionId: 'social', icon: <User size={14} /> },
     { id: 'resume', path: `${API_URL}/api/resume/view`, label: 'Resume', isResume: true, icon: <FileText size={14} /> },
     { id: 'github', path: '/github', label: 'GitHub', icon: <Code size={14} /> },
   ];
