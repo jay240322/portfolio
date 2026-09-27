@@ -132,6 +132,12 @@
   font-weight: 600;
 }
 
+.mobile-menu-theme-divider {
+  margin-top: 0.35rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--glass-border);
+}
+
 @media (max-width: 768px) {
   .desktop-only {
     display: none !important;
@@ -151,11 +157,11 @@
     right: 1.25rem;
     padding: 0.65rem;
     border-radius: 14px;
-    background: rgba(15, 15, 15, 0.92);
+    background: var(--glass-bg);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   }
   
   .navbar {

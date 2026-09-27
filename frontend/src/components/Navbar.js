@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Code, Menu, X, Briefcase, BookOpen, Book, User, FileText } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -205,6 +206,8 @@ const Navbar = () => {
               </Link>
             );
           })}
+          {/* Theme Controller (Right after GitHub) */}
+          <ThemeToggle />
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -253,6 +256,9 @@ const Navbar = () => {
               </Link>
             );
           })}
+          <div className="mobile-menu-theme-divider">
+            <ThemeToggle isMobile={true} />
+          </div>
         </div>
       )}
     </nav>

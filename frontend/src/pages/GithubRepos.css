@@ -34,6 +34,7 @@
   width: 100%;
   margin: 0 auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -134,7 +135,9 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  background-color: #251a2745;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
 }
 
 .repo-card::before {

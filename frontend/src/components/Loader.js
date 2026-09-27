@@ -72,7 +72,8 @@ const StyledWrapper = styled.div`
     top: 0;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: var(--text-primary, #111827);
+    border-radius: 2px;
   }
 
   .banter-loader__box:nth-child(3n) {

@@ -20,58 +20,71 @@ html.lenis {
   overflow: hidden;
 }
 
-:root {
+/* ==========================================================================
+   Theme Variables (Default: Light / White Minimalist)
+   ========================================================================== */
+:root,
+[data-theme="light"],
+html.light {
+  --bg-color: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-light: #1f2937;
+  --text-muted: #6b7280;
+  --accent-color: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --card-bg: #ffffff;
+  --card-bg-darkened: #f2f3f6;
+  --card-hover-bg: rgba(0, 0, 0, 0.03);
+  --font-family-title: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --theme-toggle-bg: rgba(0, 0, 0, 0.04);
+  --theme-toggle-hover: rgba(0, 0, 0, 0.08);
+  --theme-toggle-color: #111827;
+
+  --tooltip-bg: #0f172a;
+  --tooltip-text: #ffffff;
+
+  /* Admin Dashboard theme variables */
+  --admin-bg: rgba(15, 23, 42, 0.03);
+  --admin-border: rgba(15, 23, 42, 0.08);
+  --admin-input-bg: rgba(255, 255, 255, 0.95);
+  --admin-input-border: rgba(15, 23, 42, 0.15);
+}
+
+/* ==========================================================================
+   Dark Theme (Signature Colors)
+   ========================================================================== */
+[data-theme="dark"],
+html.dark {
   --bg-color: #130D14;
-  /* Pure black background */
   --text-primary: #f2f3f4d9;
-  /* Off-white text */
   --text-secondary: #9ca3af;
-  /* Muted slate text for descriptions */
   --text-light: #e5e7eb;
-  /* Support for Admin pages */
   --text-muted: #9ca3af;
-  /* Support for Admin pages */
   --accent-color: #3b82f6;
-  /* Vibrant electric blue */
-  --accent-glow: rgba(59, 130, 246, 0.1);
-  --glass-bg: rgba(15, 15, 15, 0.75);
-  /* Premium dark glassmorphism on black */
+  --accent-glow: rgba(59, 130, 246, 0.18);
+  --glass-bg: rgba(19, 13, 20, 0.75);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --font-family-title: system-ui;
+  --card-bg: #1a121b;
+  --card-bg-darkened: #170E18;
+  --card-hover-bg: rgba(255, 255, 255, 0.03);
+  --font-family-title: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --theme-toggle-bg: rgba(255, 255, 255, 0.06);
+  --theme-toggle-hover: rgba(255, 255, 255, 0.12);
+  --theme-toggle-color: #f3f4f6;
+
+  --tooltip-bg: #ffffff;
+  --tooltip-text: #111111;
 
   /* Admin Dashboard theme variables */
   --admin-bg: rgba(255, 255, 255, 0.05);
   --admin-border: rgba(255, 255, 255, 0.1);
   --admin-input-bg: rgba(0, 0, 0, 0.2);
   --admin-input-border: rgba(255, 255, 255, 0.1);
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-color: #f8fafc;
-    /* Slate 50 background */
-    --text-primary: #0f172a;
-    /* Slate 900 primary text */
-    --text-secondary: #475569;
-    /* Slate 600 secondary text */
-    --text-light: #1e293b;
-    /* Slate 800 light text alternative */
-    --text-muted: #64748b;
-    /* Slate 500 muted text */
-    --accent-color: #2563eb;
-    /* Premium royal blue */
-    --accent-glow: rgba(37, 99, 235, 0.05);
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    /* Clean white glass */
-    --glass-border: rgba(15, 23, 42, 0.08);
-    /* Subtle slate border for light glass */
-
-    /* Admin Dashboard theme variables */
-    --admin-bg: rgba(15, 23, 42, 0.03);
-    --admin-border: rgba(15, 23, 42, 0.08);
-    --admin-input-bg: rgba(255, 255, 255, 0.85);
-    --admin-input-border: rgba(15, 23, 42, 0.12);
-  }
 }
 
 

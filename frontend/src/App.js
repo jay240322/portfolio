@@ -8,6 +8,7 @@ import Devspace from './pages/Devspace';
 import Kubesense from './pages/Kubesense';
 import ClickSpark from './components/ClickSpark';
 import Loader from './components/Loader';
+import { ThemeProvider } from './context/ThemeContext';
 import Lenis from '@studio-freight/lenis';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -149,9 +150,11 @@ function App() {
   }
 
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   );
 }
 

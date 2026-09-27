@@ -13,6 +13,7 @@ import {
   Server,
   Key
 } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 import './Kubesense.css';
 
 const overviewLinks = [
@@ -125,6 +126,7 @@ const Kubesense = () => {
             <ChevronRight size={14} className="breadcrumb-icon" />
             <span className="breadcrumb-current">kubesense</span>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
 

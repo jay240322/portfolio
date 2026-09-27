@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, GitFork, BookOpen, ExternalLink, Activity, ChevronRight } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 import './GithubRepos.css';
 
 const GithubRepos = () => {
@@ -43,6 +44,7 @@ const GithubRepos = () => {
             <ChevronRight size={14} className="breadcrumb-icon" />
             <span className="breadcrumb-current">github</span>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Download, Cpu, ShieldCheck, Box, Layers, ExternalLink } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 import './Devspace.css';
 
 const overviewLinks = [
@@ -125,6 +126,7 @@ const Devspace = () => {
             <ChevronRight size={14} className="breadcrumb-icon" />
             <span className="breadcrumb-current">devspace</span>
           </div>
+          <ThemeToggle />
         </div>
       </nav>
 
