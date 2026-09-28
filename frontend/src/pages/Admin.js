@@ -16,7 +16,6 @@ const Admin = () => {
   const [works, setWorks] = useState([]);
   const [notes, setNotes] = useState([]);
   const [stories, setStories] = useState([]);
-  const [connect, setConnect] = useState([]);
   const [resume, setResume] = useState(null);
   const [resumeError, setResumeError] = useState('');
   const [resumeSuccess, setResumeSuccess] = useState('');
@@ -35,21 +34,18 @@ const Admin = () => {
   const [showWorkForm, setShowWorkForm] = useState(false);
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [showStoryForm, setShowStoryForm] = useState(false);
-  const [showConnectForm, setShowConnectForm] = useState(false);
 
   // Form states
   const [newTech, setNewTech] = useState({ name: '', icon: '' });
   const [newWork, setNewWork] = useState({ title: '', category: '', description: '', link: '', liveUrl: '', enableLiveUrl: false, downloadUrl: '', enableDownload: false, month: '', year: '' });
   const [newNote, setNewNote] = useState({ title: '', description: '', link: '', month: '', year: '' });
   const [newStory, setNewStory] = useState({ title: '', description: '', link: '', month: '', year: '' });
-  const [newConnect, setNewConnect] = useState({ name: '', link: '', icon: 'link' });
 
   // Edit states
   const [editingTechIndex, setEditingTechIndex] = useState(null);
   const [editingWorkIndex, setEditingWorkIndex] = useState(null);
   const [editingNoteIndex, setEditingNoteIndex] = useState(null);
   const [editingStoryIndex, setEditingStoryIndex] = useState(null);
-  const [editingConnectIndex, setEditingConnectIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
 
   useEffect(() => {
@@ -64,7 +60,6 @@ const Admin = () => {
           if (data.works) setWorks(data.works);
           if (data.notes) setNotes(data.notes);
           if (data.stories) setStories(data.stories);
-          if (data.connect) setConnect(data.connect);
           if (data.resume) {
             setResume(data.resume);
           } else {
@@ -86,14 +81,12 @@ const Admin = () => {
       const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
       const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
       const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
-      const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
       const storedResume = localStorage.getItem('portfolio_resume');
 
       setTechStack(storedTech || []);
       setWorks(storedWorks || []);
       setNotes(storedNotes || []);
       setStories(storedStories || []);
-      setConnect(storedConnect || []);
       setResume(storedResume || null);
 
       // Check Devspace status
@@ -172,7 +165,6 @@ const Admin = () => {
   const saveWorks = (data) => { setWorks(data); localStorage.setItem('portfolio_works', JSON.stringify(data)); saveToBackend('works', data); };
   const saveNotes = (data) => { setNotes(data); localStorage.setItem('portfolio_notes', JSON.stringify(data)); saveToBackend('notes', data); };
   const saveStories = (data) => { setStories(data); localStorage.setItem('portfolio_stories', JSON.stringify(data)); saveToBackend('stories', data); };
-  const saveConnect = (data) => { setConnect(data); localStorage.setItem('portfolio_connect', JSON.stringify(data)); saveToBackend('connect', data); };
 
   // Handlers
   const handleAddTech = () => {
@@ -307,35 +299,6 @@ const Admin = () => {
     const updated = [...stories];
     updated.splice(index, 1);
     saveStories(updated);
-  };
-
-
-
-  const handleAddConnect = () => {
-    if (newConnect.name && newConnect.link) {
-      if (editingConnectIndex !== null) {
-        const updated = [...connect];
-        updated[editingConnectIndex] = newConnect;
-        saveConnect(updated);
-        setEditingConnectIndex(null);
-      } else {
-        saveConnect([...connect, newConnect]);
-      }
-      setNewConnect({ name: '', link: '', icon: 'link' });
-      setShowConnectForm(false);
-    }
-  };
-
-  const handleEditConnect = (index) => {
-    setNewConnect(connect[index]);
-    setEditingConnectIndex(index);
-    setShowConnectForm(true);
-  };
-
-  const handleDeleteConnect = (index) => {
-    const updated = [...connect];
-    updated.splice(index, 1);
-    saveConnect(updated);
   };
 
   const handleResumeUpload = (e) => {
@@ -708,53 +671,6 @@ const Admin = () => {
               <div className="form-actions">
                 <button className="admin-save-btn" onClick={handleAddStory}>{editingStoryIndex !== null ? 'Update Story' : 'Save Story'}</button>
                 <button className="admin-cancel-btn" onClick={() => { setShowStoryForm(false); setEditingStoryIndex(null); setNewStory({ title: '', description: '', link: '', month: '', year: '' }) }}>Cancel</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-
-
-      {/* Connect Admin */}
-      <section className="section-container admin-section">
-        <div className="section-box relative-box">
-          <div className="sticker sticker-top-left">🌐</div>
-          <div className="sticker sticker-bottom-right">💬</div>
-          <h2 className="section-title">Manage <span className="gradient-text">Connect</span></h2>
-
-          <div className="admin-items-list">
-            {connect.map((item, i) => (
-              <div key={i} className="admin-item">
-                <div className="admin-item-content">
-                  <span className="admin-item-title">{item.name}</span>
-                  <span className="admin-item-subtitle">{item.link}</span>
-                </div>
-                <div className="admin-item-actions">
-                  <button className="edit-btn" onClick={() => handleEditConnect(i)}>
-                    <Edit2 size={18} />
-                  </button>
-                  <button className="delete-btn" onClick={() => handleDeleteConnect(i)}>
-                    <Trash2 size={18} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {!showConnectForm ? (
-            <button className="btn-add" onClick={() => setShowConnectForm(true)}>
-              <Plus size={20} /> Add New Connect Link
-            </button>
-          ) : (
-            <div className="add-container relative-box">
-              <div className="sticker sticker-center-left">🎈</div>
-              <input type="text" placeholder="Platform Name (e.g. GitHub)" className="admin-input" value={newConnect.name} onChange={e => setNewConnect({ ...newConnect, name: e.target.value })} />
-              <input type="text" placeholder="Link URL" className="admin-input" value={newConnect.link} onChange={e => setNewConnect({ ...newConnect, link: e.target.value })} />
-              <input type="text" placeholder="Icon Name (e.g. github, or FontAwesome React/HTML code like <FontAwesomeIcon icon={faDev} />)" className="admin-input" value={newConnect.icon} onChange={e => setNewConnect({ ...newConnect, icon: e.target.value })} />
-              <div className="form-actions">
-                <button className="admin-save-btn" onClick={handleAddConnect}>{editingConnectIndex !== null ? 'Update Connect Link' : 'Save Connect Link'}</button>
-                <button className="admin-cancel-btn" onClick={() => { setShowConnectForm(false); setEditingConnectIndex(null); setNewConnect({ name: '', link: '', icon: 'link' }) }}>Cancel</button>
               </div>
             </div>
           )}

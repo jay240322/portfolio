@@ -1,10 +1,18 @@
 .repos-container {
   min-height: 100vh;
-  padding: 85px 2rem 4rem;
-  max-width: 100%;
+  padding: 100px 2.5rem 4rem;
+  max-width: 1400px;
   margin: 0 auto;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .repos-container,
+html.light .repos-container {
+  --glass-border: rgba(0, 0, 0, 0.1);
 }
 
 /* Custom Navbar / Breadcrumbs (home > github) */
@@ -14,26 +22,27 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 0.75rem 2rem;
+  padding: 0.85rem 3rem;
   transition: all 0.3s ease;
   background: transparent;
   border-bottom: 1px solid transparent;
 }
 
 .github-navbar.scrolled {
-  padding: 0.6rem 2rem;
+  padding: 0.7rem 3rem;
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid var(--glass-border);
 }
 
 .github-nav-container {
-  max-width: 1200px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -83,19 +92,23 @@
 
 .repos-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3.5rem;
 }
 
 .repos-title {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  letter-spacing: -1px;
+  font-size: clamp(2.5rem, 6vw, 3.8rem);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  letter-spacing: -1.5px;
+  color: var(--text-primary);
 }
 
 .repos-subtitle {
   color: var(--text-secondary);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  max-width: 750px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .loading-state {
@@ -123,18 +136,34 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  width: 100%;
 }
 
 .repo-card {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
+  padding: 1.75rem;
   text-decoration: none;
   color: var(--text-primary);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  background-color: #251a2745;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+[data-theme="light"] .repo-card,
+html.light .repo-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .repo-card:hover,
+html.light .repo-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.1);
 }
 
 .repo-card::before {
@@ -151,8 +180,8 @@
 
 .repo-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+  border-color: rgba(59, 130, 246, 0.35);
 }
 
 .repo-card:hover::before {
@@ -168,31 +197,34 @@
 
 .repo-icon {
   color: var(--accent-color);
+  flex-shrink: 0;
 }
 
 .repo-name {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
   flex-grow: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-primary);
 }
 
 .link-icon {
   color: var(--text-secondary);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .repo-card:hover .link-icon {
   opacity: 1;
+  transform: translate(2px, -2px);
 }
 
 .repo-desc {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 1.5rem;
   flex-grow: 1;
   display: -webkit-box;
@@ -204,9 +236,10 @@
 .repo-meta {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   font-size: 0.85rem;
   color: var(--text-secondary);
+  margin-top: auto;
 }
 
 .repo-lang {
@@ -225,7 +258,7 @@
 .repo-stat {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 
 .no-repos {
@@ -238,6 +271,100 @@
   border: 1px dashed var(--glass-border);
 }
 
+/* 3-Column Minimalist Footer */
+.footer-minimal-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 5rem auto 0 auto;
+  padding: 3.5rem 0 3rem 0;
+  border-top: 1px solid var(--glass-border);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3.5rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-col:first-child {
+  padding-left: 2rem;
+}
+
+.footer-col-title {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.2px;
+}
+
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  display: inline-block;
+  width: fit-content;
+}
+
+.footer-link:hover {
+  color: var(--text-primary);
+  transform: translateX(2px);
+}
+
+.footer-location-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.footer-divider {
+  border: 0;
+  height: 1px;
+  background: var(--glass-border);
+  margin: 3.5rem 0 2rem 0;
+}
+
+.footer-bottom-copyright {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 1024px) {
   .repos-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -246,7 +373,7 @@
 
 @media (max-width: 768px) {
   .repos-container {
-    padding: 75px 1.25rem 3rem;
+    padding: 80px 1.25rem 3rem;
   }
 
   .github-navbar {
@@ -285,5 +412,29 @@
 
   .no-repos {
     padding: 2.5rem 1.25rem;
+  }
+
+  .footer-minimal-container {
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+  }
+
+  .footer-grid {
+    text-align: center;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+
+  .footer-col:first-child {
+    padding-left: 0;
+  }
+
+  .footer-links-list {
+    align-items: center;
+  }
+
+  .footer-col-title {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
   }
 }

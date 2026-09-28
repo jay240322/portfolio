@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ChevronRight, Mail, Code as GithubIcon, Briefcase as LinkedinIcon, ExternalLink, Camera as Instagram, MessageCircle as Twitter, Globe, Link as LinkIcon, ChevronDown, Download } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronRight, ChevronDown, ExternalLink, Globe } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -10,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   const container = useRef();
+  const worksSliderRef = useRef(null);
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const [techStack, setTechStack] = useState(() => {
@@ -44,14 +46,6 @@ const Home = () => {
       return [];
     }
   });
-  const [connect, setConnect] = useState(() => {
-    try {
-      const stored = localStorage.getItem('portfolio_connect');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
   const [activeTechIndex, setActiveTechIndex] = useState(null);
 
   useEffect(() => {
@@ -69,12 +63,6 @@ const Home = () => {
 
     // Desktop/Tablet animations
     mm.add("(min-width: 769px)", () => {
-      // Hero section page load entry animations (centered)
-      gsap.fromTo('.hero-content-centered',
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1.4, ease: 'power3.out' }
-      );
-
       // Scroll-triggered slide animations for name and subtitle
       gsap.to('.hero-title-centered', {
         xPercent: -50,
@@ -121,9 +109,9 @@ const Home = () => {
       });
 
       // Scroll-triggered animations for all sections
-      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      const sections = ['#about', '#stack', '#works', '#notes', '#stories', '#social'];
       sections.forEach((id) => {
-        const isSocial = id === '#social';
+        const isSocial = id === '#social' || id === '#about';
 
         // Title and subtitle slide/fade-in
         gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
@@ -192,12 +180,6 @@ const Home = () => {
 
     // Mobile specific animations (avoiding horizontal transformations to prevent overflow)
     mm.add("(max-width: 768px)", () => {
-      // Hero section page load entry animations (gentler fade on mobile)
-      gsap.fromTo('.hero-content-centered',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out' }
-      );
-
       // Scroll-triggered simple fade animations (no layout-breaking horizontal movements)
       gsap.to('.hero-title-centered, .hero-subtitle-centered', {
         opacity: 0,
@@ -221,7 +203,7 @@ const Home = () => {
       });
 
       // Scroll-triggered fade-in animations for all sections
-      const sections = ['#stack', '#works', '#notes', '#stories', '#social'];
+      const sections = ['#about', '#stack', '#works', '#notes', '#stories', '#social'];
       sections.forEach((id) => {
         // Gentle vertical fade-in on mobile
         gsap.fromTo(`${id} .section-title, ${id} .section-subtitle`,
@@ -284,7 +266,7 @@ const Home = () => {
     });
 
     return () => mm.revert();
-  }, { dependencies: [techStack, works, blogs, stories, connect], scope: container });
+  }, { dependencies: [techStack, works, blogs, stories], scope: container });
 
   useEffect(() => {
     const loadFromLocalStorage = () => {
@@ -292,13 +274,11 @@ const Home = () => {
       const storedWorks = JSON.parse(localStorage.getItem('portfolio_works'));
       const storedNotes = JSON.parse(localStorage.getItem('portfolio_notes'));
       const storedStories = JSON.parse(localStorage.getItem('portfolio_stories'));
-      const storedConnect = JSON.parse(localStorage.getItem('portfolio_connect'));
 
       if (storedTech) setTechStack(storedTech);
       if (storedWorks) setWorks(storedWorks);
       if (storedNotes) setBlogs(storedNotes);
       if (storedStories) setStories(storedStories);
-      if (storedConnect) setConnect(storedConnect);
     };
 
     const loadFromBackend = async () => {
@@ -323,10 +303,6 @@ const Home = () => {
           if (data.stories) {
             setStories(data.stories);
             localStorage.setItem('portfolio_stories', JSON.stringify(data.stories));
-          }
-          if (data.connect) {
-            setConnect(data.connect);
-            localStorage.setItem('portfolio_connect', JSON.stringify(data.connect));
           }
         } else {
           loadFromLocalStorage();
@@ -362,93 +338,74 @@ const Home = () => {
       ScrollTrigger.refresh();
     }, 150);
     return () => clearTimeout(timer);
-  }, [techStack, works, blogs, stories, connect]);
+  }, [techStack, works, blogs, stories]);
 
-  const getIconForConnect = (iconInput) => {
-    if (!iconInput) return <LinkIcon size={32} />;
-    const input = iconInput.trim();
+  // Drag-to-scroll support for selected works slider on desktop
+  useEffect(() => {
+    const slider = worksSliderRef.current;
+    if (!slider) return;
 
-    // 0. Check if it's a raw SVG string
-    if (input.startsWith('<svg')) {
-      return <span className="social-icon-svg-inline" dangerouslySetInnerHTML={{ __html: input }} />;
-    }
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
 
-    // 1. Check if it's a FontAwesome React component string
-    if (input.startsWith('<FontAwesomeIcon') || input.includes('icon={fa')) {
-      const iconMatch = input.match(/icon\s*=\s*\{\s*(fa[A-Za-z0-9]+)\s*\}/);
-      if (iconMatch) {
-        const camelName = iconMatch[1];
-        // Convert to kebab-case
-        const name = camelName.replace(/^fa/, '').replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
-        const brands = [
-          'dev', 'github', 'linkedin', 'instagram', 'twitter', 'facebook', 'youtube', 'discord', 'slack',
-          'medium', 'twitch', 'codepen', 'gitlab', 'stack-overflow', 'hashnode', 'threads', 'tiktok',
-          'whatsapp', 'telegram', 'reddit', 'pinterest', 'google', 'apple', 'microsoft', 'aws', 'docker'
-        ];
-        const faClass = brands.includes(name) ? `fa-brands fa-${name}` : `fa-solid fa-${name}`;
+    const handleMouseDown = (e) => {
+      if (e.target.closest('a, button')) return;
+      isDown = true;
+      slider.classList.add('active-drag');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    };
 
-        // Parse style if any
-        const styleMatch = input.match(/style\s*=\s*\{\{\s*([^}]+)\s*\}\}/);
-        let styleObj = { fontSize: '24px' };
-        if (styleMatch) {
-          const styleContent = styleMatch[1];
-          styleContent.split(',').forEach(pair => {
-            const parts = pair.split(':');
-            if (parts.length >= 2) {
-              const key = parts[0].trim();
-              const val = parts.slice(1).join(':').trim().replace(/^['"]|['"]$/g, '');
-              styleObj[key] = val;
-            }
-          });
+    const handleMouseLeave = () => {
+      isDown = false;
+      slider.classList.remove('active-drag');
+    };
+
+    const handleMouseUp = () => {
+      isDown = false;
+      slider.classList.remove('active-drag');
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      slider.scrollLeft = scrollLeft - walk;
+    };
+
+    slider.addEventListener('mousedown', handleMouseDown);
+    slider.addEventListener('mouseleave', handleMouseLeave);
+    slider.addEventListener('mouseup', handleMouseUp);
+    slider.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      slider.removeEventListener('mousedown', handleMouseDown);
+      slider.removeEventListener('mouseleave', handleMouseLeave);
+      slider.removeEventListener('mouseup', handleMouseUp);
+      slider.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [works]);
+
+  const handleResumeClick = (e) => {
+    try {
+      const localResume = localStorage.getItem('portfolio_resume');
+      if (localResume && localResume.startsWith('data:application/pdf')) {
+        e.preventDefault();
+        const base64Data = localResume.split(',')[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
-        return <i className={faClass} style={styleObj}></i>;
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
       }
-    }
-
-    // 2. Check if it's a FontAwesome HTML tag string
-    if (input.startsWith('<i ') && input.endsWith('></i>')) {
-      const classMatch = input.match(/class(?:Name)?\s*=\s*["']([^"']+)["']/);
-      const styleMatch = input.match(/style\s*=\s*\{\{\s*([^}]+)\s*\}\}/) || input.match(/style\s*=\s*["']([^"']+)["']/);
-      let classes = '';
-      if (classMatch) {
-        classes = classMatch[1];
-      }
-      let styleObj = { fontSize: '24px' };
-      if (styleMatch) {
-        const styleContent = styleMatch[1];
-        if (styleContent.includes(':')) {
-          styleContent.split(/[;,]/).forEach(pair => {
-            const parts = pair.split(':');
-            if (parts.length >= 2) {
-              const key = parts[0].trim();
-              const val = parts.slice(1).join(':').trim().replace(/^['"]|['"]$/g, '');
-              styleObj[key] = val;
-            }
-          });
-        }
-      }
-      return <i className={classes} style={styleObj}></i>;
-    }
-
-    // 3. Check if it's a raw class string (e.g. "fa-brands fa-dev")
-    if (input.startsWith('fa-') || input.includes(' fa-')) {
-      return <i className={input} style={{ fontSize: '24px' }}></i>;
-    }
-
-    // 4. Default to standard Lucide icons
-    switch (input.toLowerCase()) {
-      case 'github': return <GithubIcon size={24} />;
-      case 'linkedin': return <LinkedinIcon size={24} />;
-      case 'instagram': return <Instagram size={24} />;
-      case 'twitter': return <Twitter size={24} />;
-      case 'mail': return <Mail size={24} />;
-      case 'globe': return <Globe size={24} />;
-      case 'download': return <Download size={24} />;
-      case 'dev':
-      case 'dev.to':
-      case 'devto':
-        return <i className="fa-brands fa-dev" style={{ fontSize: '24px' }}></i>;
-      default: return <LinkIcon size={24} />;
+    } catch (err) {
+      console.error('Error opening local resume:', err);
     }
   };
 
@@ -469,12 +426,14 @@ const Home = () => {
 
         {/* Scroll Indicator */}
         <div className="scroll-indicator" onClick={() => {
-          const target = document.getElementById('stack');
+          const target = document.getElementById('about');
           if (target) {
+            const offset = -Math.max(0, (window.innerHeight - target.offsetHeight) / 2);
             if (window.lenis) {
-              window.lenis.scrollTo(target, { duration: 1.2 });
+              window.lenis.scrollTo(target, { duration: 1.2, offset });
             } else {
-              target.scrollIntoView({ behavior: 'smooth' });
+              const top = target.getBoundingClientRect().top + window.scrollY - Math.max(0, (window.innerHeight - target.offsetHeight) / 2);
+              window.scrollTo({ top, behavior: 'smooth' });
             }
           }
         }}>
@@ -482,6 +441,14 @@ const Home = () => {
           <ChevronDown className="scroll-arrow" size={20} />
         </div>
       </div>
+
+      {/* What I Bring Section */}
+      <section id="about" className="section-container border-t border-foreground/5 what-i-bring-section">
+        <h3 className="section-title text-left">What I Bring</h3>
+        <p className="what-i-bring-desc text-left">
+          I specialize in architecting secure, scalable cloud ecosystems and resilient infrastructure from the ground up. With deep expertise across systems security, threat modeling, vulnerability remediation, automated DevSecOps pipelines, and container orchestration with Kubernetes, I help organizations harden their attack surface, eliminate vulnerabilities, and implement multi-layered defense-in-depth frameworks without sacrificing engineering velocity.
+        </p>
+      </section>
 
       {/* Tech Stack Marquee Section */}
       <section id="stack" className="section-container border-t border-foreground/5">
@@ -509,14 +476,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Selected Works Section */}
-      <section id="works" className="section-container border-t border-foreground/5">
+      {/* Selected Works Section (Horizontal Slider) */}
+      <section id="works" className="section-container border-t border-foreground/5 works-slider-section">
         <h3 className="section-title text-left">Selected Works</h3>
         <p className="section-subtitle text-left">Projects I worked on. Each tailored to solve specific business problems.</p>
 
-        <div className="works-grid-layout">
+        <div className="works-slider-container" ref={worksSliderRef}>
           {works.map((work, index) => (
-            <div key={index} className="work-grid-item">
+            <div key={index} className="work-slider-card">
               <div className="work-grid-header">
                 <span className="work-grid-category">{work.category}</span>
                 <h4 className="work-grid-title">{work.title}</h4>
@@ -534,7 +501,7 @@ const Home = () => {
 
                   {/* See on Web (Live Website Link) */}
                   {work.enableLiveUrl && work.liveUrl && (
-                    <a href={work.liveUrl} className="work-grid-link">
+                    <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
                       <span>See on Web</span>
                       <Globe size={16} />
                     </a>
@@ -619,30 +586,119 @@ const Home = () => {
         </div>
       </section>
 
-
-
-      {/* Social Section */}
-      <section id="social" className="section-container border-t border-foreground/5">
-        <h3 className="section-title text-center">Got a security challenge or a project in mind?<br />Let’s talk</h3>
-        <p className="section-subtitle text-center">Find me on these online spaces.</p>
-
-        <div className="social-grid-static">
-          {connect.map((item, index) => (
-            <a key={index} href={item.link} className="social-item-static" target="_blank" rel="noreferrer">
-              <span className="social-icon-wrapper-static">{getIconForConnect(item.icon)}</span>
-              <span className="social-name-static">{item.name}</span>
-            </a>
-          ))}
-        </div>
+      {/* Have a Security Challenge / Let's Talk Section */}
+      <section id="social" className="section-container border-t border-foreground/5 let-talk-section">
+        <h3 className="section-title text-center">Have a Security Challenge?</h3>
+        <p className="let-talk-desc">
+          Whether you're looking to audit your cloud infrastructure, harden application security, automate DevSecOps pipelines, or discuss an exciting project, let's talk.
+        </p>
+        <p className="let-talk-cta">
+          Reach out via email or connect with me through my links below.
+        </p>
       </section>
 
-      {/* Footer */}
-      <footer className="footer-container">
-        <hr className="footer-line" />
-        <p className="footer-text">2026 @ JAY. All rights reserved.</p><br />
-        <p className="footer-contact" style={{ marginTop: '0.75rem', fontSize: '0.95rem', color: 'var(--text-secondary)' }}>
-          &bull; Email: <a href="mailto:pateljay0j@gmail.com" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>pateljay0j@gmail.com</a><br /><br /> &bull;  num: <a href="tel:+919104974534" style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>+91 9104974534</a>
-        </p>
+      {/* 3-Column Minimalist Footer (Contact / Connect / Resources) */}
+      <footer className="footer-minimal-container">
+        <div className="footer-grid">
+          {/* Column 1: Contact */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Contact</h4>
+            <ul className="footer-links-list">
+              <li className="footer-location-text">
+                Ahmedabad, Gujarat, India
+              </li>
+              <li>
+                <a href="mailto:pateljay0j@gmail.com" className="footer-link">
+                  pateljay0j@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919104974534" className="footer-link">
+                  +91 9104974534
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: Connect */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Connect</h4>
+            <ul className="footer-links-list">
+              <li>
+                <a href="https://github.com/jay240322" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/in/jaypatel24" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a href="https://dev.to/jaypatel_24" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  Dev
+                </a>
+              </li>
+              <li>
+                <a href="https://x.com/jaypatel_24" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  X
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Resources */}
+          <div className="footer-col">
+            <h4 className="footer-col-title">Resources</h4>
+            <ul className="footer-links-list">
+              <li>
+                <Link
+                  to="/"
+                  className="footer-link"
+                  onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      if (window.lenis) {
+                        window.lenis.scrollTo(0, { duration: 1.2 });
+                      } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }
+                  }}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <a href="https://jaypatel2403.hashnode.dev/" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  Articles
+                </a>
+              </li>
+              <li>
+                <a href="https://medium.com/@JayPatel_1" target="_blank" rel="noopener noreferrer" className="footer-link">
+                  Stories
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${API_URL}/api/resume/view`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                  onClick={handleResumeClick}
+                >
+                  Resume
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Divider Line & Copyright */}
+        <hr className="footer-divider" />
+        <div className="footer-bottom-copyright">
+          <p>2026 @ Jay. All rights reserved.</p>
+        </div>
       </footer>
     </div >
   );

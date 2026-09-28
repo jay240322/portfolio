@@ -11,6 +11,21 @@
   <meta property="og:image"content="%PUBLIC_URL%/Jay.png" />
   <meta property="og:type"content="website" />
   <meta name="description" content="Jay Patel's Portfolio" />
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem('portfolio_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) { }
+    })();
+  </script>
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
