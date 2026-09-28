@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronDown, ExternalLink, Globe } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -651,20 +652,22 @@ const Home = () => {
             <h4 className="footer-col-title">Resources</h4>
             <ul className="footer-links-list">
               <li>
-                <a
-                  href="/"
+                <Link
+                  to="/"
                   className="footer-link"
                   onClick={(e) => {
-                    e.preventDefault();
-                    if (window.lenis) {
-                      window.lenis.scrollTo(0, { duration: 1.2 });
-                    } else {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      if (window.lenis) {
+                        window.lenis.scrollTo(0, { duration: 1.2 });
+                      } else {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
                     }
                   }}
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="https://jaypatel2403.hashnode.dev/" target="_blank" rel="noopener noreferrer" className="footer-link">

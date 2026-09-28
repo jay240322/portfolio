@@ -201,7 +201,7 @@
 
 .section-title {
   font-size: 2.9rem;
-  font-weight: 800;
+  font-weight: 500;
   margin-bottom: 0.5rem;
   position: relative;
   z-index: 1;
@@ -468,7 +468,7 @@
 
 .work-grid-title {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-primary);
   line-height: 1.2;
   opacity: 0.7;
@@ -562,11 +562,12 @@
   gap: 1.5rem;
 }
 
-/* Minimal 3-Column Footer matching reference design */
+/* 3-Column Minimalist Footer matching /github footer */
 .footer-minimal-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3.5rem 2rem 5rem 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 5rem auto 0 auto;
+  padding: 3.5rem 0 3rem 0;
   border-top: 1px solid var(--glass-border);
 }
 
@@ -581,9 +582,13 @@
   flex-direction: column;
 }
 
+.footer-col:first-child {
+  padding-left: 2rem;
+}
+
 .footer-col-title {
   font-size: 1.15rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 1.5rem;
   letter-spacing: -0.2px;
@@ -762,8 +767,8 @@
     font-size: 1rem;
   }
 
-  .footer-contact {
-    font-size: 0.85rem !important;
+  .footer-col:first-child {
+    padding-left: 0;
   }
 }
 
