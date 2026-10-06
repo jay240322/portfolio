@@ -46,6 +46,11 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' })); // support base64 uploads like pdf resumes & binaries
 
+// DeployGuard redirect
+app.get(['/deployguard', '/deploy-guard'], (req, res) => {
+  res.redirect('https://deploy-guard-i9wb.onrender.com');
+});
+
 // Database Connection check middleware (ensures connection is ready before processing any DB request)
 const ensureDb = async (req, res, next) => {
   if (mongoose.connection.readyState === 1) {
