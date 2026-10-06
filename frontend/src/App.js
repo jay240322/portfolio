@@ -14,6 +14,14 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './App.css';
 
+function DeployGuardRedirect() {
+  useEffect(() => {
+    window.location.replace('https://deploy-guard-i9wb.onrender.com');
+  }, []);
+
+  return null;
+}
+
 function App() {
   const [showLoader, setShowLoader] = useState(true);
   const [fadeOutLoader, setFadeOutLoader] = useState(false);
@@ -32,6 +40,12 @@ function App() {
         clearInterval(stopScrollTimer);
       }
     }, 50);
+
+    const pathname = window.location.pathname.toLowerCase();
+    if (pathname === '/deployguard' || pathname === '/deploy-guard') {
+      window.location.replace('https://deploy-guard-i9wb.onrender.com');
+      return;
+    }
 
     const initData = async () => {
       // Create a promise that resolves after 4 seconds as a fallback timeout
@@ -129,12 +143,13 @@ function App() {
     const isDevspacePath = location.pathname === '/devspace';
     const isGithubPath = location.pathname === '/github';
     const isKubesensePath = location.pathname === '/kubesense';
+    const isDeployGuardPath = location.pathname.toLowerCase() === '/deployguard' || location.pathname.toLowerCase() === '/deploy-guard';
 
     return (
       <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
         <div className="app-container">
-          {showLoader && <Loader fadeOut={fadeOutLoader} />}
-          {!isAdminPath && !isDevspacePath && !isGithubPath && !isKubesensePath && <Navbar />}
+          {showLoader && !isDeployGuardPath && <Loader fadeOut={fadeOutLoader} />}
+          {!isAdminPath && !isDevspacePath && !isGithubPath && !isKubesensePath && !isDeployGuardPath && <Navbar />}
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -142,6 +157,8 @@ function App() {
               <Route path={adminRoute} element={<Admin />} />
               <Route path="/devspace" element={<Devspace />} />
               <Route path="/kubesense" element={<Kubesense />} />
+              <Route path="/deployguard" element={<DeployGuardRedirect />} />
+              <Route path="/deploy-guard" element={<DeployGuardRedirect />} />
             </Routes>
           </main>
         </div>
