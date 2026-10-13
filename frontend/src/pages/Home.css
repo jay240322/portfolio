@@ -352,6 +352,16 @@
 }
 
 /* Works Horizontal Slider Layout */
+.works-slider-wrapper {
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  display: flex;
+  align-items: center;
+}
+
 .works-slider-container {
   display: flex;
   flex-direction: row;
@@ -368,10 +378,8 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Hide scrollbar Firefox */
   -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
+  width: 100%;
+  max-width: 100%;
   background: var(--bg-color, #ffffff);
   border-top: 1px solid var(--glass-border);
   border-bottom: 1px solid var(--glass-border);
@@ -388,6 +396,95 @@
 
 .works-slider-container::-webkit-scrollbar {
   display: none; /* Hide scrollbar Chrome/Safari */
+}
+
+/* Slider Navigation Arrow Buttons */
+.works-slider-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.works-slider-nav-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.works-slider-next {
+  right: max(1.5rem, calc(50vw - 700px + 1.25rem));
+  animation: arrowNudgeRight 2.2s ease-in-out infinite;
+}
+
+.works-slider-prev {
+  left: max(1.5rem, calc(50vw - 700px + 1.25rem));
+}
+
+.works-slider-nav-btn:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px var(--accent-glow);
+  transform: translateY(-50%) scale(1.1);
+  animation-play-state: paused;
+}
+
+.works-slider-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+@keyframes arrowNudgeRight {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(6px);
+  }
+}
+
+/* Edge gradient fades for smooth carousel transition cue */
+.works-slider-fade {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 72px;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.works-slider-fade.is-visible {
+  opacity: 1;
+}
+
+.works-slider-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color, #ffffff) 20%, transparent 100%);
+}
+
+.works-slider-fade-right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color, #ffffff) 20%, transparent 100%);
 }
 
 .work-slider-card {
@@ -422,6 +519,23 @@
     min-width: 80vw;
     max-width: 88vw;
     padding: 2rem 1.5rem;
+  }
+
+  .works-slider-nav-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .works-slider-next {
+    right: 0.75rem;
+  }
+
+  .works-slider-prev {
+    left: 0.75rem;
+  }
+
+  .works-slider-fade {
+    width: 44px;
   }
 }
 

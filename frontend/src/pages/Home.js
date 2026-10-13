@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, ChevronDown, ExternalLink, Globe } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, ExternalLink, Globe } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -47,6 +47,8 @@ const Home = () => {
     }
   });
   const [activeTechIndex, setActiveTechIndex] = useState(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     const handleDocumentClick = () => {
@@ -340,10 +342,40 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, [techStack, works, blogs, stories]);
 
-  // Drag-to-scroll support for selected works slider on desktop
+  // Scroll tracking and button handlers for selected works slider
+  const checkWorksScroll = useCallback(() => {
+    const slider = worksSliderRef.current;
+    if (!slider) return;
+    const { scrollLeft, scrollWidth, clientWidth } = slider;
+    setCanScrollLeft(scrollLeft > 15);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 15);
+  }, []);
+
+  const handleSlideWorks = (direction) => {
+    const slider = worksSliderRef.current;
+    if (!slider) return;
+
+    const firstCard = slider.querySelector('.work-slider-card');
+    let scrollStep = 540;
+    if (firstCard) {
+      const style = window.getComputedStyle(slider);
+      const gap = parseFloat(style.gap) || 32;
+      scrollStep = firstCard.offsetWidth + gap;
+    }
+
+    slider.scrollBy({
+      left: direction === 'right' ? scrollStep : -scrollStep,
+      behavior: 'smooth'
+    });
+  };
+
+  // Drag-to-scroll and scroll-listener support for selected works slider
   useEffect(() => {
     const slider = worksSliderRef.current;
     if (!slider) return;
+
+    checkWorksScroll();
+    const scrollTimer = setTimeout(checkWorksScroll, 300);
 
     let isDown = false;
     let startX = 0;
@@ -379,14 +411,19 @@ const Home = () => {
     slider.addEventListener('mouseleave', handleMouseLeave);
     slider.addEventListener('mouseup', handleMouseUp);
     slider.addEventListener('mousemove', handleMouseMove);
+    slider.addEventListener('scroll', checkWorksScroll, { passive: true });
+    window.addEventListener('resize', checkWorksScroll);
 
     return () => {
+      clearTimeout(scrollTimer);
       slider.removeEventListener('mousedown', handleMouseDown);
       slider.removeEventListener('mouseleave', handleMouseLeave);
       slider.removeEventListener('mouseup', handleMouseUp);
       slider.removeEventListener('mousemove', handleMouseMove);
+      slider.removeEventListener('scroll', checkWorksScroll);
+      window.removeEventListener('resize', checkWorksScroll);
     };
-  }, [works]);
+  }, [works, checkWorksScroll]);
 
   const handleResumeClick = (e) => {
     try {
@@ -481,38 +518,67 @@ const Home = () => {
         <h3 className="section-title text-left">Selected Works</h3>
         <p className="section-subtitle text-left">Projects I worked on. Each tailored to solve specific business problems.</p>
 
-        <div className="works-slider-container" ref={worksSliderRef}>
-          {works.map((work, index) => (
-            <div key={index} className="work-slider-card">
-              <div className="work-grid-header">
-                <span className="work-grid-category">{work.category}</span>
-                <h4 className="work-grid-title">{work.title}</h4>
-              </div>
-              <p className="work-grid-desc text-secondary">{work.description}</p>
-              <div className="work-grid-footer">
-                <div className="work-grid-actions">
-                  {/* Explore Project (GitHub Link) */}
-                  {work.link && (
-                    <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                      <span>Explore Project</span>
-                      <ExternalLink size={16} />
-                    </a>
-                  )}
+        <div className="works-slider-wrapper">
+          {/* Previous Arrow Button */}
+          <button
+            type="button"
+            className={`works-slider-nav-btn works-slider-prev ${canScrollLeft ? 'is-visible' : ''}`}
+            onClick={() => handleSlideWorks('left')}
+            aria-label="Previous works (slide left)"
+            title="Slide left"
+          >
+            <ChevronLeft size={22} strokeWidth={2.4} />
+          </button>
 
-                  {/* See on Web (Live Website Link) */}
-                  {work.enableLiveUrl && work.liveUrl && (
-                    <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                      <span>See on Web</span>
-                      <Globe size={16} />
-                    </a>
-                  )}
+          {/* Slider Container */}
+          <div className="works-slider-container" ref={worksSliderRef}>
+            {works.map((work, index) => (
+              <div key={index} className="work-slider-card">
+                <div className="work-grid-header">
+                  <span className="work-grid-category">{work.category}</span>
+                  <h4 className="work-grid-title">{work.title}</h4>
                 </div>
-                <span className="work-grid-year">
-                  {work.month && work.year ? `${work.month} ${work.year}` : (work.year || "2025 - 2026")}
-                </span>
+                <p className="work-grid-desc text-secondary">{work.description}</p>
+                <div className="work-grid-footer">
+                  <div className="work-grid-actions">
+                    {/* Explore Project (GitHub Link) */}
+                    {work.link && (
+                      <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                        <span>Explore Project</span>
+                        <ExternalLink size={16} />
+                      </a>
+                    )}
+
+                    {/* See on Web (Live Website Link) */}
+                    {work.enableLiveUrl && work.liveUrl && (
+                      <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                        <span>See on Web</span>
+                        <Globe size={16} />
+                      </a>
+                    )}
+                  </div>
+                  <span className="work-grid-year">
+                    {work.month && work.year ? `${work.month} ${work.year}` : (work.year || "2025 - 2026")}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Right-Faced Arrow Button */}
+          <button
+            type="button"
+            className={`works-slider-nav-btn works-slider-next ${canScrollRight ? 'is-visible' : ''}`}
+            onClick={() => handleSlideWorks('right')}
+            aria-label="Next works (slide right)"
+            title="Slide right to view more works"
+          >
+            <ChevronRight size={22} strokeWidth={2.4} />
+          </button>
+
+          {/* Subtle edge fades for smooth sliding cue */}
+          <div className={`works-slider-fade works-slider-fade-left ${canScrollLeft ? 'is-visible' : ''}`} />
+          <div className={`works-slider-fade works-slider-fade-right ${canScrollRight ? 'is-visible' : ''}`} />
         </div>
       </section>
 
