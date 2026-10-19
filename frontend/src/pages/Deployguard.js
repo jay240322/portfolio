@@ -29,10 +29,10 @@ import './Deployguard.css';
 
 const overviewLinks = [
   { id: 'overview', label: 'Overview' },
-  { id: 'problems', label: 'Problems Solved' },
+  { id: 'problems', label: 'Problems' },
   { id: 'features', label: 'Features' },
   { id: 'architecture', label: 'Architecture' },
-  { id: 'guide', label: 'How to Use' },
+  { id: 'guide', label: 'Quick Guide' },
   { id: 'deepdive', label: 'Deep Dive' },
   { id: 'rules', label: 'Secret Rules' },
   { id: 'stack', label: 'Tech Stack' },
@@ -793,31 +793,14 @@ const Deployguard = () => {
         </div>
       </section>
 
-      {/* Support Banner */}
-      <div className="star-banner glass-panel animate-fade-in" style={{ marginTop: '4rem', animationDelay: '0.35s' }}>
+      {/* Closing Star Banner */}
+      <div className="star-banner glass-panel animate-fade-in" style={{ marginTop: '4rem', animationDelay: '0.4s' }}>
         <h3>⭐ Support DeployGuard</h3>
-        <p>If you find DeployGuard useful for securing CI/CD pipelines, consider giving the repository a star on GitHub!</p>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <a
-            href="https://deploy-guard-i9wb.onrender.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-hero-action primary-tint"
-          >
-            <Globe size={16} />
-            <span>Visit the Website</span>
-          </a>
-
-          <a
-            href="https://github.com/jay240322/Deploy-Guard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-hero-action"
-          >
-            <ExternalLink size={16} />
-            <span>Star jay240322/Deploy-Guard</span>
-          </a>
-        </div>
+        <p>If you find DeployGuard useful, consider giving the repository a star on GitHub!</p>
+        <a href="https://github.com/jay240322/Deploy-Guard" target="_blank" rel="noopener noreferrer" className="btn-star-repo">
+          <ExternalLink size={16} />
+          <span>Star jay240322/Deploy-Guard</span>
+        </a>
       </div>
 
       {/* 3-Column Minimalist Footer (Contact / Connect / Resources) */}
