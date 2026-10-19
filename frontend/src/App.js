@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import GithubRepos from './pages/GithubRepos';
@@ -144,9 +144,10 @@ function App() {
               <Route path={adminRoute} element={<Admin />} />
               <Route path="/devspace" element={<Devspace />} />
               <Route path="/kubesense" element={<Kubesense />} />
-              <Route path="/Deployguard" element={<Deployguard />} />
-              <Route path="/deployguard" element={<Deployguard />} />
+              <Route path="/Deploy-guard" element={<Deployguard />} />
               <Route path="/deploy-guard" element={<Deployguard />} />
+              <Route path="/Deployguard" element={<Navigate to="/Deploy-guard" replace />} />
+              <Route path="/deployguard" element={<Navigate to="/Deploy-guard" replace />} />
             </Routes>
           </main>
         </div>
