@@ -46,7 +46,8 @@ const Admin = () => {
   const [editingWorkIndex, setEditingWorkIndex] = useState(null);
   const [editingNoteIndex, setEditingNoteIndex] = useState(null);
   const [editingStoryIndex, setEditingStoryIndex] = useState(null);
-  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [draggedTechIndex, setDraggedTechIndex] = useState(null);
+  const [draggedWorkIndex, setDraggedWorkIndex] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -137,29 +138,70 @@ const Admin = () => {
     saveToBackend('techStack', data);
   };
 
-  const handleDragStart = (e, index) => {
-    setDraggedIndex(index);
+  const handleTechDragStart = (e, index) => {
+    setDraggedTechIndex(index);
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/html", e.target);
   };
 
-  const handleDragOver = (e, index) => {
+  const handleTechDragOver = (e, index) => {
     e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
+    if (draggedTechIndex === null || draggedTechIndex === index) return;
 
     const updated = [...techStack];
-    const draggedItem = updated[draggedIndex];
-    updated.splice(draggedIndex, 1);
+    const draggedItem = updated[draggedTechIndex];
+    updated.splice(draggedTechIndex, 1);
     updated.splice(index, 0, draggedItem);
 
-    setDraggedIndex(index);
+    setDraggedTechIndex(index);
     setTechStack(updated);
   };
 
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
+  const handleTechDragEnd = () => {
+    setDraggedTechIndex(null);
     localStorage.setItem('portfolio_techStack', JSON.stringify(techStack));
     saveToBackend('techStack', techStack);
+  };
+
+  const moveTechPosition = (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= techStack.length || fromIndex === toIndex) return;
+    const updated = [...techStack];
+    const item = updated.splice(fromIndex, 1)[0];
+    updated.splice(toIndex, 0, item);
+    saveTechStack(updated);
+  };
+
+  const handleWorkDragStart = (e, index) => {
+    setDraggedWorkIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.target);
+  };
+
+  const handleWorkDragOver = (e, index) => {
+    e.preventDefault();
+    if (draggedWorkIndex === null || draggedWorkIndex === index) return;
+
+    const updated = [...works];
+    const draggedItem = updated[draggedWorkIndex];
+    updated.splice(draggedWorkIndex, 1);
+    updated.splice(index, 0, draggedItem);
+
+    setDraggedWorkIndex(index);
+    setWorks(updated);
+  };
+
+  const handleWorkDragEnd = () => {
+    setDraggedWorkIndex(null);
+    localStorage.setItem('portfolio_works', JSON.stringify(works));
+    saveToBackend('works', works);
+  };
+
+  const moveWorkPosition = (fromIndex, toIndex) => {
+    if (toIndex < 0 || toIndex >= works.length || fromIndex === toIndex) return;
+    const updated = [...works];
+    const item = updated.splice(fromIndex, 1)[0];
+    updated.splice(toIndex, 0, item);
+    saveWorks(updated);
   };
 
   const saveWorks = (data) => { setWorks(data); localStorage.setItem('portfolio_works', JSON.stringify(data)); saveToBackend('works', data); };
@@ -456,21 +498,46 @@ const Admin = () => {
             {techStack.map((tech, i) => (
               <div
                 key={i}
-                className={`admin-item ${draggedIndex === i ? 'dragging' : ''}`}
+                className={`admin-item ${draggedTechIndex === i ? 'dragging' : ''}`}
                 draggable
-                onDragStart={(e) => handleDragStart(e, i)}
-                onDragOver={(e) => handleDragOver(e, i)}
-                onDragEnd={handleDragEnd}
+                onDragStart={(e) => handleTechDragStart(e, i)}
+                onDragOver={(e) => handleTechDragOver(e, i)}
+                onDragEnd={handleTechDragEnd}
                 style={{ cursor: 'grab' }}
               >
-                <div className="drag-handle" style={{ cursor: 'grab', marginRight: '1rem', color: 'var(--text-secondary)', userSelect: 'none' }}>
+                <div className="drag-handle" style={{ cursor: 'grab', marginRight: '0.75rem', color: 'var(--text-secondary)', userSelect: 'none' }} title="Hold & drag to replace position">
                   ☰
                 </div>
                 <div className="admin-item-content">
-                  <span className="admin-item-title">{tech.name}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="position-pill" title={`Position #${i + 1}`}>
+                      #{i + 1}
+                    </span>
+                    <span className="admin-item-title">{tech.name}</span>
+                  </div>
                   <span className="admin-item-subtitle">{tech.icon}</span>
                 </div>
                 <div className="admin-item-actions">
+                  <div className="order-actions">
+                    <button
+                      type="button"
+                      className="order-btn"
+                      disabled={i === 0}
+                      onClick={(e) => { e.stopPropagation(); moveTechPosition(i, i - 1); }}
+                      title="Move up"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      className="order-btn"
+                      disabled={i === techStack.length - 1}
+                      onClick={(e) => { e.stopPropagation(); moveTechPosition(i, i + 1); }}
+                      title="Move down"
+                    >
+                      ▼
+                    </button>
+                  </div>
                   <button className="edit-btn" onClick={() => handleEditTech(i)}>
                     <Edit2 size={18} />
                   </button>
@@ -509,14 +576,50 @@ const Admin = () => {
 
           <div className="admin-items-list">
             {works.map((work, i) => (
-              <div key={i} className="admin-item">
+              <div
+                key={i}
+                className={`admin-item ${draggedWorkIndex === i ? 'dragging' : ''}`}
+                draggable
+                onDragStart={(e) => handleWorkDragStart(e, i)}
+                onDragOver={(e) => handleWorkDragOver(e, i)}
+                onDragEnd={handleWorkDragEnd}
+                style={{ cursor: 'grab' }}
+              >
+                <div className="drag-handle" style={{ cursor: 'grab', marginRight: '0.75rem', color: 'var(--text-secondary)', userSelect: 'none' }} title="Hold & drag to replace position">
+                  ☰
+                </div>
                 <div className="admin-item-content">
-                  <span className="admin-item-title">{work.title}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="position-pill" title={`Position #${i + 1}`}>
+                      #{i + 1}
+                    </span>
+                    <span className="admin-item-title">{work.title}</span>
+                  </div>
                   <span className="admin-item-subtitle">
                     {work.category} {work.month && work.year ? `(${work.month} ${work.year})` : (work.year ? `(${work.year})` : '')}
                   </span>
                 </div>
                 <div className="admin-item-actions">
+                  <div className="order-actions">
+                    <button
+                      type="button"
+                      className="order-btn"
+                      disabled={i === 0}
+                      onClick={(e) => { e.stopPropagation(); moveWorkPosition(i, i - 1); }}
+                      title="Move up"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      className="order-btn"
+                      disabled={i === works.length - 1}
+                      onClick={(e) => { e.stopPropagation(); moveWorkPosition(i, i + 1); }}
+                      title="Move down"
+                    >
+                      ▼
+                    </button>
+                  </div>
                   <button className="edit-btn" onClick={() => handleEditWork(i)}>
                     <Edit2 size={18} />
                   </button>

@@ -6,6 +6,7 @@ import GithubRepos from './pages/GithubRepos';
 import Admin from './pages/Admin';
 import Devspace from './pages/Devspace';
 import Kubesense from './pages/Kubesense';
+import Deployguard from './pages/Deployguard';
 import ClickSpark from './components/ClickSpark';
 import Loader from './components/Loader';
 import { ThemeProvider } from './context/ThemeContext';
@@ -13,14 +14,6 @@ import Lenis from '@studio-freight/lenis';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './App.css';
-
-function DeployGuardRedirect() {
-  useEffect(() => {
-    window.location.replace('https://deploy-guard-i9wb.onrender.com');
-  }, []);
-
-  return null;
-}
 
 function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -40,12 +33,6 @@ function App() {
         clearInterval(stopScrollTimer);
       }
     }, 50);
-
-    const pathname = window.location.pathname.toLowerCase();
-    if (pathname === '/deployguard' || pathname === '/deploy-guard') {
-      window.location.replace('https://deploy-guard-i9wb.onrender.com');
-      return;
-    }
 
     const initData = async () => {
       // Create a promise that resolves after 4 seconds as a fallback timeout
@@ -157,8 +144,9 @@ function App() {
               <Route path={adminRoute} element={<Admin />} />
               <Route path="/devspace" element={<Devspace />} />
               <Route path="/kubesense" element={<Kubesense />} />
-              <Route path="/deployguard" element={<DeployGuardRedirect />} />
-              <Route path="/deploy-guard" element={<DeployGuardRedirect />} />
+              <Route path="/Deployguard" element={<Deployguard />} />
+              <Route path="/deployguard" element={<Deployguard />} />
+              <Route path="/deploy-guard" element={<Deployguard />} />
             </Routes>
           </main>
         </div>
