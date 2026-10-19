@@ -237,7 +237,7 @@ const Deployguard = () => {
           <div className="breadcrumb">
             <Link to="/" className="breadcrumb-link">home</Link>
             <ChevronRight size={14} className="breadcrumb-icon" />
-            <span className="breadcrumb-current">deployguard</span>
+            <span className="breadcrumb-current">Deploy-guard</span>
           </div>
           <ThemeToggle />
         </div>
