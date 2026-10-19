@@ -541,20 +541,34 @@ const Home = () => {
                 <p className="work-grid-desc text-secondary">{work.description}</p>
                 <div className="work-grid-footer">
                   <div className="work-grid-actions">
-                    {/* Explore Project (GitHub Link) */}
+                    {/* Explore Project (GitHub Link or internal route) */}
                     {work.link && (
-                      <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                        <span>Explore Project</span>
-                        <ExternalLink size={16} />
-                      </a>
+                      work.link.startsWith('/') ? (
+                        <Link to={work.link} className="work-grid-link">
+                          <span>Explore Project</span>
+                          <ExternalLink size={16} />
+                        </Link>
+                      ) : (
+                        <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                          <span>Explore Project</span>
+                          <ExternalLink size={16} />
+                        </a>
+                      )
                     )}
 
-                    {/* See on Web (Live Website Link) */}
+                    {/* See on Web (Live Website Link or internal route) */}
                     {work.enableLiveUrl && work.liveUrl && (
-                      <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                        <span>See on Web</span>
-                        <Globe size={16} />
-                      </a>
+                      work.liveUrl.startsWith('/') ? (
+                        <Link to={work.liveUrl} className="work-grid-link">
+                          <span>See on Web</span>
+                          <Globe size={16} />
+                        </Link>
+                      ) : (
+                        <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                          <span>See on Web</span>
+                          <Globe size={16} />
+                        </a>
+                      )
                     )}
                   </div>
                   <span className="work-grid-year">
