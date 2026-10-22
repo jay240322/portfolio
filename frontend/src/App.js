@@ -16,39 +16,13 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './App.css';
 
-// External Redirect Component for DeployGuard live website
+// External Redirect Component for DeployGuard live website (instant redirect without any intermediate message)
 const ExternalRedirect = ({ url }) => {
   useEffect(() => {
     window.location.replace(url);
   }, [url]);
 
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '1rem',
-        background: 'var(--bg-color, #130D14)',
-        color: 'var(--text-primary, #ffffff)',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}
-    >
-      <p style={{ fontSize: '1.1rem' }}>Redirecting to DeployGuard...</p>
-      <a
-        href={url}
-        style={{
-          color: '#3b82f6',
-          textDecoration: 'underline',
-          fontSize: '0.9rem'
-        }}
-      >
-        Click here if you are not redirected automatically
-      </a>
-    </div>
-  );
+  return null;
 };
 
 function App() {
@@ -172,6 +146,13 @@ function App() {
     const isDeployGuardExternal = normalizedPath === '/deployguard';
     const isDeployGuardDetail = normalizedPath === '/deploy-guard';
     const isDeployGuardPath = isDeployGuardExternal || isDeployGuardDetail;
+
+    if (isDeployGuardExternal) {
+      if (typeof window !== 'undefined') {
+        window.location.replace('https://deploy-guard-i9wb.onrender.com/');
+      }
+      return null;
+    }
 
     return (
       <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
