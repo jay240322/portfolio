@@ -8,6 +8,7 @@ import AOS from 'aos';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
+window.ScrollTrigger = ScrollTrigger;
 
 const Home = () => {
   const container = useRef();
@@ -450,7 +451,11 @@ const Home = () => {
   const resolveInternalRoute = (url, title) => {
     if (url) {
       const trimmed = url.trim();
-      if (trimmed.startsWith('/')) return trimmed;
+      if (trimmed.startsWith('/')) {
+        const lowerTrimmed = trimmed.toLowerCase();
+        if (lowerTrimmed === '/deployguard') return '/Deploy-guard';
+        return trimmed;
+      }
 
       const lowerUrl = trimmed.toLowerCase();
       if (lowerUrl === 'kubesense') return '/kubesense';

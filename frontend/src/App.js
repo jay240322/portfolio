@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import GithubRepos from './pages/GithubRepos';
@@ -9,11 +9,47 @@ import Kubesense from './pages/Kubesense';
 import Deployguard from './pages/Deployguard';
 import ClickSpark from './components/ClickSpark';
 import Loader from './components/Loader';
+import ScrollToTop from './components/ScrollToTop';
 import { ThemeProvider } from './context/ThemeContext';
 import Lenis from '@studio-freight/lenis';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './App.css';
+
+// External Redirect Component for DeployGuard live website
+const ExternalRedirect = ({ url }) => {
+  useEffect(() => {
+    window.location.replace(url);
+  }, [url]);
+
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '1rem',
+        background: 'var(--bg-color, #130D14)',
+        color: 'var(--text-primary, #ffffff)',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}
+    >
+      <p style={{ fontSize: '1.1rem' }}>Redirecting to DeployGuard...</p>
+      <a
+        href={url}
+        style={{
+          color: '#3b82f6',
+          textDecoration: 'underline',
+          fontSize: '0.9rem'
+        }}
+      >
+        Click here if you are not redirected automatically
+      </a>
+    </div>
+  );
+};
 
 function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -91,6 +127,7 @@ function App() {
       easing: 'ease-out-cubic',
       offset: 0, // trigger reveals immediately upon entering screen to avoid blank space
     });
+    window.AOS = AOS;
 
     // Initialize Lenis smooth scroll
     const lenis = new Lenis({
@@ -130,7 +167,11 @@ function App() {
     const isDevspacePath = location.pathname === '/devspace';
     const isGithubPath = location.pathname === '/github';
     const isKubesensePath = location.pathname === '/kubesense';
-    const isDeployGuardPath = location.pathname.toLowerCase() === '/deployguard' || location.pathname.toLowerCase() === '/deploy-guard';
+
+    const normalizedPath = location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+    const isDeployGuardExternal = normalizedPath === '/deployguard';
+    const isDeployGuardDetail = normalizedPath === '/deploy-guard';
+    const isDeployGuardPath = isDeployGuardExternal || isDeployGuardDetail;
 
     return (
       <ClickSpark sparkColor="rgba(59, 130, 246, 0.6)" sparkSize={12} sparkRadius={20} sparkCount={10} duration={400}>
@@ -144,10 +185,17 @@ function App() {
               <Route path={adminRoute} element={<Admin />} />
               <Route path="/devspace" element={<Devspace />} />
               <Route path="/kubesense" element={<Kubesense />} />
+
+              {/* Internal Project Detail Page: /Deploy-guard */}
               <Route path="/Deploy-guard" element={<Deployguard />} />
               <Route path="/deploy-guard" element={<Deployguard />} />
-              <Route path="/Deployguard" element={<Navigate to="/Deploy-guard" replace />} />
-              <Route path="/deployguard" element={<Navigate to="/Deploy-guard" replace />} />
+              <Route path="/Deploy-Guard" element={<Deployguard />} />
+
+              {/* External Live Website Redirect: /deployguard */}
+              <Route path="/deployguard" element={<ExternalRedirect url="https://deploy-guard-i9wb.onrender.com/" />} />
+              <Route path="/Deployguard" element={<ExternalRedirect url="https://deploy-guard-i9wb.onrender.com/" />} />
+              <Route path="/DeployGuard" element={<ExternalRedirect url="https://deploy-guard-i9wb.onrender.com/" />} />
+              <Route path="/DEPLOYGUARD" element={<ExternalRedirect url="https://deploy-guard-i9wb.onrender.com/" />} />
             </Routes>
           </main>
         </div>
@@ -158,6 +206,7 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <ScrollToTop />
         <AppContent />
       </Router>
     </ThemeProvider>

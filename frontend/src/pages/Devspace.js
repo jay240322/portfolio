@@ -22,6 +22,17 @@ const Devspace = () => {
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    if (window.lenis) {
+      try {
+        window.lenis.scrollTo(0, { immediate: true });
+      } catch (e) {}
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
