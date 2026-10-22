@@ -484,7 +484,7 @@ $ kubectl get nodes`}</code></pre>
             <p>Forward port 3000 from the cluster service resource mapping directly to your localhost environment:</p>
             <pre className="font-mono"><code>{`$ kubectl port-forward -n kubesense svc/kubesense-frontend-service 3000:3000`}</code></pre>
             <p className="access-info-note">
-              Open your browser and navigate to: <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer">http://localhost:3000</a>
+              Open your browser and navigate to: <a href="http://localhost:3000" rel="noopener noreferrer">http://localhost:3000</a>
             </p>
           </div>
 

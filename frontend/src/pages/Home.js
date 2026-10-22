@@ -447,6 +447,49 @@ const Home = () => {
   };
 
 
+  const resolveInternalRoute = (url, title) => {
+    if (url) {
+      const trimmed = url.trim();
+      if (trimmed.startsWith('/')) return trimmed;
+
+      const lowerUrl = trimmed.toLowerCase();
+      if (lowerUrl === 'kubesense') return '/kubesense';
+      if (lowerUrl === 'devspace') return '/devspace';
+      if (lowerUrl === 'deployguard' || lowerUrl === 'deploy-guard') return '/Deploy-guard';
+      if (lowerUrl === 'github') return '/github';
+
+      try {
+        const parsed = new URL(trimmed);
+        const host = parsed.hostname.toLowerCase();
+        const currentHost = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
+        if (
+          host === currentHost ||
+          host === 'localhost' ||
+          host === '127.0.0.1' ||
+          host.includes('jaypatel.online')
+        ) {
+          const path = parsed.pathname.toLowerCase();
+          if (path.includes('kubesense')) return '/kubesense';
+          if (path.includes('devspace')) return '/devspace';
+          if (path.includes('deployguard') || path.includes('deploy-guard')) return '/Deploy-guard';
+          if (path.includes('github')) return '/github';
+          return parsed.pathname;
+        }
+      } catch {
+        // Not a standard URL
+      }
+    }
+
+    if (title) {
+      const lower = title.toLowerCase();
+      if (lower.includes('kubesense') || lower.includes('kube sense')) return '/kubesense';
+      if (lower.includes('devspace') || lower.includes('dev space')) return '/devspace';
+      if (lower.includes('deployguard') || lower.includes('deploy guard') || lower.includes('deploy-guard')) return '/Deploy-guard';
+    }
+
+    return null;
+  };
+
   return (
     <div className="home-container" ref={container}>
       <div className="hero-section hero-section-centered">
@@ -532,51 +575,74 @@ const Home = () => {
 
           {/* Slider Container */}
           <div className="works-slider-container" ref={worksSliderRef}>
-            {works.map((work, index) => (
-              <div key={index} className="work-slider-card">
-                <div className="work-grid-header">
-                  <span className="work-grid-category">{work.category}</span>
-                  <h4 className="work-grid-title">{work.title}</h4>
-                </div>
-                <p className="work-grid-desc text-secondary">{work.description}</p>
-                <div className="work-grid-footer">
-                  <div className="work-grid-actions">
-                    {/* Explore Project (GitHub Link or internal route) */}
-                    {work.link && (
-                      work.link.startsWith('/') ? (
-                        <Link to={work.link} className="work-grid-link">
-                          <span>Explore Project</span>
-                          <ExternalLink size={16} />
-                        </Link>
-                      ) : (
-                        <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                          <span>Explore Project</span>
-                          <ExternalLink size={16} />
-                        </a>
-                      )
-                    )}
+            {works.map((work, index) => {
+              const internalLink = resolveInternalRoute(work.link);
+              const internalLiveUrl = resolveInternalRoute(work.liveUrl);
+              const dedicatedPageRoute = resolveInternalRoute(null, work.title);
+              const projectPageRoute = internalLink || internalLiveUrl || dedicatedPageRoute;
 
-                    {/* See on Web (Live Website Link or internal route) */}
-                    {work.enableLiveUrl && work.liveUrl && (
-                      work.liveUrl.startsWith('/') ? (
-                        <Link to={work.liveUrl} className="work-grid-link">
-                          <span>See on Web</span>
-                          <Globe size={16} />
+              return (
+                <div key={index} className="work-slider-card">
+                  <div className="work-grid-header">
+                    <span className="work-grid-category">{work.category}</span>
+                    <h4 className="work-grid-title">
+                      {projectPageRoute ? (
+                        <Link to={projectPageRoute} className="work-title-link">
+                          {work.title}
                         </Link>
                       ) : (
-                        <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
-                          <span>See on Web</span>
-                          <Globe size={16} />
-                        </a>
-                      )
-                    )}
+                        work.title
+                      )}
+                    </h4>
                   </div>
-                  <span className="work-grid-year">
-                    {work.month && work.year ? `${work.month} ${work.year}` : (work.year || "2025 - 2026")}
-                  </span>
+                  <p className="work-grid-desc text-secondary">{work.description}</p>
+                  <div className="work-grid-footer">
+                    <div className="work-grid-actions">
+                      {/* Explore Project (internal route or external link) */}
+                      {work.link && (
+                        internalLink ? (
+                          <Link to={internalLink} className="work-grid-link">
+                            <span>Explore Project</span>
+                            <ExternalLink size={16} />
+                          </Link>
+                        ) : (
+                          <a href={work.link} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                            <span>Explore Project</span>
+                            <ExternalLink size={16} />
+                          </a>
+                        )
+                      )}
+
+                      {/* See on Web (internal route or external link) */}
+                      {work.enableLiveUrl && work.liveUrl && (
+                        internalLiveUrl ? (
+                          <Link to={internalLiveUrl} className="work-grid-link">
+                            <span>See on Web</span>
+                            <Globe size={16} />
+                          </Link>
+                        ) : (
+                          <a href={work.liveUrl} className="work-grid-link" target="_blank" rel="noopener noreferrer">
+                            <span>See on Web</span>
+                            <Globe size={16} />
+                          </a>
+                        )
+                      )}
+
+                      {/* Fallback internal page button if neither link is an internal route but this work has a dedicated page */}
+                      {!internalLink && !internalLiveUrl && dedicatedPageRoute && (
+                        <Link to={dedicatedPageRoute} className="work-grid-link">
+                          <span>View Overview</span>
+                          <ChevronRight size={16} />
+                        </Link>
+                      )}
+                    </div>
+                    <span className="work-grid-year">
+                      {work.month && work.year ? `${work.month} ${work.year}` : (work.year || "2025 - 2026")}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Right-Faced Arrow Button */}

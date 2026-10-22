@@ -1068,4 +1068,103 @@ html.light .diagram-frame {
     width: 100%;
     justify-content: center;
   }
+
+  /* Make footer elements match desktop layout on mobile with refined smaller text */
+  .footer-minimal-container {
+    margin-top: 2.75rem;
+    padding: 2rem 0 1.75rem 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1.25fr 0.85fr 0.9fr;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .footer-col {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .footer-col:first-child {
+    padding-left: 0;
+  }
+
+  .footer-links-list {
+    align-items: flex-start;
+    text-align: left;
+    gap: 0.55rem;
+  }
+
+  .footer-col-title {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    text-align: left;
+    letter-spacing: -0.1px;
+  }
+
+  .footer-link,
+  .footer-location-text {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+
+  .footer-divider {
+    margin: 2rem 0 1.25rem 0;
+  }
+
+  .footer-bottom-copyright {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-minimal-container {
+    margin-top: 2.25rem;
+    padding: 1.75rem 0 1.25rem 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1.2fr 0.8fr 0.85fr;
+    gap: 0.65rem;
+  }
+
+  .footer-col-title {
+    font-size: 0.76rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .footer-links-list {
+    gap: 0.45rem;
+  }
+
+  .footer-link,
+  .footer-location-text {
+    font-size: 0.68rem;
+    line-height: 1.4;
+  }
+
+  .footer-divider {
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .footer-bottom-copyright {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-grid {
+    gap: 0.5rem;
+  }
+
+  .footer-col-title {
+    font-size: 0.72rem;
+  }
+
+  .footer-link,
+  .footer-location-text {
+    font-size: 0.64rem;
+  }
 }
