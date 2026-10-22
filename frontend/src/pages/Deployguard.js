@@ -306,7 +306,7 @@ const Deployguard = () => {
           Static Secret Detection, CI/CD Pipeline Visualizer & DevSecOps Intelligence Platform — Continuous pre-deployment security inspection for Git repositories.
         </p>
 
-        {/* Action Buttons - Visit Website & GitHub Repo */}
+        {/* Action Button - Visit Website */}
         <div className="deployguard-hero-ctas">
           <a
             href="https://deploy-guard-i9wb.onrender.com"
@@ -316,16 +316,6 @@ const Deployguard = () => {
           >
             <Globe size={16} />
             <span>Visit the Website</span>
-          </a>
-
-          <a
-            href="https://github.com/jay240322/Deploy-Guard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-hero-action"
-          >
-            <ExternalLink size={16} />
-            <span>View GitHub Repo</span>
           </a>
         </div>
 
